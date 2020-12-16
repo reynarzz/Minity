@@ -1,2 +1,0 @@
-D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\Debug\MinityPlugin.dll
-D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\Debug\MinityPlugin.pdb

@@ -16,21 +16,9 @@ namespace MinityEngine
         private CommandBuffer _command;
 
         [DllImport(MinityPluginName)]
-        private static extern IntPtr GetEventFunction();
+        private static extern IntPtr Run();
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void DebugDelegate(string text);
-
-        [DllImport(MinityPluginName)]
-        private static extern int ReturnValue();
-
-        [DllImport(MinityPluginName)]
-        private static extern void GlVert(float x, float y, float z);
-
-        static void CallBackFunction(string text) 
-        {
-            Debug.Log(text);
-        }
+        private Material _mat;
 
         private void Start()
         {
@@ -40,22 +28,43 @@ namespace MinityEngine
             _command.name = MinityPluginName;
 
             Camera.main.AddCommandBuffer(CameraEvent.AfterGBuffer, _command);
-            print(ReturnValue());
+            //print(ReturnValue());
             Debug.Log("Called 1");
         }
-         
+
         private void Update()
         {
-            _command.IssuePluginEvent(GetEventFunction(), 0);
+            //_command.IssuePluginEvent(Run(), 0);
         }
 
-        private void OnPreRender()
+        private void OnRenderObject()
         {
+            if (_mat == null)
+                _mat = new Material(Canvas.GetDefaultCanvasMaterial());
 
-            GlVert(0, 0, 0);
-            GlVert(100, 0, 0);
+            //GL.IssuePluginEvent(GlVert(0, 0, 0), 0);
+            // GL.IssuePluginEvent(GlVert(100, 0, 0), 0);
 
-            GL.IssuePluginEvent(GetEventFunction(), 1);
+            _mat.SetPass(0);
+            //GL.PushMatrix();
+            //// Set transformation matrix for drawing to
+            //// match our transform
+            //GL.MultMatrix(transform.localToWorldMatrix);
+
+            //GL.Begin(GL.LINES);
+            //GL.Color(Color.white);
+            //// GlVert(0, 0, 0);
+            //// GlVert(100, 0, 0);
+            ////GL.Vertex3(0,0,0);
+            ////GL.Vertex3(100,0,0);
+
+
+            //GL.End();
+            //GL.PopMatrix();
+
+            GL.IssuePluginEvent(Run(), 1);
+            _command.IssuePluginEvent(Run(), 0);
+
         }
     }
 }

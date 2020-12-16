@@ -35,5 +35,11 @@
     <ClCompile Include="BasicRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DebugCPP.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugCPP.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
