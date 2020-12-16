@@ -1,0 +1,3 @@
+-Unity should be set to run in OpenGL 4.5
+-The .dll have to be in the plugins folder.
+-The "MinityPlugin" have to be in the scene

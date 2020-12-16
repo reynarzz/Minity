@@ -21,19 +21,23 @@ bool _result;
 const char* vsSource =
 "#version 330 core\n"
 "layout(location = 0) in vec4 pos;\n"
-"uniform mat4 rotate;"
+"out vec4 color;\n"
+"uniform mat4 rotate;\n"
 "void main()\n"
 "{\n"
+"color = pos;\n"
 "gl_Position = rotate * pos;\n"
-"}\n";
+"\n"
+"}";
 
 const char* fsSource =
 "#version 330 core\n"
-"layout(location = 0) out vec4 color;\n"
+"layout(location = 0) out vec4 outColor;\n"
+"in vec4 color;\n"
 "void main()\n"
 "{\n"
-"color = vec4(0.0f, 0.0f, 1.0f, 1.0f);\n"
-"}\n";
+"outColor = color;\n"
+"}";
 
 float verts[] =
 {
@@ -41,7 +45,7 @@ float verts[] =
 	1.0f, -1.0f,
 	1.0f, 1.0f,
 };
-
+ 
 unsigned int _vao;
 unsigned int _vbo;
 float _time;
