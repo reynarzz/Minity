@@ -4,6 +4,12 @@
 #include "DebugCPP.h"
 
 #include <GL/glew.h>
+#include <glm/vec4.hpp>
+#include <glm/matrix.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+using glm::vec4;
+using glm::mat4;
 
 static IUnityInterfaces* s_UnityInterfaces = NULL;
 static IUnityGraphics* s_Graphics = NULL;
@@ -15,9 +21,10 @@ bool _result;
 const char* vsSource =
 "#version 330 core\n"
 "layout(location = 0) in vec4 pos;\n"
+"uniform mat4 rotate;"
 "void main()\n"
 "{\n"
-"gl_Position = pos;\n"
+"gl_Position = rotate * pos;\n"
 "}\n";
 
 const char* fsSource =
@@ -34,8 +41,29 @@ float verts[] =
 	1.0f, -1.0f,
 	1.0f, 1.0f,
 };
+
 unsigned int _vao;
 unsigned int _vbo;
+float _time;
+float _deltaTime;
+
+extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetTime(float time, float deltaTime) 
+{
+	_time = time;
+}
+
+mat4 ZRotation(float angle)
+{
+	mat4 zRot;
+
+	zRot = mat4(vec4(cos(angle), sin(angle), 0.0f, 0.0f),
+				vec4(-sin(angle), cos(angle), 0.0f, 0.0f),
+				vec4(0, 0, 1, 0),
+				vec4(0, 0, 0, 1));
+
+	return zRot;
+}
+mat4 _modelMatrix;
 
 void CreateShaders()
 {
@@ -91,7 +119,7 @@ static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 	//Bind buffer and set data.
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 6, verts);
-	
+
 	//Set data layout for the shader.
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
@@ -99,6 +127,9 @@ static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 	CreateShaders();
 	glUseProgram(_shaderProgram);
 
+	unsigned int rotateID = glGetUniformLocation(_shaderProgram, "rotate");
+
+	glUniformMatrix4fv(rotateID, 1, GL_FALSE, glm::value_ptr(ZRotation(_time)));
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	glDeleteVertexArrays(1, &_vao);
@@ -136,8 +167,6 @@ OnGraphicsDeviceEvent(UnityGfxDeviceEventType eventType)
 			glGenBuffers(1, &_vbo);
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6, verts, GL_STREAM_DRAW);
-
-			
 		}
 
 		//TODO: user initialization code
@@ -147,7 +176,7 @@ OnGraphicsDeviceEvent(UnityGfxDeviceEventType eventType)
 	{
 		s_RendererType = kUnityGfxRendererNull;
 		//TODO: user shutdown code
-		break; 
+		break;
 	}
 	case kUnityGfxDeviceEventBeforeReset:
 	{

@@ -18,6 +18,9 @@ namespace MinityEngine
         [DllImport(MinityPluginName)]
         public static extern IntPtr Run();
 
+        [DllImport(MinityPluginName)]
+        public static extern void SetTime(float time, float deltaTime);
+
         [SerializeField] private Material _mat;
 
         private void Start()
@@ -50,6 +53,7 @@ namespace MinityEngine
 
         private void Update()
         {
+            SetTime(Time.time, Time.deltaTime);
         }
 
         private void OnRenderObject()
