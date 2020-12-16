@@ -57,7 +57,7 @@ namespace MinityEngine
             //_mat.SetPass(0);
             //_command.IssuePluginEvent(Run(), 0);
 
-            GL.IssuePluginEvent(Run(), 1);
+            //GL.IssuePluginEvent(Run(), 1);
         }
 
 

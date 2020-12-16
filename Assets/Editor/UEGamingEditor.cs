@@ -46,24 +46,10 @@ namespace UEGaming_
             if (Event.current.type == EventType.Repaint)
             {
                 GUI.BeginClip(rect);
-                GL.Viewport(new Rect(10, 0, 1000, 200));
+                GL.Viewport(new Rect(0, 75, 1000, 200));
 
-                GL.LoadPixelMatrix();
-                //GL.Flush();
+                GL.IssuePluginEvent(MinityEngine.MinityPlugin.Run(), 0);
 
-                //GL.PushMatrix();
-
-                //GL.Clear(true, false, Color.black);
-               // _mat.SetPass(0);
-
-                //GL.Begin(GL.LINES);
-
-                //GL.Color(Color.white);
-               GL.IssuePluginEvent(MinityEngine.MinityPlugin.Run(), 0);
-                //GL.PopMatrix();
-                //DrawPlane();
-
-                //GL.End();
                 GUI.EndClip();
             }
 
@@ -82,12 +68,12 @@ namespace UEGaming_
                 var pos2 = new Vector4(x * 10 * spacing, 10 * spacing * 4, 0, 1);
 
                 _plane.Add(pos1);
-                _plane.Add(pos2);  
+                _plane.Add(pos2);
             }
 
             for (int y = 0; y < 5; y++)
             {
-                var pos1 = new Vector4( 0, y * 10 * spacing, 0, 1);
+                var pos1 = new Vector4(0, y * 10 * spacing, 0, 1);
                 var pos2 = new Vector4(10 * spacing * 4, y * 10 * spacing, 0, 1);
 
                 _plane.Add(pos1);
@@ -95,13 +81,13 @@ namespace UEGaming_
             }
         }
 
-        private void DrawPlane() 
+        private void DrawPlane()
         {
             for (int i = 0; i < _plane.Count; i++)
             {
                 var vertex = _plane[i];
 
-                var pers = Matrix4x4.Perspective(60, 1000f/200f, 0.1f, 300);
+                var pers = Matrix4x4.Perspective(60, 1000f / 200f, 0.1f, 300);
 
                 GL.Vertex(pers * vertex);
             }

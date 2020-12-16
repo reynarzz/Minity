@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "Unity_PluginAPI/IUnityInterface.h"
 #include "Unity_PluginAPI/IUnityGraphics.h"
-#include <GL/glew.h>
 #include "DebugCPP.h"
+
+#include <GL/glew.h>
 
 static IUnityInterfaces* s_UnityInterfaces = NULL;
 static IUnityGraphics* s_Graphics = NULL;
@@ -77,25 +78,27 @@ static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 	/*if (_result)
 	{
 		Debug::Log("fine", Color::White);
-
 	}
 	else
 	{
 		Debug::Log("bad", Color::White);
-
 	}*/
+
+	//Generate vertex array object
+	glGenVertexArrays(1, &_vao);
+	glBindVertexArray(_vao);
+
+	//Bind buffer and set data.
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 6, verts);
+	
+	//Set data layout for the shader.
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
 
 	CreateShaders();
 	glUseProgram(_shaderProgram);
 
-	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 6, verts);
-
-	glGenVertexArrays(1, &_vao);
-	glBindVertexArray(_vao);
-
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0);
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	glDeleteVertexArrays(1, &_vao);
