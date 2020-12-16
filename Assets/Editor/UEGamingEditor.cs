@@ -41,25 +41,28 @@ namespace UEGaming_
 
             _elapseTime = _clock.ElapsedTicks;
 
-            Rect rect = GUILayoutUtility.GetRect(10, 1000, 200, 200, EditorStyles.helpBox);
+            Rect rect = GUILayoutUtility.GetRect(10, 1000, 200, 200);
 
             if (Event.current.type == EventType.Repaint)
             {
                 GUI.BeginClip(rect);
-                GL.Flush();
 
-                GL.PushMatrix();
+                //GL.Flush();
 
-                GL.Clear(true, false, Color.black);
-                _mat.SetPass(0);
+                //GL.PushMatrix();
 
-                GL.Begin(GL.LINES);
+                //GL.Clear(true, false, Color.black);
 
-                GL.Color(Color.white);
+                GL.IssuePluginEvent(MinityEngine.MinityPlugin.Run(), 0);
+                //_mat.SetPass(0);
 
-                DrawPlane();
+                //GL.Begin(GL.LINES);
 
-                GL.End();
+                //GL.Color(Color.white);
+
+                //DrawPlane();
+
+                //GL.End();
                 GUI.EndClip();
             }
 

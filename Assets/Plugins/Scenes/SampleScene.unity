@@ -363,6 +363,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1661505742}
   - component: {fileID: 1661505743}
+  - component: {fileID: 1661505744}
   m_Layer: 0
   m_Name: Minity
   m_TagString: Untagged
@@ -394,6 +395,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 10e2abda4df15514bb7bb759e47d8b5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mat: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+--- !u!114 &1661505744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1661505741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 246e0c871fa406f418d6318810e30431, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1963059393

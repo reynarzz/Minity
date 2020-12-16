@@ -12,7 +12,7 @@ unsigned int _shaderProgram;
 bool _result;
 
 const char* vsSource =
-"#version 300 \n"
+"#version 300 core\n"
 "layout(location = 0) in vec4 pos;\n"
 "void main()\n"
 "{\n"
@@ -20,22 +20,31 @@ const char* vsSource =
 "}\n";
 
 const char* fsSource =
-"#version 300 \n"
+"#version 300 core\n"
 "layout(location = 0) out vec4 color;\n"
 "void main()\n"
 "{\n"
-"color = vec4(1.0f,1.0f,1.0f,1.0f);\n"
+"color = vec4(0.0f,1.0f,1.0f,1.0f);\n"
 "}\n";
 
-void CreateShaders() 
+float verts[] =
+{
+	-0.5f, -0.5f,
+	0.5f, -0.5f,
+	0.0f, 0.5f,
+};
+unsigned int _vao;
+unsigned int _vbo;
+
+void CreateShaders()
 {
 	_shaderProgram = glCreateProgram();
 
 	unsigned int vsID = glCreateShader(GL_VERTEX_SHADER);
 	unsigned int fsID = glCreateShader(GL_FRAGMENT_SHADER);
 
-	glShaderSource(vsID, 1, &vsSource, NULL);
-	glShaderSource(fsID, 1, &fsSource, NULL);
+	glShaderSource(vsID, 1, &vsSource, 0);
+	glShaderSource(fsID, 1, &fsSource, 0);
 
 	glCompileShader(vsID);
 	glCompileShader(fsID);
@@ -45,7 +54,9 @@ void CreateShaders()
 
 	glLinkProgram(_shaderProgram);
 	glValidateProgram(_shaderProgram);
-	
+
+	glDeleteShader(vsID);
+	glDeleteShader(fsID);
 }
 
 static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
@@ -61,27 +72,33 @@ static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 	glEnable(GL_DEPTH_TEST);
 	glDepthMask(GL_FALSE);
 
-	if (_result) 
+	//glUseProgram(_shaderProgram);
+
+	/*if (_result)
 	{
 		Debug::Log("fine", Color::White);
 
 	}
-	else 
+	else
 	{
 		Debug::Log("bad", Color::White);
 
-	}
+	}*/
+	//glUseProgram(_shaderProgram);
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 6, verts);
 
-	/*unsigned int vao;
+	glGenVertexArrays(1, &_vao);
+	glBindVertexArray(_vao);
 
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);*/
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6, &verts, GL_DYNAMIC_DRAW);
 
-	
 
-	//glClear(GL_COLOR_BUFFER_BIT);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
+	//glUnmapBuffer(GL_ARRAY_BUFFER);
 }
 
 extern "C"
@@ -100,39 +117,29 @@ OnGraphicsDeviceEvent(UnityGfxDeviceEventType eventType)
 	{
 		s_RendererType = s_Graphics->GetRenderer();
 
-		if (s_RendererType == kUnityGfxRendererOpenGLES20 || s_RendererType == kUnityGfxRendererOpenGLES30)
+		if (s_RendererType == kUnityGfxRendererOpenGLCore)
 		{
 			//Aqui inicializo el renderer de open gl (Creo los shaders, seteo las matrices(world y projection), crear los vertex buffer)
 
-			if (glewInit() == GLEW_OK) 
+			if (glewInit() == GLEW_OK)
 			{
 				_result = true;
 
 			}
-			else 
+			else
 			{
 				_result = false;
 			}
 
-			float verts[] =
-			{
-				-0.5f, -0.5f,
-				0.5f, -0.5f,
-				0.0f, 0.5f,
-			};
-
-			unsigned int vbo;
-
-			glGenBuffers(1, &vbo);
-			glBindBuffer(GL_ARRAY_BUFFER, vbo);
+			glGenBuffers(1, &_vbo);
+			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6, verts, GL_STREAM_DRAW);
 
-			glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
-			glEnableVertexAttribArray(0);
+			//glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+			//glEnableVertexAttribArray(0);
 
 			CreateShaders();
-		
-			glUseProgram(_shaderProgram);
+			//glUseProgram(_shaderProgram);
 		}
 
 		//TODO: user initialization code

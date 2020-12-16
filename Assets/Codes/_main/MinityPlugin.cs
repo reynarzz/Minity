@@ -16,20 +16,36 @@ namespace MinityEngine
         private CommandBuffer _command;
 
         [DllImport(MinityPluginName)]
-        private static extern IntPtr Run();
+        public static extern IntPtr Run();
 
-        private Material _mat;
+        [SerializeField] private Material _mat;
 
         private void Start()
         {
             Debug.Log("Called 0");
 
-            _command = new CommandBuffer();
-            _command.name = MinityPluginName;
+            //_command = new CommandBuffer();
+            //_command.name = MinityPluginName;
 
-            Camera.main.AddCommandBuffer(CameraEvent.AfterGBuffer, _command);
+            //Camera.main.AddCommandBuffer(CameraEvent.AfterGBuffer, _command);
             //print(ReturnValue());
             Debug.Log("Called 1");
+            StartCoroutine(Call());
+        }
+
+        private IEnumerator Call() 
+        {
+            while (true)
+            {
+                yield return new WaitForEndOfFrame();
+
+                
+                //_mat.SetPass(0);
+
+
+                //GL.IssuePluginEvent(Run(), 1);
+                //Debug.Log("Called");
+            }
         }
 
         private void Update()
@@ -39,31 +55,16 @@ namespace MinityEngine
 
         private void OnRenderObject()
         {
-            if (_mat == null)
-                _mat = new Material(Canvas.GetDefaultCanvasMaterial());
-
-            //GL.IssuePluginEvent(GlVert(0, 0, 0), 0);
-            // GL.IssuePluginEvent(GlVert(100, 0, 0), 0);
-
-            _mat.SetPass(0);
-            //GL.PushMatrix();
-            //// Set transformation matrix for drawing to
-            //// match our transform
-            //GL.MultMatrix(transform.localToWorldMatrix);
-
-            //GL.Begin(GL.LINES);
-            //GL.Color(Color.white);
-            //// GlVert(0, 0, 0);
-            //// GlVert(100, 0, 0);
-            ////GL.Vertex3(0,0,0);
-            ////GL.Vertex3(100,0,0);
-
-
-            //GL.End();
-            //GL.PopMatrix();
+            //_mat.SetPass(0);
 
             GL.IssuePluginEvent(Run(), 1);
-            _command.IssuePluginEvent(Run(), 0);
+        }
+
+
+        private void OnPostRender()
+        {
+           
+            //GL.IssuePluginEvent(Run(), 1);
 
         }
     }
