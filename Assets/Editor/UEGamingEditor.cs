@@ -46,20 +46,21 @@ namespace UEGaming_
             if (Event.current.type == EventType.Repaint)
             {
                 GUI.BeginClip(rect);
+                GL.Viewport(new Rect(10, 0, 1000, 200));
 
+                GL.LoadPixelMatrix();
                 //GL.Flush();
 
                 //GL.PushMatrix();
 
                 //GL.Clear(true, false, Color.black);
-
-                GL.IssuePluginEvent(MinityEngine.MinityPlugin.Run(), 0);
-                //_mat.SetPass(0);
+               // _mat.SetPass(0);
 
                 //GL.Begin(GL.LINES);
 
                 //GL.Color(Color.white);
-
+               GL.IssuePluginEvent(MinityEngine.MinityPlugin.Run(), 0);
+                //GL.PopMatrix();
                 //DrawPlane();
 
                 //GL.End();

@@ -24,22 +24,22 @@ namespace MinityEngine
         {
             Debug.Log("Called 0");
 
-            //_command = new CommandBuffer();
-            //_command.name = MinityPluginName;
+            _command = new CommandBuffer();
+            _command.name = MinityPluginName;
 
-            //Camera.main.AddCommandBuffer(CameraEvent.AfterGBuffer, _command);
+            Camera.main.AddCommandBuffer(CameraEvent.AfterGBuffer, _command);
             //print(ReturnValue());
             Debug.Log("Called 1");
-            StartCoroutine(Call());
+            // StartCoroutine(Call());
         }
 
-        private IEnumerator Call() 
+        private IEnumerator Call()
         {
             while (true)
             {
                 yield return new WaitForEndOfFrame();
 
-                
+
                 //_mat.SetPass(0);
 
 
@@ -50,12 +50,12 @@ namespace MinityEngine
 
         private void Update()
         {
-            //_command.IssuePluginEvent(Run(), 0);
         }
 
         private void OnRenderObject()
         {
             //_mat.SetPass(0);
+            //_command.IssuePluginEvent(Run(), 0);
 
             GL.IssuePluginEvent(Run(), 1);
         }
@@ -63,7 +63,7 @@ namespace MinityEngine
 
         private void OnPostRender()
         {
-           
+
             //GL.IssuePluginEvent(Run(), 1);
 
         }

@@ -12,7 +12,7 @@ unsigned int _shaderProgram;
 bool _result;
 
 const char* vsSource =
-"#version 300 core\n"
+"#version 330 core\n"
 "layout(location = 0) in vec4 pos;\n"
 "void main()\n"
 "{\n"
@@ -20,18 +20,18 @@ const char* vsSource =
 "}\n";
 
 const char* fsSource =
-"#version 300 core\n"
+"#version 330 core\n"
 "layout(location = 0) out vec4 color;\n"
 "void main()\n"
 "{\n"
-"color = vec4(0.0f,1.0f,1.0f,1.0f);\n"
+"color = vec4(0.0f, 0.0f, 1.0f, 1.0f);\n"
 "}\n";
 
 float verts[] =
 {
-	-0.5f, -0.5f,
-	0.5f, -0.5f,
-	0.0f, 0.5f,
+	-1.0f, -1.0f,
+	1.0f, -1.0f,
+	1.0f, 1.0f,
 };
 unsigned int _vao;
 unsigned int _vbo;
@@ -84,21 +84,21 @@ static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 		Debug::Log("bad", Color::White);
 
 	}*/
-	//glUseProgram(_shaderProgram);
+
+	CreateShaders();
+	glUseProgram(_shaderProgram);
+
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 6, verts);
 
 	glGenVertexArrays(1, &_vao);
 	glBindVertexArray(_vao);
 
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6, &verts, GL_DYNAMIC_DRAW);
-
-
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
-	//glUnmapBuffer(GL_ARRAY_BUFFER);
+	glDeleteVertexArrays(1, &_vao);
 }
 
 extern "C"
@@ -124,7 +124,6 @@ OnGraphicsDeviceEvent(UnityGfxDeviceEventType eventType)
 			if (glewInit() == GLEW_OK)
 			{
 				_result = true;
-
 			}
 			else
 			{
@@ -135,11 +134,7 @@ OnGraphicsDeviceEvent(UnityGfxDeviceEventType eventType)
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6, verts, GL_STREAM_DRAW);
 
-			//glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
-			//glEnableVertexAttribArray(0);
-
-			CreateShaders();
-			//glUseProgram(_shaderProgram);
+			
 		}
 
 		//TODO: user initialization code
@@ -149,7 +144,7 @@ OnGraphicsDeviceEvent(UnityGfxDeviceEventType eventType)
 	{
 		s_RendererType = kUnityGfxRendererNull;
 		//TODO: user shutdown code
-		break;
+		break; 
 	}
 	case kUnityGfxDeviceEventBeforeReset:
 	{
