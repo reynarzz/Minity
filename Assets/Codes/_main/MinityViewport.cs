@@ -23,6 +23,9 @@ namespace MinityEngine
 
         [SerializeField] private Material _mat;
 
+        [DllImport(MinityPluginName)]
+        public static extern void SetPos(float x, float y, float z);
+
         private void Start()
         {
         }

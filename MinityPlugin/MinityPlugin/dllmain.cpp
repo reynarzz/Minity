@@ -69,6 +69,9 @@ float _screenWidth;
 float _screenHeight;
 float _screenAspectRatio;
 
+glm::vec3 _pos = glm::vec3(0.0f, 0.0f, -3.0f);
+glm::vec3 _rot;
+
 extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetTime(float time, float deltaTime)
 {
 	_time = time;
@@ -80,6 +83,16 @@ extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetScreenValues(float
 	_screenWidth = width;
 	_screenHeight = height;
 	_screenAspectRatio = aspect;
+}
+
+extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetPos(float x, float y, float z)
+{
+	_pos = glm::vec3(x, y, z);
+}
+
+extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetRot(float x, float y, float z)
+{
+	_rot = glm::vec3(x, y, z);
 }
 
 mat4 ZRotation(float angle)
@@ -108,9 +121,9 @@ mat4 YRotation(float angle)
 mat4 Translate(float x, float y, float z)
 {
 	return mat4(vec4(1, 0, 0, x),
-				vec4(0, 1, 0, y),
-				vec4(0, 0, 1, z),
-				vec4(0, 0, 0, 1));
+		vec4(0, 1, 0, y),
+		vec4(0, 0, 1, z),
+		vec4(0, 0, 0, 1));
 }
 void CreateShaders()
 {
@@ -180,9 +193,9 @@ static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 	mat4 projection = glm::perspective(45.0f, _screenAspectRatio, 0.1f, 150.0f);
 	//mat4 orth = glm::ortho(-3.0f, 3.0f, -2.5f, 2.5f);
 	mat4 model = glm::mat4(1.0f);
-	
-	model = glm::rotate(model, _time /** 3.14f / 180*/, glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -7.0f));
+
+	model = glm::translate(model, _pos);
+	model = glm::rotate(model, _time /* 3.14f / 180*/, glm::vec3(0.0f, 1.0f, 0.0f));
 
 	/*auto r1 = projection[0];
 	auto r2 = projection[0];

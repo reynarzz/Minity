@@ -1,3 +1,7 @@
 ﻿  dllmain.cpp
+x64\Debug\DebugCPP.obj : warning LNK4042: object specified more than once; extras ignored
+     Creating library D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\x64\Debug\MinityPlugin.lib and object D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\x64\Debug\MinityPlugin.exp
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\x64\Debug\vc120.pdb'; linking object as if no debug info
   MinityPlugin.vcxproj -> D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\x64\Debug\MinityPlugin.dll
           1 file(s) copied.
