@@ -161,6 +161,7 @@ static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_DEPTH_TEST);
 	glDepthMask(GL_FALSE);*/
+	glEnable(GL_DEPTH_TEST);
 
 	glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -242,12 +243,11 @@ OnGraphicsDeviceEvent(UnityGfxDeviceEventType eventType)
 				_result = false;
 			}
 
-			glDisable(GL_CULL_FACE);
-			glDisable(GL_BLEND);
+			//glDisable(GL_CULL_FACE);
+			//glDisable(GL_BLEND);
 
-			glDepthFunc(GL_LEQUAL);
-			glEnable(GL_DEPTH_TEST);
-			glDepthMask(GL_FALSE);
+			//glDepthFunc(GL_LEQUAL);
+			//glDepthMask(GL_FALSE);
 
 			glGenBuffers(1, &_vbo);
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
