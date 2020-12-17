@@ -22,11 +22,12 @@ const char* vsSource =
 "#version 330 core\n"
 "layout(location = 0) in vec4 pos;\n"
 "out vec4 color;\n"
-"uniform mat4 rotate;\n"
+"uniform mat4 model;\n"
+"uniform mat4 project;\n"
 "void main()\n"
 "{\n"
 "color = pos;\n"
-"gl_Position = rotate * pos;\n"
+"gl_Position = project * model * pos;\n"
 "\n"
 "}";
 
@@ -39,21 +40,46 @@ const char* fsSource =
 "outColor = color;\n"
 "}";
 
-float verts[] =
+float _verts[15] =
 {
-	-1.0f, -1.0f,
-	1.0f, -1.0f,
-	1.0f, 1.0f,
+	0.0f, 1.0f, 0.0f,
+	-1.0f, 0.0f, 1.0f,
+	1.0f, 0.0f, 1.0f,
+	1.0f, 0.0f, -1.0f,
+	-1.0f, 0.0f, -1.0f,
+
 };
- 
+
+unsigned int _indices[12] =
+{
+	0, 1, 2,
+	0, 2, 3,
+	0, 3, 4,
+	0, 4, 1
+};
+
 unsigned int _vao;
 unsigned int _vbo;
+unsigned int _index;
+
 float _time;
 float _deltaTime;
 
-extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetTime(float time, float deltaTime) 
+float _screenWidth;
+float _screenHeight;
+float _screenAspectRatio;
+
+extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetTime(float time, float deltaTime)
 {
 	_time = time;
+	_deltaTime = deltaTime;
+}
+
+extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetScreenValues(float width, float height, float aspect)
+{
+	_screenWidth = width;
+	_screenHeight = height;
+	_screenAspectRatio = aspect;
 }
 
 mat4 ZRotation(float angle)
@@ -61,14 +87,31 @@ mat4 ZRotation(float angle)
 	mat4 zRot;
 
 	zRot = mat4(vec4(cos(angle), sin(angle), 0.0f, 0.0f),
-				vec4(-sin(angle), cos(angle), 0.0f, 0.0f),
-				vec4(0, 0, 1, 0),
-				vec4(0, 0, 0, 1));
+		vec4(-sin(angle), cos(angle), 0.0f, 0.0f),
+		vec4(0, 0, 1, 0),
+		vec4(0, 0, 0, 1));
 
 	return zRot;
 }
-mat4 _modelMatrix;
 
+
+mat4 YRotation(float angle)
+{
+
+	return mat4(vec4(cos(angle), -sin(angle), 0.0f, 0.0f),
+		vec4(0, 1, 0, 0),
+		vec4(sin(angle), cos(angle), 0.0f, 0.0f),
+		vec4(0, 0, 0, 1));
+
+}
+
+mat4 Translate(float x, float y, float z)
+{
+	return mat4(vec4(1, 0, 0, x),
+		vec4(0, 1, 0, y),
+		vec4(0, 0, 1, z),
+		vec4(0, 0, 0, 1));
+}
 void CreateShaders()
 {
 	_shaderProgram = glCreateProgram();
@@ -122,20 +165,37 @@ static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 
 	//Bind buffer and set data.
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 6, verts);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 15, _verts);
 
 	//Set data layout for the shader.
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _index);
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(unsigned int) * 12, _indices);
 
 	CreateShaders();
 	glUseProgram(_shaderProgram);
 
-	unsigned int rotateID = glGetUniformLocation(_shaderProgram, "rotate");
+	glm::mat4 projection = glm::perspective(45.0f, _screenAspectRatio, 0.1f, 100.0f);
+	glm::mat4 orth = glm::ortho(-3.0f, 3.0f, -2.5f, 2.5f);
 
-	glUniformMatrix4fv(rotateID, 1, GL_FALSE, glm::value_ptr(ZRotation(_time)));
+	/*auto r1 = projection[0];
+	auto r2 = projection[0];
+	auto r3 = projection[0];
+	auto r4 = projection[0];*/
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	unsigned int uniformModelID = glGetUniformLocation(_shaderProgram, "model");
+	unsigned int uniformProjectionID = glGetUniformLocation(_shaderProgram, "project");
+
+	glUniformMatrix4fv(uniformModelID, 1, GL_FALSE, glm::value_ptr(Translate(0, 0, -2.5f) * YRotation(_time)));
+	glUniformMatrix4fv(uniformProjectionID, 1, GL_FALSE, glm::value_ptr(orth));
+	//first: raw object vertices.
+
+	//Model matrix = translation + rotation + scale matrices, every object has a model matrix, this convert your object to worlSpace.
+
+	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
+
 	glDeleteVertexArrays(1, &_vao);
 }
 
@@ -170,7 +230,12 @@ OnGraphicsDeviceEvent(UnityGfxDeviceEventType eventType)
 
 			glGenBuffers(1, &_vbo);
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6, verts, GL_STREAM_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 15, _verts, GL_STREAM_DRAW);
+
+
+			glGenBuffers(1, &_index);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _index);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 12, _indices, GL_STREAM_DRAW);
 		}
 
 		//TODO: user initialization code

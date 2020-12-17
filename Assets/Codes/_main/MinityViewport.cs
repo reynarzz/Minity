@@ -18,6 +18,9 @@ namespace MinityEngine
         [DllImport(MinityPluginName)]
         public static extern void SetTime(float time, float deltaTime);
 
+        [DllImport(MinityPluginName)]
+        public static extern void SetScreenValues(float width, float height, float aspect);
+
         [SerializeField] private Material _mat;
 
         private void Start()
