@@ -154,14 +154,15 @@ static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 	//Render estate: glDepthFunc(GL_LEQUAL);
 	//Uso el shader program.
 	//se setea el vertex array object si se esta usando el core profile. (siempre se esta usando)
-	glDisable(GL_CULL_FACE);
+
+	/*glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_DEPTH_TEST);
-	glDepthMask(GL_FALSE);
+	glDepthMask(GL_FALSE);*/
 
-	//glUseProgram(_shaderProgram);
+	glClear(GL_DEPTH_BUFFER_BIT);
 
 	/*if (_result)
 	{
@@ -191,19 +192,14 @@ static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 	glUseProgram(_shaderProgram);
 
 	mat4 projection = glm::perspective(45.0f, _screenAspectRatio, 0.1f, 150.0f);
-	//mat4 orth = glm::ortho(-3.0f, 3.0f, -2.5f, 2.5f);
 	mat4 model = glm::mat4(1.0f);
 
 	model = glm::translate(model, _pos);
 	model = glm::rotate(model, _time /* 3.14f / 180*/, glm::vec3(0.0f, 1.0f, 0.0f));
 
-	/*auto r1 = projection[0];
-	auto r2 = projection[0];
-	auto r3 = projection[0];
-	auto r4 = projection[0];*/
-
 	unsigned int uniformModelID = glGetUniformLocation(_shaderProgram, "model");
 	unsigned int uniformProjectionID = glGetUniformLocation(_shaderProgram, "project");
+	//glViewport(0, 0, _screenWidth, _screenHeight);
 
 	glUniformMatrix4fv(uniformModelID, 1, GL_FALSE, value_ptr(model));
 	glUniformMatrix4fv(uniformProjectionID, 1, GL_FALSE, value_ptr(projection));
@@ -245,6 +241,13 @@ OnGraphicsDeviceEvent(UnityGfxDeviceEventType eventType)
 			{
 				_result = false;
 			}
+
+			glDisable(GL_CULL_FACE);
+			glDisable(GL_BLEND);
+
+			glDepthFunc(GL_LEQUAL);
+			glEnable(GL_DEPTH_TEST);
+			glDepthMask(GL_FALSE);
 
 			glGenBuffers(1, &_vbo);
 			glBindBuffer(GL_ARRAY_BUFFER, _vbo);
