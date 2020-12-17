@@ -27,7 +27,6 @@ namespace MinityEngine
 
             Rect rect = GUILayoutUtility.GetRect(Screen.width, Screen.height);
 
-
             //Debug.Log((Screen.width, Screen.height));
 
             if (Event.current.type == EventType.Repaint)

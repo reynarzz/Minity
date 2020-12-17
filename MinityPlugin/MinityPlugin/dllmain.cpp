@@ -108,9 +108,9 @@ mat4 YRotation(float angle)
 mat4 Translate(float x, float y, float z)
 {
 	return mat4(vec4(1, 0, 0, x),
-		vec4(0, 1, 0, y),
-		vec4(0, 0, 1, z),
-		vec4(0, 0, 0, 1));
+				vec4(0, 1, 0, y),
+				vec4(0, 0, 1, z),
+				vec4(0, 0, 0, 1));
 }
 void CreateShaders()
 {
@@ -163,11 +163,11 @@ static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 	glGenVertexArrays(1, &_vao);
 	glBindVertexArray(_vao);
 
-	//Bind buffer and set data.
+	// Bind buffer and set data.
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 15, _verts);
 
-	//Set data layout for the shader.
+	// Set data layout for the shader.
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
 
@@ -177,8 +177,12 @@ static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 	CreateShaders();
 	glUseProgram(_shaderProgram);
 
-	glm::mat4 projection = glm::perspective(45.0f, _screenAspectRatio, 0.1f, 100.0f);
-	glm::mat4 orth = glm::ortho(-3.0f, 3.0f, -2.5f, 2.5f);
+	mat4 projection = glm::perspective(45.0f, _screenAspectRatio, 0.1f, 150.0f);
+	//mat4 orth = glm::ortho(-3.0f, 3.0f, -2.5f, 2.5f);
+	mat4 model = glm::mat4(1.0f);
+	
+	model = glm::rotate(model, _time /** 3.14f / 180*/, glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -7.0f));
 
 	/*auto r1 = projection[0];
 	auto r2 = projection[0];
@@ -188,11 +192,12 @@ static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 	unsigned int uniformModelID = glGetUniformLocation(_shaderProgram, "model");
 	unsigned int uniformProjectionID = glGetUniformLocation(_shaderProgram, "project");
 
-	glUniformMatrix4fv(uniformModelID, 1, GL_FALSE, glm::value_ptr(Translate(0, 0, -2.5f) * YRotation(_time)));
-	glUniformMatrix4fv(uniformProjectionID, 1, GL_FALSE, glm::value_ptr(orth));
-	//first: raw object vertices.
+	glUniformMatrix4fv(uniformModelID, 1, GL_FALSE, value_ptr(model));
+	glUniformMatrix4fv(uniformProjectionID, 1, GL_FALSE, value_ptr(projection));
 
-	//Model matrix = translation + rotation + scale matrices, every object has a model matrix, this convert your object to worlSpace.
+	// first: raw object vertices.
+
+	// Model matrix = translation + rotation + scale matrices, every object has a model matrix, this convert your object to worlSpace.
 
 	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
 
