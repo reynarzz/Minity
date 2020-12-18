@@ -7,9 +7,11 @@ private:
 	vec3 _cameraRot;
 public:
 
-	Camera();
+	Camera(vec3 position, vec3 rotation);
 	~Camera();
 
-	mat4 MoveCamera(vec2 mouseDelta);
+	void SetCameraMoveSpeed(float speed);
+	void SetCameraPos(vec3 cameraPos);
+	mat4 GetViewMatrix(vec3 cameraPos, vec2 mouseDelta);
 };
 
