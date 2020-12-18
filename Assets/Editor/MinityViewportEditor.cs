@@ -32,24 +32,24 @@ namespace MinityEngine
             MinityViewport.SetScreenValues(Screen.width, 200f, Screen.width / 200f);
             Event current = Event.current;
 
-            MinityViewport.SetMouseData(current.mousePosition.x, current.mousePosition.y, current.delta.x, current.delta.y);
+            //MinityViewport.SetMouseData(current.mousePosition.x, current.mousePosition.y, current.delta.x, current.delta.y);
 
 
-            if (current.alt)
-            {
-                MinityViewport.SetKeyDow(2, 1);
-            }
-            else 
-            {
-                MinityViewport.SetKeyUp(2);
-            }
+            //if (current.alt)
+            //{
+            //    MinityViewport.SetKeyDow(2, 1);
+            //}
+            //else 
+            //{
+            //    MinityViewport.SetKeyUp(2);
+            //}
 
             //Debug.Log((Screen.width, Screen.height));
 
             if (Event.current.type == EventType.Repaint)
             {
                 GUI.BeginClip(rect);
-                rect.y = 440;
+                rect.y = rect.height;
                 GL.Viewport(rect);
                 
                 GL.IssuePluginEvent(MinityViewport.Run(), 0);

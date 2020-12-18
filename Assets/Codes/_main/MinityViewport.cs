@@ -37,6 +37,7 @@ namespace MinityEngine
 
         private void Start()
         {
+            //transform.forward
         }
 
         private void Update()

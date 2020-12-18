@@ -14,14 +14,14 @@ namespace MinityEngine
         private static EditorWindow _window;
 
         [MenuItem("Window/Minity Engine")]
-        public static void Open() 
+        public static void Open()
         {
             _window = GetWindow<MinityWindow>("Minity Engine");
         }
 
         private void Update()
         {
-            
+
         }
 
         private void OnGUI()
@@ -30,15 +30,13 @@ namespace MinityEngine
             GL.IssuePluginEvent(MinityViewport.Run(), 0);
 
             Event current = Event.current;
-            
+
             MinityViewport.SetMouseData(current.mousePosition.x, current.mousePosition.y, current.delta.x / 12, current.delta.y / 12);
 
-            if (current.type == EventType.ScrollWheel) 
+            if (current.type == EventType.ScrollWheel)
             {
-                
-            }
 
-            Debug.Log((float)current.delta.y);
+            }
 
             if (current.alt)
             {
@@ -47,6 +45,69 @@ namespace MinityEngine
             else
             {
                 MinityViewport.SetKeyUp(2);
+            }
+
+            if (current.isMouse) 
+            {
+                if (current.type == EventType.MouseDown)
+                {
+                    //Debug.Log("left");
+                    MinityViewport.SetKeyDow(1, 1);
+                }
+
+                if (current.type == EventType.MouseUp)
+                {
+                    MinityViewport.SetKeyUp(1);
+                }
+            }
+
+            if (current.type == EventType.KeyDown)
+            {
+                
+                if (current.keyCode == KeyCode.A)
+                {
+                    MinityViewport.SetKeyDow(0, 2);
+                }
+                else if (current.keyCode == KeyCode.D) 
+                {
+                    MinityViewport.SetKeyDow(0, 4);
+                }
+
+                if (current.keyCode == KeyCode.W)
+                {
+                    MinityViewport.SetKeyDow(0, 1);
+                }
+                else if (current.keyCode == KeyCode.S)
+                {
+                    MinityViewport.SetKeyDow(0, 3);
+                }
+
+                if (current.keyCode == KeyCode.Q)
+                {
+                    MinityViewport.SetKeyDow(0, 5);
+                }
+                else if (current.keyCode == KeyCode.E)
+                {
+                    MinityViewport.SetKeyDow(0, 6);
+                }
+
+            }
+            else if (current.type == EventType.KeyUp)
+            {
+                    MinityViewport.SetKeyUp(0);
+
+                //if (current.keyCode == KeyCode.A)
+                //{
+                //    MinityViewport.SetKeyUp(0);
+
+                //    Debug.Log("Release A");
+                //}
+                //else if (current.keyCode == KeyCode.D)
+                //{
+                //    MinityViewport.SetKeyUp(0);
+
+                //    Debug.Log("Release D");
+                //}
             }
 
             Repaint();
