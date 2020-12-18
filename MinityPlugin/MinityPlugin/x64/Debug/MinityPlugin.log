@@ -1,7 +1,12 @@
-﻿  pch.cpp
-  DebugCPP.cpp
-  DebugCPP.h
-  main.cpp
+﻿  main.cpp
+D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\main.cpp(9,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  Material.cpp
+  Mesh.cpp
+  MeshRenderer.cpp
+  Renderer.cpp
+D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\Renderer.cpp(85,49): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\Renderer.cpp(86,47): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  Shader.cpp
   Generating Code...
 x64\Debug\DebugCPP.obj : warning LNK4042: object specified more than once; extras ignored
      Creating library D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\x64\Debug\MinityPlugin.lib and object D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\x64\Debug\MinityPlugin.exp
