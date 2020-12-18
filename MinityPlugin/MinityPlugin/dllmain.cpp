@@ -23,11 +23,12 @@ const char* vsSource =
 "layout(location = 0) in vec4 pos;\n"
 "out vec4 color;\n"
 "uniform mat4 model;\n"
+"uniform mat4 view;"
 "uniform mat4 project;\n"
 "void main()\n"
 "{\n"
 "color = pos;\n"
-"gl_Position = project * model * pos;\n"
+"gl_Position = project * view * model * pos;\n"
 "\n"
 "}";
 
@@ -39,6 +40,40 @@ const char* fsSource =
 "{\n"
 "outColor = color;\n"
 "}";
+
+enum class NormalKey
+{
+	RELEASED = -1,
+	NONE = 0,
+	W = 1,
+	A = 2,
+	S = 3,
+	D = 4,
+	F = 5,
+	ENTER = 6,
+	SPACE = 7,
+};
+
+enum class MouseKeys
+{
+	RELEASED = -1,
+	NONE = 0,
+	LEFT_CLICK = 1,
+	RIGHT_CLICK = 2,
+	Mid = 3
+};
+
+enum class ModifierKeys
+{
+	RELEASED = -1,
+	NONE = 0,
+	ALT = 1,
+	SHIFT = 2
+};
+
+NormalKey _normalKey;
+MouseKeys _mouseKey;
+ModifierKeys _modifierKey;
 
 float _verts[15] =
 {
@@ -71,6 +106,8 @@ float _screenAspectRatio;
 
 glm::vec3 _pos = glm::vec3(0.0f, 0.0f, -3.0f);
 glm::vec3 _rot;
+glm::vec2 _mousePos;
+glm::vec2 _mouseDelta;
 
 extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetTime(float time, float deltaTime)
 {
@@ -95,6 +132,56 @@ extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetRot(float x, float
 	_rot = glm::vec3(x, y, z);
 }
 
+extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetMouseData(float xPos, float yPos, float deltaX, float deltaY)
+{
+	_mousePos = glm::vec2(xPos, yPos);
+	_mouseDelta = glm::vec2(deltaX, deltaY);
+}
+
+extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetKeyDow(int keyType, int key)
+{
+	if (keyType == 0)
+	{
+		_normalKey = static_cast<NormalKey>(key);
+	}
+	if (keyType == 1)
+	{
+		_mouseKey = static_cast<MouseKeys>(key);
+	}
+	else if (keyType == 2)
+	{
+		_modifierKey = static_cast<ModifierKeys>(key);
+	}
+
+	if (keyType > 2)
+	{
+		Debug::Log("Wrong key number");
+	}
+}
+
+extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetKeyUp(int keyType)
+{
+	if (keyType == 0)
+	{
+		_normalKey = NormalKey::RELEASED;
+	}
+
+	if (keyType == 1)
+	{
+		_mouseKey = MouseKeys::RELEASED;
+	}
+
+	if (keyType == 2)
+	{
+		_modifierKey = ModifierKeys::RELEASED;
+	}
+
+	if (keyType > 2)
+	{
+		Debug::Log("Wrong key number");
+	}
+}
+
 mat4 ZRotation(float angle)
 {
 	mat4 zRot;
@@ -107,10 +194,8 @@ mat4 ZRotation(float angle)
 	return zRot;
 }
 
-
 mat4 YRotation(float angle)
 {
-
 	return mat4(vec4(cos(angle), -sin(angle), 0.0f, 0.0f),
 		vec4(0, 1, 0, 0),
 		vec4(sin(angle), cos(angle), 0.0f, 0.0f),
@@ -147,6 +232,8 @@ void CreateShaders()
 	glDeleteShader(vsID);
 	glDeleteShader(fsID);
 }
+
+void MoveCamera();
 
 static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 {
@@ -208,10 +295,58 @@ static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 	// first: raw object vertices.
 
 	// Model matrix = translation + rotation + scale matrices, every object has a model matrix, this convert your object to worlSpace.
+	MoveCamera();
 
 	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
 
 	glDeleteVertexArrays(1, &_vao);
+}
+
+float _angleX;
+float _angleY;
+
+mat4 view(1.0f);
+
+void MoveCamera()
+{
+	/*if (_normalKey == NormalKey::A)
+	{
+		Debug::Log("A Presing");
+	}
+	else if (_normalKey == NormalKey::RELEASED)
+	{
+		Debug::Log("A Released");
+		_normalKey = NormalKey::NONE;
+	}*/
+
+	unsigned int viewUniformID = glGetUniformLocation(_shaderProgram, "view");
+
+
+
+	if (_modifierKey == ModifierKeys::ALT)
+	{
+		view = mat4(1.0f);
+
+		_angleX += _mouseDelta.y;
+		_angleY += _mouseDelta.x;
+
+		view = glm::rotate(view, 3.14f / 180.0f * _angleX, glm::vec3(1.0f, 0.0f, 0.0f));
+		view = glm::rotate(view, 3.14f / 180.0f * _angleY, glm::vec3(0.0f, 0.1f, 0.0f));
+
+		Debug::Log("ALT Presing");
+	}
+	else if (_modifierKey == ModifierKeys::RELEASED)
+	{
+		Debug::Log("ALT Released");
+		_normalKey = NormalKey::NONE;
+	}
+	else 
+	{
+		view = glm::rotate(view, 3.14f / 180.0f * _angleX, glm::vec3(1.0f, 0.0f, 0.0f));
+		view = glm::rotate(view, 3.14f / 180.0f * _angleY, glm::vec3(0.0f, 0.1f, 0.0f));
+	}
+
+	glUniformMatrix4fv(viewUniformID, 1, GL_FALSE, glm::value_ptr(view));
 }
 
 extern "C"

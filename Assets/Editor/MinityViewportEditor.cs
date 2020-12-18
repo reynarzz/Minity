@@ -30,6 +30,19 @@ namespace MinityEngine
             MinityViewport.SetPos(_minity.transform.position.x, _minity.transform.position.y, _minity.transform.position.z);
 
             MinityViewport.SetScreenValues(Screen.width, 200f, Screen.width / 200f);
+            Event current = Event.current;
+
+            MinityViewport.SetMouseData(current.mousePosition.x, current.mousePosition.y, current.delta.x, current.delta.y);
+
+
+            if (current.alt)
+            {
+                MinityViewport.SetKeyDow(2, 1);
+            }
+            else 
+            {
+                MinityViewport.SetKeyUp(2);
+            }
 
             //Debug.Log((Screen.width, Screen.height));
 

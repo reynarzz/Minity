@@ -26,6 +26,15 @@ namespace MinityEngine
         [DllImport(MinityPluginName)]
         public static extern void SetPos(float x, float y, float z);
 
+        [DllImport(MinityPluginName)]
+        public static extern void SetKeyDow(int keyType, int key);
+
+        [DllImport(MinityPluginName)]
+        public static extern void SetKeyUp(int keyType);
+
+        [DllImport(MinityPluginName)]
+        public static extern void SetMouseData(float xPos, float yPos, float deltaX, float deltaY);
+
         private void Start()
         {
         }
@@ -33,6 +42,15 @@ namespace MinityEngine
         private void Update()
         {
             SetTime(Time.time, Time.deltaTime);
+
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                SetKeyDow(0, 2);
+            }
+            else if (Input.GetKeyUp(KeyCode.A))
+            {
+                SetKeyUp(0);
+            }
         }
     }
 }
