@@ -11,11 +11,18 @@
 #include "Material.h"
 #include "Shader.h"
 
-unsigned int _vao;
+bool _glewInit;
 
 Renderer::Renderer()
 {
-	glewInit();
+	if (glewInit() == GLEW_OK)
+	{
+		_glewInit = true;
+	}
+	else
+	{
+		_glewInit = false;
+	}
 }
 
 Renderer::~Renderer()
@@ -37,14 +44,16 @@ void Renderer::AddMeshToRenderer(MeshRenderer* meshRenderer)
 	Mesh* mesh = meshRenderer->GetMesh();
 	Material* material = meshRenderer->GetMaterial();
 
+	unsigned int vertexSize = mesh->GetVertices()->size();
+	unsigned int indicesSize = mesh->GetIndices()->size();
+
 	glGenBuffers(1, &meshRenderer->_vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, meshRenderer->_vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->GetVertices()->size(), mesh->GetVertices(), GL_STREAM_DRAW);
-
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertexSize, &mesh->GetVertices()->at(0), GL_STREAM_DRAW);
 
 	glGenBuffers(1, &meshRenderer->_ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshRenderer->_ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * mesh->GetIndices()->size(), mesh->GetIndices(), GL_STREAM_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indicesSize, &mesh->GetIndices()->at(0), GL_STREAM_DRAW);
 
 	_renderers.push_back(meshRenderer);
 }
@@ -66,9 +75,19 @@ void Renderer::Draw()
 
 	//glClear(GL_DEPTH_BUFFER_BIT);
 
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
+
+	glDepthFunc(GL_LEQUAL);
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_FALSE);
+
+
+	unsigned int vao;
+
 	//Generate vertex array object
-	glGenVertexArrays(1, &_vao);
-	glBindVertexArray(_vao);
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
 
 	/*for (auto renderer : _renderers)
 	{
@@ -79,24 +98,25 @@ void Renderer::Draw()
 	Mesh* mesh = renderer->GetMesh();
 	Material* material = renderer->GetMaterial();
 
-	auto shader = material->GetShader();
-	int verticesCount = mesh->GetVertices()->size();
-	int indicesCount = mesh->GetIndices()->size();
+	Shader* shader = material->GetShader();
 
 	// Bind buffer and set data.
 	glBindBuffer(GL_ARRAY_BUFFER, renderer->_vbo);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * verticesCount, mesh->GetVertices());
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * mesh->GetVertices()->size(), &mesh->GetVertices()->at(0));
 
 	// Set data layout for the shader.
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer->_ibo);
-	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(unsigned int) * indicesCount, mesh->GetIndices());
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(unsigned int) * mesh->GetIndices()->size(), &mesh->GetIndices()->at(0));
 
 	unsigned int shaderProgram = shader->BuildShader();
 
 	glUseProgram(shaderProgram);
+
+	//Debug::Log(shaderProgram);
+
 
 	//--unsigned int uniformModelID = glGetUniformLocation(shaderProgram, "model");
 	//--unsigned int uniformProjectionID = glGetUniformLocation(shaderProgram, "project");
@@ -104,14 +124,8 @@ void Renderer::Draw()
 	//--glUniformMatrix4fv(uniformModelID, 1, GL_FALSE, glm::value_ptr(model));
 	//--glUniformMatrix4fv(uniformProjectionID, 1, GL_FALSE, glm::value_ptr(projection));
 
-	glDisable(GL_CULL_FACE);
-	glDisable(GL_BLEND);
+	
+	glDrawElements(GL_TRIANGLES, mesh->GetIndices()->size(), GL_UNSIGNED_INT, 0);
 
-	glDepthFunc(GL_LEQUAL);
-	glEnable(GL_DEPTH_TEST);
-	glDepthMask(GL_FALSE);
-
-	glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, 0);
-
-	glDeleteVertexArrays(1, &_vao);
+	glDeleteVertexArrays(1, &vao);
 }

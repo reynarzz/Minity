@@ -3,7 +3,7 @@
 #include "Shader.h"
 
 
-Shader::Shader(string& vertexSource, string& fragmentSource) 
+Shader::Shader(string vertexSource, string fragmentSource) 
 	:_vertexSource(vertexSource), _fragmentSource(fragmentSource), _programID(-1)
 {
 }
@@ -33,6 +33,9 @@ unsigned int Shader::BuildShader()
 	glDeleteShader(vsID);
 	glDeleteShader(fsID);
 
+	Debug::Log(_vertexSource);
+	Debug::Log(_fragmentSource);
+
 	return _programID;
 }
 
@@ -42,6 +45,7 @@ unsigned int Shader::GetProgramID() const
 	{
 		Debug::Log("ERROR: Getting Shader program before building it!!");
 	}
+	
 	return _programID;
 }
 

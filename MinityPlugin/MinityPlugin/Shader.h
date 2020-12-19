@@ -11,11 +11,11 @@ class Shader
 {
 private:
 	unsigned int _programID;
-	string& _vertexSource;
-	string& _fragmentSource;
+	string _vertexSource;
+	string _fragmentSource;
 public:
 
-	Shader(string& vertexSource, string& fragmentSource);
+	Shader(string vertexSource, string fragmentSource);
 	~Shader();
 	/// <summary>Sets up the shader program and returns it</summary>
 	/// <returns>Shader program.</returns>

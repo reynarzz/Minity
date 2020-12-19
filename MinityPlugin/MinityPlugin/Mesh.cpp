@@ -7,11 +7,6 @@ Mesh::Mesh(vector<float>* vertices, vector<unsigned int>* indices):
 {
 }
 
-Mesh::~Mesh()
-{
-	delete _vertices, _indices;
-}
-
 void Mesh::SetVertices(vector<float>* vertices)
 {
 	_vertices = vertices;
@@ -30,4 +25,10 @@ vector<float>* Mesh::GetVertices() const
 vector<unsigned int>* Mesh::GetIndices() const
 {
 	return _indices;
+}
+
+
+Mesh::~Mesh()
+{
+	delete _vertices, _indices;
 }

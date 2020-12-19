@@ -1,16 +1,8 @@
-﻿  main.cpp
-D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\main.cpp(9,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  Material.cpp
-  Mesh.cpp
-  MeshRenderer.cpp
+﻿  Mesh.cpp
   Renderer.cpp
-D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\Renderer.cpp(85,49): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\Renderer.cpp(86,47): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  Shader.cpp
+D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\Renderer.cpp(47,55): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\Renderer.cpp(48,55): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\Renderer.cpp(128,77): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
   Generating Code...
-x64\Debug\DebugCPP.obj : warning LNK4042: object specified more than once; extras ignored
-     Creating library D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\x64\Debug\MinityPlugin.lib and object D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\x64\Debug\MinityPlugin.exp
-LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
-glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\x64\Debug\vc120.pdb'; linking object as if no debug info
   MinityPlugin.vcxproj -> D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\x64\Debug\MinityPlugin.dll
           1 file(s) copied.

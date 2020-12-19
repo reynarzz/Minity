@@ -32,7 +32,7 @@ namespace MinityEngine
             Event current = Event.current;
 
             MinityViewport.SetMouseData(current.mousePosition.x, current.mousePosition.y, current.delta.x / 12, current.delta.y / 12);
-
+            
             if (current.type == EventType.ScrollWheel)
             {
 

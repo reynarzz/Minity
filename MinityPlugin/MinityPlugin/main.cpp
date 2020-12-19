@@ -30,8 +30,7 @@ string vsSource =
 "{\n"
 "color = pos;\n"
 "//gl_Position = project * view * model * pos;\n"
-"gl_Position = pos;"
-"\n"
+"gl_Position = pos;\n"
 "}";
 
 string fsSource =
@@ -40,7 +39,7 @@ string fsSource =
 "in vec4 color;\n"
 "void main()\n"
 "{\n"
-"outColor =color;// vec4(1.0f,1.0f,1.0f,1.0f);\n"
+"outColor =  vec4(1.0f,1.0f,1.0f,1.0f);\n"
 "}";
 
 
@@ -144,7 +143,6 @@ MeshRenderer* GetMesh()
 		1.0f, 0.0f, 1.0f,
 		1.0f, 0.0f, -1.0f,
 		-1.0f, 0.0f, -1.0f,
-
 	};
 
 	vector<unsigned int>* indices = new vector<unsigned int>
@@ -157,16 +155,13 @@ MeshRenderer* GetMesh()
 
 	Mesh* mesh = new Mesh(vertices, indices);
 	Shader* shader = new Shader(vsSource, fsSource);
-
+	
 	Material* material = new Material(shader);
 
 	MeshRenderer* meshRenderer = new MeshRenderer(mesh, material);
 
 	return meshRenderer;
 }
-
-//mat4 viewRot(1.0f);
-//glm::vec3 position;
 
 //void MoveCamera()
 //{
@@ -261,6 +256,7 @@ OnGraphicsDeviceEvent(UnityGfxDeviceEventType eventType)
 	case kUnityGfxDeviceEventShutdown:
 	{
 		s_RendererType = kUnityGfxRendererNull;
+		//delete _renderer;
 		//TODO: user shutdown code
 		break;
 	}
@@ -296,5 +292,4 @@ extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API
 UnityPluginUnload()
 {
 	s_Graphics->UnregisterDeviceEventCallback(OnGraphicsDeviceEvent);
-	delete _renderer;
 }
