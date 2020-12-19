@@ -6,14 +6,16 @@
 
 #include <vector>
 #include "MeshRenderer.h"
-#include "Renderer.h"
+
 #include "Mesh.h"
 #include "Material.h"
 #include "Shader.h"
 
+#include "Renderer.h"
+
 bool _glewInit;
 
-Renderer::Renderer()
+Renderer::Renderer(Scene* startScene) : _scene(startScene)
 {
 	if (glewInit() == GLEW_OK)
 	{
@@ -23,24 +25,24 @@ Renderer::Renderer()
 	{
 		_glewInit = false;
 	}
+
+	SetScene(startScene);
 }
 
-Renderer::~Renderer()
+void Renderer::SetScene(Scene* scene)
 {
-	for (auto renderers : _renderers)
+	_scene = scene;
+
+	auto meshRenderers = scene->GetMeshRenderers();
+
+	for (MeshRenderer* meshRenderer : meshRenderers)
 	{
-		delete renderers;
+		AddMeshRendererToRenderer(meshRenderer);
 	}
 }
 
-void Renderer::AddObjectToRenderer(MeshRenderer* meshRenderer)
+void Renderer::AddMeshRendererToRenderer(MeshRenderer* meshRenderer)
 {
-	//glDisable(GL_CULL_FACE);
-			//glDisable(GL_BLEND);
-
-			//glDepthFunc(GL_LEQUAL);
-			//glDepthMask(GL_FALSE);
-
 	Mesh* mesh = meshRenderer->GetMesh();
 	Material* material = meshRenderer->GetMaterial();
 
@@ -87,7 +89,7 @@ void Renderer::Draw()
 
 	/*for (auto renderer : _renderers)
 	{
-
+		
 	}*/
 
 	MeshRenderer* renderer = _renderers[0];
@@ -111,17 +113,42 @@ void Renderer::Draw()
 
 	glUseProgram(shaderProgram);
 
+	SetShader_MVP_MATRIX(shaderProgram);
+
 	//Debug::Log(shaderProgram);
 
-
-	//--unsigned int uniformModelID = glGetUniformLocation(shaderProgram, "model");
-	//--unsigned int uniformProjectionID = glGetUniformLocation(shaderProgram, "project");
-
-	//--glUniformMatrix4fv(uniformModelID, 1, GL_FALSE, glm::value_ptr(model));
-	//--glUniformMatrix4fv(uniformProjectionID, 1, GL_FALSE, glm::value_ptr(projection));
-
-	
 	glDrawElements(GL_TRIANGLES, mesh->GetIndices()->size(), GL_UNSIGNED_INT, 0);
 
 	glDeleteVertexArrays(1, &vao);
+}
+
+float angle = 0.0f;
+
+void Renderer::SetShader_MVP_MATRIX(unsigned int shaderProgram)
+{
+	unsigned int uniformModelID = glGetUniformLocation(shaderProgram, "model");
+	unsigned int uniformViewID = glGetUniformLocation(shaderProgram, "view");
+	unsigned int uniformProjectionID = glGetUniformLocation(shaderProgram, "projection");
+
+	vector<Camera*> cameras = _scene->GetCameras();
+
+	Camera* mainCamera = cameras.at(0);
+
+	glm::mat4 modelTest(1.0f);
+
+	angle += 0.20f;
+
+	modelTest = glm::translate(modelTest, glm::vec3(0.0f, 0.0f, -10.0f));
+	modelTest = glm::rotate(modelTest, glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
+
+	glUniformMatrix4fv(uniformModelID, 1, GL_FALSE, glm::value_ptr(modelTest));
+	glUniformMatrix4fv(uniformViewID, 1, GL_FALSE, glm::value_ptr(mainCamera->GetViewMatrix()));
+	glUniformMatrix4fv(uniformProjectionID, 1, GL_FALSE, glm::value_ptr(mainCamera->GetProjectionMatrix()));
+}
+
+Renderer::~Renderer()
+{
+	// Be carefull, clear deletes all.
+	_renderers.clear();
+	_renderers.shrink_to_fit();
 }

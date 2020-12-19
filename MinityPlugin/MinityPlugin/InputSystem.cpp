@@ -1,28 +1,34 @@
 #include "pch.h"
+
 #include "InputSystem.h"
-#include "Unity_PluginAPI/IUnityInterface.h"
 
 // Use function pointers.
 
-extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetPos(float x, float y, float z)
-{
-	//_pos = glm::vec3(x, y, z);
-}
+//extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetPos(float x, float y, float z)
+//{
+//	//_pos = glm::vec3(x, y, z);
+//}
+//
+//extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetRot(float x, float y, float z)
+//{
+//	//_rot = glm::vec3(x, y, z);
+//}
 
-extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetRot(float x, float y, float z)
-{
-	//_rot = glm::vec3(x, y, z);
-}
+NormalKey _normalKey;
+MouseKeys _mouseKey;
+ModifierKeys _modifierKey;
+glm::vec2 _mouseDelta;
+glm::vec3 _position;
 
 extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetMouseData(float xPos, float yPos, float deltaX, float deltaY)
 {
-	/*_mousePos = glm::vec2(xPos, yPos);
-	_mouseDelta = glm::vec2(deltaX, deltaY);*/
+	//_mousePos = glm::vec2(xPos, yPos);
+	_mouseDelta = glm::vec2(deltaX, deltaY);
 }
 
 extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetKeyDow(int keyType, int key)
 {
-	/*if (keyType == 0)
+	if (keyType == 0)
 	{
 		_normalKey = static_cast<NormalKey>(key);
 	}
@@ -38,12 +44,12 @@ extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetKeyDow(int keyType
 	if (keyType > 2)
 	{
 		Debug::Log("Wrong key number");
-	}*/
+	}
 }
 
 extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetKeyUp(int keyType)
 {
-	/*if (keyType == 0)
+	if (keyType == 0)
 	{
 		_normalKey = NormalKey::RELEASED;
 	}
@@ -61,5 +67,46 @@ extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetKeyUp(int keyType)
 	if (keyType > 2)
 	{
 		Debug::Log("Wrong key number");
-	}*/
+	}
+}
+
+InputSystem::InputSystem(Camera* camera)
+{
+	_camera = camera;
+}
+
+void InputSystem::Update()
+{
+	if (_normalKey == NormalKey::A)
+	{
+		//right *= 0.01f;
+		Debug::Log("A key press");
+		_position -= _camera->_right * 0.01f;
+
+	}
+	else if (_normalKey == NormalKey::D)
+	{
+		_position += _camera->_right * 0.01f;
+	}
+
+	if (_normalKey == NormalKey::W)
+	{
+		_position += _camera->_forward * 0.01f;
+	}
+	if (_normalKey == NormalKey::S)
+	{
+		_position -= _camera->_forward * 0.01f;
+	}
+
+	if (_normalKey == NormalKey::Q)
+	{
+		_position += glm::vec3(0.0f, -0.01f, 0.0f);
+	}
+	else if (_normalKey == NormalKey::E)
+	{
+		_position += glm::vec3(0.0f, 0.01f, 0.0f);
+	}
+
+	_camera->SetCameraPosition(_position);
+	_camera->SetCameraRotation(_mouseDelta);
 }

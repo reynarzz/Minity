@@ -1,4 +1,7 @@
 #pragma once
+#include "Scene.h"
+#include "Unity_PluginAPI/IUnityInterface.h"
+
 
 enum class NormalKey
 {
@@ -32,12 +35,16 @@ enum class ModifierKeys
 	SHIFT = 2
 };
 
-
 class InputSystem
 {
 public:
+	Camera* _camera;
+	// Use function pointers.
+	
+
+	InputSystem(Camera* camera);
+	void Update();
 };
 
-NormalKey _normalKey;
-MouseKeys _mouseKey;
-ModifierKeys _modifierKey;
+
+

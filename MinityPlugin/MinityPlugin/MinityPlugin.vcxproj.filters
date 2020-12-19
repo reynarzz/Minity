@@ -19,77 +19,80 @@
     <Filter Include="Source Files\Core\Renderer">
       <UniqueIdentifier>{e78d44d3-2465-46a5-83ee-b66adf9840bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\MinityHeaders">
+      <UniqueIdentifier>{dbdb39c0-95e4-416c-ac5b-50a33651bf33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Internal">
+      <UniqueIdentifier>{4d635005-b6ca-4460-947f-1c4789fbbf2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Unity_PluginAPI\IUnityEventQueue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Unity_PluginAPI\IUnityGraphics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Unity_PluginAPI\IUnityGraphicsD3D11.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Unity_PluginAPI\IUnityGraphicsD3D12.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Unity_PluginAPI\IUnityGraphicsMetal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Unity_PluginAPI\IUnityInterface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Unity_PluginAPI\IUnityProfilerCallbacks.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Unity_PluginAPI\IUnityRenderingExtensions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Unity_PluginAPI\IUnityShaderCompilerAccess.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\MinityHeaders</Filter>
     </ClInclude>
-    <ClInclude Include="EditorScene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="framework.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="InputSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshRenderer.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Scene.h">
+      <Filter>Header Files\MinityHeaders</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\MinityHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files\MinityHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshRenderer.h">
+      <Filter>Header Files\MinityHeaders</Filter>
     </ClInclude>
     <ClInclude Include="MinityEngine.h">
+      <Filter>Header Files\MinityHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Header Files\MinityHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files\MinityHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem.h">
+      <Filter>Header Files\MinityHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>Header Files\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Unity_PluginAPI\IUnityEventQueue.h">
+      <Filter>Header Files\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Unity_PluginAPI\IUnityGraphics.h">
+      <Filter>Header Files\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Unity_PluginAPI\IUnityGraphicsD3D11.h">
+      <Filter>Header Files\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Unity_PluginAPI\IUnityGraphicsD3D12.h">
+      <Filter>Header Files\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Unity_PluginAPI\IUnityGraphicsMetal.h">
+      <Filter>Header Files\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Unity_PluginAPI\IUnityInterface.h">
+      <Filter>Header Files\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Unity_PluginAPI\IUnityProfilerCallbacks.h">
+      <Filter>Header Files\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Unity_PluginAPI\IUnityRenderingExtensions.h">
+      <Filter>Header Files\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Unity_PluginAPI\IUnityShaderCompilerAccess.h">
+      <Filter>Header Files\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="MyOBJParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugCPP.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugCPP.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EditorScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InputSystem.cpp">
@@ -121,6 +124,12 @@
     </ClCompile>
     <ClCompile Include="MinityEngine.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugCPP.h">
+      <Filter>Header Files\MinityHeaders</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

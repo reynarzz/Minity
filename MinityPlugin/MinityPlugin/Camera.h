@@ -17,11 +17,17 @@ private:
 
 public:
 
+	glm::vec3 _forward;
+	glm::vec3 _right;
+	glm::vec3 _up;
+
 	Camera(vec3 position, vec2 rotation, float aspectRatio);
 	~Camera();
 
-	/// <summary>Called when the screen size changes.</summary>
-	void OnScreenSizeChanged();
-	const mat4& GetViewMatrix(vec3 cameraPos, vec2 mouseDelta);
+	const mat4& GetViewMatrix();
 	const mat4& GetProjectionMatrix() const;
+	void UpdateProjectionMatrix(float aspectRatio);
+
+	void SetCameraPosition(glm::vec3 pos);
+	void SetCameraRotation(glm::vec2 mouseDelta);
 };

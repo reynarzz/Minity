@@ -1,6 +1,7 @@
 #pragma once
 #include "MeshRenderer.h"
 #include "Renderer.h"
+#include "InputSystem.h"
 
 class ScreenInfo
 {

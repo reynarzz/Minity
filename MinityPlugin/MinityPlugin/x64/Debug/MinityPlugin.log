@@ -1,12 +1,3 @@
-﻿  Camera.cpp
-  InputSystem.cpp
-  Material.cpp
-  MeshRenderer.cpp
-  MinityEngine.cpp
-  Renderer.cpp
-D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\Renderer.cpp(124,77): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-  Shader.cpp
-  main.cpp
-  Generating Code...
+﻿  InputSystem.cpp
   MinityPlugin.vcxproj -> D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\x64\Debug\MinityPlugin.dll
           1 file(s) copied.

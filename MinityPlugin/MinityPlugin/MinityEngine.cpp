@@ -2,71 +2,22 @@
 #include "Unity_PluginAPI/IUnityInterface.h"
 
 #include "MinityEngine.h"
+#include "Scene.h"
 
-
-MeshRenderer* GetMesh()
-{
-	string vsSource =
-		"#version 330 core\n"
-		"layout(location = 0) in vec4 pos;\n"
-		"out vec4 color;\n"
-		"uniform mat4 model;\n"
-		"uniform mat4 view;"
-		"uniform mat4 project;\n"
-		"void main()\n"
-		"{\n"
-		"color = pos;\n"
-		"//gl_Position = project * view * model * pos;\n"
-		"gl_Position = pos;\n"
-		"}";
-
-	string fsSource =
-		"#version 330 core\n"
-		"layout(location = 0) out vec4 outColor;\n"
-		"in vec4 color;\n"
-		"void main()\n"
-		"{\n"
-		"outColor =  color;//vec4(1.0f,1.0f,1.0f,1.0f);\n"
-		"}";
-
-
-	vector<float>* vertices = new vector<float>
-	{
-		0.0f, 1.0f, 0.0f,
-		-1.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, -1.0f,
-		-1.0f, 0.0f, -1.0f,
-	};
-
-	vector<unsigned int>* indices = new vector<unsigned int>
-	{
-		0, 1, 2,
-		0, 2, 3,
-		0, 3, 4,
-		0, 4, 1
-	};
-
-	Mesh* mesh = new Mesh(vertices, indices);
-	Shader* shader = new Shader(vsSource, fsSource);
-
-	Material* material = new Material(shader);
-
-	MeshRenderer* meshRenderer = new MeshRenderer(mesh, material);
-
-	return meshRenderer;
-}
-
+Scene* _scene;
+InputSystem* _inputSystem;
 //Aqui inicializo el renderer de open gl (Creo los shaders, seteo las matrices(world y projection), crear los vertex buffer)
 
 /// <summary>An engine that runs above the unity engine.</summary>
-MinityEngine::MinityEngine() 
+MinityEngine::MinityEngine()
 	: _deltaTime(-1), _screenInfo()
 {
-	_renderer = new Renderer();
+	//I will have to remove this later
+	_scene = new Scene();
 
-	//Add a geometry at the start.
-	_renderer->AddObjectToRenderer(GetMesh());
+	_renderer = new Renderer(_scene);
+
+	_inputSystem = new InputSystem(_scene->GetCameras().at(0));
 }
 
 void MinityEngine::Update(float deltaTime, const ScreenInfo& screenInfo)
@@ -74,9 +25,10 @@ void MinityEngine::Update(float deltaTime, const ScreenInfo& screenInfo)
 	_deltaTime = deltaTime;
 	_screenInfo = screenInfo;
 
-
-	// Do your rendering stuff below.--------------
-
+	// Do your stuff below.--------------
+	_scene->SetAspectRatio(screenInfo._aspectRatio);
+	_inputSystem->Update();
+	
 	_renderer->Draw();
 }
 
@@ -87,5 +39,5 @@ float MinityEngine::GetDeltaTime()
 
 MinityEngine::~MinityEngine()
 {
-	delete _renderer;
+	delete _scene, _renderer;
 }
