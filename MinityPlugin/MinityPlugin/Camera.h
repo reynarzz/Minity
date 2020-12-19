@@ -20,7 +20,8 @@ public:
 	Camera(vec3 position, vec2 rotation, float aspectRatio);
 	~Camera();
 
-	mat4 GetViewMatrix(vec3 cameraPos, vec2 mouseDelta);
-	mat4 GetProjectionMatrix() const;
+	/// <summary>Called when the screen size changes.</summary>
+	void OnScreenSizeChanged();
+	const mat4& GetViewMatrix(vec3 cameraPos, vec2 mouseDelta);
+	const mat4& GetProjectionMatrix() const;
 };
-

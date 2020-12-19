@@ -3,39 +3,42 @@
 #include "Shader.h"
 
 
-Shader::Shader(string vertexSource, string fragmentSource) 
-	:_vertexSource(vertexSource), _fragmentSource(fragmentSource), _programID(-1)
+Shader::Shader(const string vertexSource, const string fragmentSource) 
+	:_vertexSource(vertexSource), _fragmentSource(fragmentSource), _programID(0)
 {
 }
 
 unsigned int Shader::BuildShader()
 {
-	_programID = glCreateProgram();
+	if (_programID == 0) 
+	{
+		_programID = glCreateProgram();
 
-	unsigned int vsID = glCreateShader(GL_VERTEX_SHADER);
-	unsigned int fsID = glCreateShader(GL_FRAGMENT_SHADER);
+		unsigned int vsID = glCreateShader(GL_VERTEX_SHADER);
+		unsigned int fsID = glCreateShader(GL_FRAGMENT_SHADER);
 
-	const char* vSource = _vertexSource.c_str();
-	const char* fSource = _fragmentSource.c_str();
+		const char* vSource = _vertexSource.c_str();
+		const char* fSource = _fragmentSource.c_str();
 
-	glShaderSource(vsID, 1, &vSource, 0);
-	glShaderSource(fsID, 1, &fSource, 0);
+		glShaderSource(vsID, 1, &vSource, 0);
+		glShaderSource(fsID, 1, &fSource, 0);
 
-	glCompileShader(vsID);
-	glCompileShader(fsID);
+		glCompileShader(vsID);
+		glCompileShader(fsID);
 
-	glAttachShader(_programID, vsID);
-	glAttachShader(_programID, fsID);
+		glAttachShader(_programID, vsID);
+		glAttachShader(_programID, fsID);
 
-	glLinkProgram(_programID);
-	glValidateProgram(_programID);
+		glLinkProgram(_programID);
+		glValidateProgram(_programID);
 
-	glDeleteShader(vsID);
-	glDeleteShader(fsID);
+		glDeleteShader(vsID);
+		glDeleteShader(fsID);
 
-	Debug::Log(_vertexSource);
-	Debug::Log(_fragmentSource);
-
+		Debug::Log(_vertexSource);
+		Debug::Log(_fragmentSource);
+	}
+	
 	return _programID;
 }
 
@@ -47,6 +50,12 @@ unsigned int Shader::GetProgramID() const
 	}
 	
 	return _programID;
+}
+
+void Shader::Clear() 
+{
+	glDeleteProgram(_programID);
+	_programID = 0;
 }
 
 Shader::~Shader() { }

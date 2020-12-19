@@ -1,236 +1,46 @@
 #include "pch.h"
 #include "Unity_PluginAPI/IUnityInterface.h"
 #include "Unity_PluginAPI/IUnityGraphics.h"
-#include "DebugCPP.h"
-#include "MeshRenderer.h"
 #include <glm/glm.hpp>
 
-#include "Renderer.h"
-#include "vector";
-
-using std::vector;
+#include "MinityEngine.h"
 
 static IUnityInterfaces* s_UnityInterfaces = NULL;
 static IUnityGraphics* s_Graphics = NULL;
 static UnityGfxRenderer s_RendererType = kUnityGfxRendererNull;
 
-Renderer* _renderer;
-
-unsigned int _shaderProgram;
-bool _result;
-
-string vsSource =
-"#version 330 core\n"
-"layout(location = 0) in vec4 pos;\n"
-"out vec4 color;\n"
-"uniform mat4 model;\n"
-"uniform mat4 view;"
-"uniform mat4 project;\n"
-"void main()\n"
-"{\n"
-"color = pos;\n"
-"//gl_Position = project * view * model * pos;\n"
-"gl_Position = pos;\n"
-"}";
-
-string fsSource =
-"#version 330 core\n"
-"layout(location = 0) out vec4 outColor;\n"
-"in vec4 color;\n"
-"void main()\n"
-"{\n"
-"outColor =  vec4(1.0f,1.0f,1.0f,1.0f);\n"
-"}";
-
+MinityEngine* _minityEngine;
+ScreenInfo _screenInfo;
 
 float _time;
 float _deltaTime;
 
-float _screenWidth;
-float _screenHeight;
-float _screenAspectRatio;
+void OnRenderEvent(int eventID);
 
-extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetTime(float time, float deltaTime)
+extern "C" 
 {
-	_time = time;
-	_deltaTime = deltaTime;
-}
-
-extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetScreenValues(float width, float height, float aspect)
-{
-	_screenWidth = width;
-	_screenHeight = height;
-	_screenAspectRatio = aspect;
-}
-
-extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetPos(float x, float y, float z)
-{
-	//_pos = glm::vec3(x, y, z);
-}
-
-extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetRot(float x, float y, float z)
-{
-	//_rot = glm::vec3(x, y, z);
-}
-
-extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetMouseData(float xPos, float yPos, float deltaX, float deltaY)
-{
-	/*_mousePos = glm::vec2(xPos, yPos);
-	_mouseDelta = glm::vec2(deltaX, deltaY);*/
-}
-
-extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetKeyDow(int keyType, int key)
-{
-	/*if (keyType == 0)
+	void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetTime(float time, float deltaTime)
 	{
-		_normalKey = static_cast<NormalKey>(key);
-	}
-	if (keyType == 1)
-	{
-		_mouseKey = static_cast<MouseKeys>(key);
-	}
-	else if (keyType == 2)
-	{
-		_modifierKey = static_cast<ModifierKeys>(key);
+		_time = time;
+		_deltaTime = deltaTime;
 	}
 
-	if (keyType > 2)
+	void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetScreenValues(float width, float height, float aspect)
 	{
-		Debug::Log("Wrong key number");
-	}*/
+		_screenInfo._dimensions.x = width;
+		_screenInfo._dimensions.y = height;
+		_screenInfo._aspectRatio = aspect;
+	}
+
+	UnityRenderingEvent UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API Run()
+	{
+		return OnRenderEvent;
+	}
 }
-
-extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetKeyUp(int keyType)
-{
-	/*if (keyType == 0)
-	{
-		_normalKey = NormalKey::RELEASED;
-	}
-
-	if (keyType == 1)
-	{
-		_mouseKey = MouseKeys::RELEASED;
-	}
-
-	if (keyType == 2)
-	{
-		_modifierKey = ModifierKeys::RELEASED;
-	}
-
-	if (keyType > 2)
-	{
-		Debug::Log("Wrong key number");
-	}*/
-}
-
 
 static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 {
-	_renderer->Draw();
-}
-
-float _angleX;
-float _angleY;
-float _xMove;
-
-MeshRenderer* GetMesh() 
-{
-
-	vector<float>* vertices = new vector<float>
-	{
-		0.0f, 1.0f, 0.0f,
-		-1.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, -1.0f,
-		-1.0f, 0.0f, -1.0f,
-	};
-
-	vector<unsigned int>* indices = new vector<unsigned int>
-	{
-		0, 1, 2,
-		0, 2, 3,
-		0, 3, 4,
-		0, 4, 1
-	};
-
-	Mesh* mesh = new Mesh(vertices, indices);
-	Shader* shader = new Shader(vsSource, fsSource);
-	
-	Material* material = new Material(shader);
-
-	MeshRenderer* meshRenderer = new MeshRenderer(mesh, material);
-
-	return meshRenderer;
-}
-
-//void MoveCamera()
-//{
-//	unsigned int viewUniformID = glGetUniformLocation(_shaderProgram, "view");
-//
-//	if (_mouseKey == MouseKeys::LEFT_CLICK)
-//	{
-//		_angleX += -_mouseDelta.y;
-//		_angleY += _mouseDelta.x;
-//	}
-//
-//	glm::vec3 forward(0.0f, 0.0f, -1.0f);
-//
-//	forward.x = cos(glm::radians(_angleY)) * cos(glm::radians(_angleX));
-//	forward.y = sin(glm::radians(_angleX));
-//	forward.z = sin(glm::radians(_angleY)) * cos(glm::radians(_angleX));
-//
-//	forward = glm::normalize(forward);
-//
-//	glm::vec3 right(glm::normalize(glm::cross(forward, glm::vec3(0.0f, 1.0, 0.0f))));
-//	glm::vec3 up(glm::normalize(glm::cross(right, forward)));
-//
-//	if (_normalKey == NormalKey::A)
-//	{
-//		right *= 0.01f;
-//
-//		position += -right;
-//
-//	}
-//	else if (_normalKey == NormalKey::D)
-//	{
-//		right *= 0.01f;
-//
-//		position += right;
-//	}
-//
-//	if (_normalKey == NormalKey::W)
-//	{
-//		forward *= 0.01f;
-//
-//		position += forward;
-//	}
-//	if (_normalKey == NormalKey::S)
-//	{
-//		forward *= 0.01f;
-//
-//		position += -forward;
-//	}
-//
-//	if (_normalKey == NormalKey::Q) 
-//	{
-//		position += glm::vec3(0.0f, -0.01f, 0.0f);
-//	}
-//	else if (_normalKey == NormalKey::E)
-//	{
-//		position += glm::vec3(0.0f, 0.01f, 0.0f);
-//	}
-//
-//	glm::mat4 view = glm::lookAt(position, position + forward, up);
-//
-//
-//	glUniformMatrix4fv(viewUniformID, 1, GL_FALSE, glm::value_ptr(view));
-//}
-
-extern "C"
-UnityRenderingEvent UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API Run()
-{
-	//Necesario para acceder al renderEvent desde unity.
-	return OnRenderEvent;
+	_minityEngine->Update(_deltaTime, _screenInfo);
 }
 
 static void UNITY_INTERFACE_API
@@ -242,12 +52,10 @@ OnGraphicsDeviceEvent(UnityGfxDeviceEventType eventType)
 	{
 		s_RendererType = s_Graphics->GetRenderer();
 
+		//This engine only runs in OpenGL (for now), unity has to be using the OpenGL backend to not crash.
 		if (s_RendererType == kUnityGfxRendererOpenGLCore)
 		{
-			//Aqui inicializo el renderer de open gl (Creo los shaders, seteo las matrices(world y projection), crear los vertex buffer)
-			_renderer = new Renderer();
-
-			_renderer->AddMeshToRenderer(GetMesh());
+			_minityEngine = new MinityEngine();
 		}
 
 		//TODO: user initialization code
@@ -256,7 +64,10 @@ OnGraphicsDeviceEvent(UnityGfxDeviceEventType eventType)
 	case kUnityGfxDeviceEventShutdown:
 	{
 		s_RendererType = kUnityGfxRendererNull;
-		//delete _renderer;
+
+		Debug::Log("Close Device");
+		delete _minityEngine;
+
 		//TODO: user shutdown code
 		break;
 	}

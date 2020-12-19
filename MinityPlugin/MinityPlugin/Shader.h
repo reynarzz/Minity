@@ -15,10 +15,11 @@ private:
 	string _fragmentSource;
 public:
 
-	Shader(string vertexSource, string fragmentSource);
+	Shader(const string vertexSource, const string fragmentSource);
 	~Shader();
 	/// <summary>Sets up the shader program and returns it</summary>
-	/// <returns>Shader program.</returns>
+	/// <returns>Shader program ID</returns>
 	unsigned int BuildShader();
 	unsigned int GetProgramID() const;
+	void Clear();
 };

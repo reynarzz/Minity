@@ -45,7 +45,7 @@ namespace MinityEngine
             //}
 
             //Debug.Log((Screen.width, Screen.height));
-
+            //Material
             if (Event.current.type == EventType.Repaint)
             {
                 GUI.BeginClip(rect);

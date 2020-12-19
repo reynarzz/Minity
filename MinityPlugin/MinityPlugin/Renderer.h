@@ -11,7 +11,7 @@ public:
 	Renderer();
 	~Renderer();
 
-	void AddMeshToRenderer(MeshRenderer* mesh);
+	void AddObjectToRenderer(MeshRenderer* mesh);
 
 	void Draw();
 };

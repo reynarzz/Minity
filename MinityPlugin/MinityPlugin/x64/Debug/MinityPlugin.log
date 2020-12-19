@@ -1,8 +1,12 @@
-﻿  Mesh.cpp
+﻿  Camera.cpp
+  InputSystem.cpp
+  Material.cpp
+  MeshRenderer.cpp
+  MinityEngine.cpp
   Renderer.cpp
-D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\Renderer.cpp(47,55): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
-D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\Renderer.cpp(48,55): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
-D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\Renderer.cpp(128,77): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\Renderer.cpp(124,77): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  Shader.cpp
+  main.cpp
   Generating Code...
   MinityPlugin.vcxproj -> D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\x64\Debug\MinityPlugin.dll
           1 file(s) copied.

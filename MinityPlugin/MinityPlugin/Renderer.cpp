@@ -33,7 +33,7 @@ Renderer::~Renderer()
 	}
 }
 
-void Renderer::AddMeshToRenderer(MeshRenderer* meshRenderer)
+void Renderer::AddObjectToRenderer(MeshRenderer* meshRenderer)
 {
 	//glDisable(GL_CULL_FACE);
 			//glDisable(GL_BLEND);
@@ -44,16 +44,13 @@ void Renderer::AddMeshToRenderer(MeshRenderer* meshRenderer)
 	Mesh* mesh = meshRenderer->GetMesh();
 	Material* material = meshRenderer->GetMaterial();
 
-	unsigned int vertexSize = mesh->GetVertices()->size();
-	unsigned int indicesSize = mesh->GetIndices()->size();
-
 	glGenBuffers(1, &meshRenderer->_vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, meshRenderer->_vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertexSize, &mesh->GetVertices()->at(0), GL_STREAM_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->GetVertices()->size(), &mesh->GetVertices()->at(0), GL_STREAM_DRAW);
 
 	glGenBuffers(1, &meshRenderer->_ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshRenderer->_ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indicesSize, &mesh->GetIndices()->at(0), GL_STREAM_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * mesh->GetIndices()->size(), &mesh->GetIndices()->at(0), GL_STREAM_DRAW);
 
 	_renderers.push_back(meshRenderer);
 }
@@ -81,7 +78,6 @@ void Renderer::Draw()
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_DEPTH_TEST);
 	glDepthMask(GL_FALSE);
-
 
 	unsigned int vao;
 

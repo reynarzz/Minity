@@ -8,11 +8,13 @@ using glm::vec4;
 class Mesh
 {
 private:
+	unsigned int _stride;
+
 	vector<float>* _vertices;
 	vector<unsigned int>* _indices;
 	//vector<glm::vec2> _uv;
+	//vector<glm::vec3> _normals;
 public:
-	
 	Mesh(vector<float>* vertices, vector<unsigned int>* indices);
 	~Mesh();
 
