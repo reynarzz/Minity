@@ -88,11 +88,11 @@ void InputSystem::Update()
 
 	if (_normalKey == NormalKey::Q)
 	{
-		_position += glm::vec3(0.0f, -0.01f, 0.0f);
+		_position += glm::vec3(0.0f, -0.05f, 0.0f);
 	}
 	else if (_normalKey == NormalKey::E)
 	{
-		_position += glm::vec3(0.0f, 0.01f, 0.0f);
+		_position += glm::vec3(0.0f, 0.05f, 0.0f);
 	}
 
 	_camera->SetCameraPosition(_position);
