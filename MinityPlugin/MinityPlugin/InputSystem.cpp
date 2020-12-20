@@ -70,20 +70,20 @@ void InputSystem::Update()
 {
 	if (_normalKey == NormalKey::A)
 	{
-		_position -= _camera->_right * 0.005f;
+		_position -= _camera->_right * 0.05f;
 	}
 	else if (_normalKey == NormalKey::D)
 	{
-		_position += _camera->_right * 0.005f;
+		_position += _camera->_right * 0.05f;
 	}
 
 	if (_normalKey == NormalKey::W)
 	{
-		_position += _camera->_forward * 0.005f;
+		_position += _camera->_forward * 0.05f;
 	}
 	if (_normalKey == NormalKey::S)
 	{
-		_position -= _camera->_forward * 0.005f;
+		_position -= _camera->_forward * 0.05f;
 	}
 
 	if (_normalKey == NormalKey::Q)

@@ -19,11 +19,6 @@ Camera::Camera(vec3 cameraPos, vec2 cameraRot, float aspectRatio)
 
 const mat4& Camera::GetViewMatrix()
 {
-	//_cameraPos = cameraPos;
-
-	//_cameraRot.x += -mouseDelta.y;
-	//_cameraRot.y += mouseDelta.x;
-
 	_forward = glm::vec3(0.0f, 0.0f, -1.0f);
 
 	_forward.x = cos(glm::radians(_cameraRot.y)) * cos(glm::radians(_cameraRot.x));
