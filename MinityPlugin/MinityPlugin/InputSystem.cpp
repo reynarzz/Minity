@@ -4,16 +4,6 @@
 
 // Use function pointers.
 
-//extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetPos(float x, float y, float z)
-//{
-//	//_pos = glm::vec3(x, y, z);
-//}
-//
-//extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetRot(float x, float y, float z)
-//{
-//	//_rot = glm::vec3(x, y, z);
-//}
-
 NormalKey _normalKey;
 MouseKeys _mouseKey;
 ModifierKeys _modifierKey;
@@ -72,6 +62,7 @@ extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetKeyUp(int keyType)
 
 InputSystem::InputSystem(Camera* camera)
 {
+	//This is bad
 	_camera = camera;
 }
 
@@ -79,10 +70,7 @@ void InputSystem::Update()
 {
 	if (_normalKey == NormalKey::A)
 	{
-		//right *= 0.01f;
-		Debug::Log("A key press");
 		_position -= _camera->_right * 0.01f;
-
 	}
 	else if (_normalKey == NormalKey::D)
 	{

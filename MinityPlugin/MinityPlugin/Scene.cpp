@@ -6,20 +6,21 @@
 #include <Obj/OBJ_Loader.h>
 #include "MyOBJParser.h"
 
-MeshRenderer* GetSimpleMeshRenderer();
+MeshRenderer* GetSimpleMeshRenderer(const string& objectPath);
 using objl::Loader;
 
-Mesh* GetMesh();
+Mesh* GetMesh(const string& objectPath);
 
 Scene::Scene()
 {
-	// I have to remove this later. An scene could exist without camera.
-	_cameras.push_back(new Camera(glm::vec3(0.0f, 0.0f, -2.0f), glm::vec2(0.0f, -90.0f), 0));
+	// I have to remove this later. An scene is able to exist without camera.
+	_cameras.push_back(new Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, -90.0f), 0));
 
-	_objects.push_back(GetSimpleMeshRenderer());
+	_objects.push_back(GetSimpleMeshRenderer("../OBJModels/worldtest2.obj"));
+	_objects.push_back(GetSimpleMeshRenderer("../OBJModels/bigBoat.obj"));
 }
 
-MeshRenderer* GetSimpleMeshRenderer()
+MeshRenderer* GetSimpleMeshRenderer(const string& objectPath)
 {
 	string vsSource =
 		"#version 330 core\n"
@@ -44,27 +45,28 @@ MeshRenderer* GetSimpleMeshRenderer()
 		"outColor =  color;//vec4(1.0f,1.0f,1.0f,1.0f);\n"
 		"}";
 
-	vector<float>* vertices = new vector<float>
-	{
-		0.0f, 1.0f, 0.0f,
-		-1.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, -1.0f,
-		-1.0f, 0.0f, -1.0f,
-	};
+	Mesh* mesh = GetMesh(objectPath);
 
-	vector<unsigned int>* indices = new vector<unsigned int>
+	if (mesh == nullptr)
 	{
-		0, 1, 2,
-		0, 2, 3,
-		0, 3, 4,
-		0, 4, 1
-	};
+		vector<float>* vertices = new vector<float>
+		{
+			0.0f, 1.0f, 0.0f,
+			-1.0f, 0.0f, 1.0f,
+			1.0f, 0.0f, 1.0f,
+			1.0f, 0.0f, -1.0f,
+			-1.0f, 0.0f, -1.0f,
+		};
 
-	Mesh* mesh = nullptr;//GetMesh();
+		vector<unsigned int>* indices = new vector<unsigned int>
+		{
+			0, 1, 2,
+			0, 2, 3,
+			0, 3, 4,
+			0, 4, 1
+		};
 
-	//if (mesh == nullptr)
-	{
+
 		mesh = new Mesh(vertices, indices);
 	}
 
@@ -76,61 +78,62 @@ MeshRenderer* GetSimpleMeshRenderer()
 	return meshRenderer;
 }
 
-Mesh* GetMesh()
+Mesh* GetMesh(const string& objectPath)
 {
-
 	Mesh* mesh = nullptr;
 
 	vector<float>* vertices = new vector<float>();
 	vector<unsigned int>* indices = new vector<unsigned int>();
 
 
-	//Loader loader;
-	//bool loaded = loader.LoadFile("OBJModels/boat.obj");
+	Loader loader;
+	bool loaded = loader.LoadFile(objectPath);
 
-	//if (loaded)
-	//{
-	//	objl::Mesh curMesh = loader.LoadedMeshes[0];
+	if (loaded)
+	{
+		objl::Mesh curMesh = loader.LoadedMeshes[0];
 
-	//	// Print Mesh Name
-	//	// file << "Mesh " << i << ": " << curMesh.MeshName << "\n";
+		// Print Mesh Name
+		// file << "Mesh " << i << ": " << curMesh.MeshName << "\n";
 
-	//	// Print Vertices
-	//	// file << "Vertices:\n";
+		// Print Vertices
+		// file << "Vertices:\n";
 
-	//	// Go through each vertex and print its number,
-	//	//  position, normal, and texture coordinate
-	//	for (int i = 0; i < curMesh.Vertices.size(); i++)
-	//	{
-	//		vertices->push_back(curMesh.Vertices[i].Position.X);
-	//		vertices->push_back(curMesh.Vertices[i].Position.Y);
-	//		vertices->push_back(-curMesh.Vertices[i].Position.Z);
+		// Go through each vertex and print its number,
+		//  position, normal, and texture coordinate
+		for (int i = 0; i < loader.LoadedMeshes.size(); i++)
+		{
+			for (int j = 0; j < curMesh.Vertices.size(); j++)
+			{
+				vertices->push_back(curMesh.Vertices[j].Position.X * 0.1f);
+				vertices->push_back(curMesh.Vertices[j].Position.Y * 0.1f);
+				vertices->push_back(-curMesh.Vertices[j].Position.Z * 0.1f);
 
-	//		/*"P(" << curMesh.Vertices[j].Position.X << ", " << curMesh.Vertices[j].Position.Y << ", " << curMesh.Vertices[j].Position.Z << ") " <<
-	//		"N(" << curMesh.Vertices[j].Normal.X << ", " << curMesh.Vertices[j].Normal.Y << ", " << curMesh.Vertices[j].Normal.Z << ") " <<
-	//		"TC(" << curMesh.Vertices[j].TextureCoordinate.X << ", " << curMesh.Vertices[j].TextureCoordinate.Y << ")\n";*/
-	//	}
+				/*"P(" << curMesh.Vertices[j].Position.X << ", " << curMesh.Vertices[j].Position.Y << ", " << curMesh.Vertices[j].Position.Z << ") " <<
+				"N(" << curMesh.Vertices[j].Normal.X << ", " << curMesh.Vertices[j].Normal.Y << ", " << curMesh.Vertices[j].Normal.Z << ") " <<
+				"TC(" << curMesh.Vertices[j].TextureCoordinate.X << ", " << curMesh.Vertices[j].TextureCoordinate.Y << ")\n";*/
+			}
 
-	//	// Go through every 3rd index and print the
-	//	//	triangle that these indices represent
-	//	for (int i = 0; i < curMesh.Indices.size(); i += 3)
-	//	{
-	//		indices->push_back(curMesh.Indices[i]);
-	//		indices->push_back(curMesh.Indices[i + 1]);
-	//		indices->push_back(curMesh.Indices[i + 2]);
-	//		//file << "T" << j / 3 << ": " <<  << ", " << curMesh.Indices[j + 1] << ", " << curMesh.Indices[j + 2] << "\n";
-	//	}
+			// Go through every 3rd index and print the
+			//	triangle that these indices represent
+			for (int j = 0; j < curMesh.Indices.size(); j += 3)
+			{
+				indices->push_back(curMesh.Indices[j]);
+				indices->push_back(curMesh.Indices[j + 1]);
+				indices->push_back(curMesh.Indices[j + 2]);
+				//file << "T" << j / 3 << ": " <<  << ", " << curMesh.Indices[j + 1] << ", " << curMesh.Indices[j + 2] << "\n";
+			}
+		}
+		mesh = new Mesh(vertices, indices);
+	}
 
-	//	mesh = new Mesh(vertices, indices);
-	//}
-
-	auto obj = ParseOBJModel("OBJModels/boat.obj");
+	/*auto obj = ParseOBJModel("../OBJModels/boat.obj");
 
 	for (auto vert : obj.verts)
 	{
-		vertices->push_back(vert.x);
-		vertices->push_back(vert.y);
-		vertices->push_back(-vert.z);
+		vertices->push_back(vert.x * 0.2f);
+		vertices->push_back(vert.y * 0.2f);
+		vertices->push_back(-vert.z * 0.2f);
 	}
 
 	for (auto indice : obj.elements)
@@ -138,7 +141,7 @@ Mesh* GetMesh()
 		indices->push_back(indice);
 	}
 
-	mesh = new Mesh(vertices, indices);
+	mesh = new Mesh(vertices, indices);*/
 
 	return mesh;
 }

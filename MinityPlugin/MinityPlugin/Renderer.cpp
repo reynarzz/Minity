@@ -14,6 +14,7 @@
 #include "Renderer.h"
 
 bool _glewInit;
+Camera* _mainCam;
 
 Renderer::Renderer(Scene* startScene) : _scene(startScene)
 {
@@ -39,6 +40,8 @@ void Renderer::SetScene(Scene* scene)
 	{
 		AddMeshRendererToRenderer(meshRenderer);
 	}
+
+	_mainCam = _scene->GetCameras().at(0);
 }
 
 void Renderer::AddMeshRendererToRenderer(MeshRenderer* meshRenderer)
@@ -64,22 +67,20 @@ void Renderer::Draw()
 	//Uso el shader program.
 	//se setea el vertex array object si se esta usando el core profile. (siempre se esta usando)
 
-	/*glDisable(GL_CULL_FACE);
-	glDisable(GL_BLEND);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	//glDepthRangef(0.1f, 100.0f);
+
+	//glDisable(GL_CULL_FACE);
+	//glDisable(GL_BLEND);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	glDepthFunc(GL_LEQUAL);
+
+	//DepthMask needs to be true!
+	glDepthMask(GL_TRUE);
+
 	glEnable(GL_DEPTH_TEST);
-	glDepthMask(GL_FALSE);*/
-	//glEnable(GL_DEPTH_TEST);
-
-	//glClear(GL_DEPTH_BUFFER_BIT);
-
-	glDisable(GL_CULL_FACE);
-	glDisable(GL_BLEND);
-
-	glDepthFunc(GL_LEQUAL);
-	glEnable(GL_DEPTH_TEST);
-	glDepthMask(GL_FALSE);
+	//gluPerspective(45.0f, _mainCam->GetAspectRatio(), 0.1f, 500.0f);
 
 	unsigned int vao;
 
@@ -87,38 +88,36 @@ void Renderer::Draw()
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
-	/*for (auto renderer : _renderers)
+	for (auto rendererObj : _renderers)
 	{
-		
-	}*/
+		MeshRenderer* renderer = rendererObj;
+		Mesh* mesh = renderer->GetMesh();
+		Material* material = renderer->GetMaterial();
 
-	MeshRenderer* renderer = _renderers[0];
-	Mesh* mesh = renderer->GetMesh();
-	Material* material = renderer->GetMaterial();
+		Shader* shader = material->GetShader();
 
-	Shader* shader = material->GetShader();
+		// Bind buffer and set data.
+		glBindBuffer(GL_ARRAY_BUFFER, renderer->_vbo);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * mesh->GetVertices()->size(), &mesh->GetVertices()->at(0));
 
-	// Bind buffer and set data.
-	glBindBuffer(GL_ARRAY_BUFFER, renderer->_vbo);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * mesh->GetVertices()->size(), &mesh->GetVertices()->at(0));
+		// Set data layout for the shader.
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(0);
 
-	// Set data layout for the shader.
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer->_ibo);
+		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(unsigned int) * mesh->GetIndices()->size(), &mesh->GetIndices()->at(0));
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer->_ibo);
-	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(unsigned int) * mesh->GetIndices()->size(), &mesh->GetIndices()->at(0));
+		unsigned int shaderProgram = shader->BuildShader();
 
-	unsigned int shaderProgram = shader->BuildShader();
+		glUseProgram(shaderProgram);
 
-	glUseProgram(shaderProgram);
+		SetShader_MVP_MATRIX(shaderProgram);
 
-	SetShader_MVP_MATRIX(shaderProgram);
+		//Debug::Log(shaderProgram);
 
-	//Debug::Log(shaderProgram);
+		glDrawElements(GL_TRIANGLES, mesh->GetIndices()->size(), GL_UNSIGNED_INT, 0);
 
-	glDrawElements(GL_TRIANGLES, mesh->GetIndices()->size(), GL_UNSIGNED_INT, 0);
-
+	}
 	glDeleteVertexArrays(1, &vao);
 }
 
@@ -138,8 +137,8 @@ void Renderer::SetShader_MVP_MATRIX(unsigned int shaderProgram)
 
 	angle += 0.20f;
 
-	modelTest = glm::translate(modelTest, glm::vec3(0.0f, 0.0f, -10.0f));
-	modelTest = glm::rotate(modelTest, glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
+	modelTest = glm::translate(modelTest, glm::vec3(0.0f, 0.0f, -5.0f));
+	//modelTest = glm::rotate(modelTest, glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
 
 	glUniformMatrix4fv(uniformModelID, 1, GL_FALSE, glm::value_ptr(modelTest));
 	glUniformMatrix4fv(uniformViewID, 1, GL_FALSE, glm::value_ptr(mainCamera->GetViewMatrix()));

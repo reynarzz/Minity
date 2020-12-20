@@ -13,7 +13,6 @@ namespace MinityEngine
     {
         private static EditorWindow _window;
 
-        [MenuItem("Window/Minity Engine")]
         public static void Open()
         {
             _window = GetWindow<MinityWindow>("Minity Engine");
@@ -27,6 +26,7 @@ namespace MinityEngine
         private void OnGUI()
         {
             MinityViewport.SetScreenValues(Screen.width, Screen.height, (float)Screen.width / Screen.height);
+
             GL.IssuePluginEvent(MinityViewport.Run(), 0);
 
             Event current = Event.current;

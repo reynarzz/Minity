@@ -14,6 +14,7 @@ private:
 	vec3 _cameraPos;
 	vec2 _cameraRot;
 	mat4 _projectionMatrix;
+	float _aspectRatio;
 
 public:
 
@@ -30,4 +31,5 @@ public:
 
 	void SetCameraPosition(glm::vec3 pos);
 	void SetCameraRotation(glm::vec2 mouseDelta);
+	float GetAspectRatio() const;
 };

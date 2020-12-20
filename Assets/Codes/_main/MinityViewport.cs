@@ -23,8 +23,8 @@ namespace MinityEngine
 
         [SerializeField] private Material _mat;
 
-        [DllImport(MinityPluginName)]
-        public static extern void SetPos(float x, float y, float z);
+        //[DllImport(MinityPluginName)]
+        //public static extern void SetPos(float x, float y, float z);
 
         [DllImport(MinityPluginName)]
         public static extern void SetKeyDow(int keyType, int key);
