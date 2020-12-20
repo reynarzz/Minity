@@ -17,7 +17,7 @@ Scene::Scene()
 	_cameras.push_back(new Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, -90.0f), 0));
 
 	_objects.push_back(GetSimpleMeshRenderer("../OBJModels/worldtest2.obj"));
-	_objects.push_back(GetSimpleMeshRenderer("../OBJModels/bigBoat.obj"));
+	_objects.push_back(GetSimpleMeshRenderer("../OBJModels/simpleModel.obj"));
 }
 
 MeshRenderer* GetSimpleMeshRenderer(const string& objectPath)

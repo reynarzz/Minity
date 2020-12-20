@@ -28,13 +28,17 @@ namespace MinityEngine
 
             Rect rect = GUILayoutUtility.GetRect(Screen.width, 200);
             //--MinityViewport.SetPos(_minity.transform.position.x, _minity.transform.position.y, _minity.transform.position.z);
+            
+            rect.width += rect.x-3;
+            rect.x = 3;
 
-            MinityViewport.SetScreenValues(Screen.width, 200f, Screen.width / 200f);
+            MinityViewport.SetScreenValues(rect.width, 200f, rect.width / 200f);
+            EditorGUI.DrawRect(rect, Color.black * 0.65f);
 
             if (Event.current.type == EventType.Repaint)
             {
                 GUI.BeginClip(rect);
-                rect.y = rect.height / 2 - 20;
+                rect.y = rect.height / 2 - 17;
                 GL.Viewport(rect);
 
                 GL.IssuePluginEvent(MinityViewport.Run(), 0);
@@ -51,7 +55,7 @@ namespace MinityEngine
             Event current = Event.current;
 
             MinityViewport.SetMouseData(current.mousePosition.x, current.mousePosition.y, current.delta.x, current.delta.y);
-            Debug.Log(current.delta);
+            //Debug.Log(current.delta);
 
             if (current.type == EventType.ScrollWheel)
             {

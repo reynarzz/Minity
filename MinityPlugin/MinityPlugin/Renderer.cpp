@@ -67,19 +67,18 @@ void Renderer::Draw()
 	//Uso el shader program.
 	//se setea el vertex array object si se esta usando el core profile. (siempre se esta usando)
 
-	glClear(GL_DEPTH_BUFFER_BIT);
+	//glClear(GL_DEPTH_BUFFER_BIT);
 	//glDepthRangef(0.1f, 100.0f);
 
-	//glDisable(GL_CULL_FACE);
-	//glDisable(GL_BLEND);
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
 
 	glDepthFunc(GL_LEQUAL);
+	glEnable(GL_DEPTH_TEST);
 
 	//DepthMask needs to be true!
 	glDepthMask(GL_TRUE);
 
-	glEnable(GL_DEPTH_TEST);
 	//gluPerspective(45.0f, _mainCam->GetAspectRatio(), 0.1f, 500.0f);
 
 	unsigned int vao;
