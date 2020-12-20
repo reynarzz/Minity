@@ -6,48 +6,85 @@
 #include <Obj/OBJ_Loader.h>
 #include "MyOBJParser.h"
 
-MeshRenderer* GetSimpleMeshRenderer(const string& objectPath);
+vector<MeshRenderer*> LoadMeshRenderers(const string& objectPath);
 using objl::Loader;
 
-Mesh* GetMesh(const string& objectPath);
+vector<Mesh*> GetMeshes(const string& objectPath);
+
+struct ShadersSource
+{
+	string vertexSource;
+	string fragmentSource;
+};
+
 
 Scene::Scene()
 {
 	// I have to remove this later. An scene is able to exist without camera.
 	_cameras.push_back(new Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, -90.0f), 0));
 
-	_objects.push_back(GetSimpleMeshRenderer("../OBJModels/worldtest2.obj"));
-	_objects.push_back(GetSimpleMeshRenderer("../OBJModels/simpleModel.obj"));
+	//auto meshRenderers = (LoadMeshRenderers("../OBJModels/worldtest2.obj"));
+	auto meshRenderers = LoadMeshRenderers("../OBJModels/DemoScene.obj");
+
+	for (auto renderer : meshRenderers)
+	{
+		_objects.push_back(renderer);
+	}
 }
 
-MeshRenderer* GetSimpleMeshRenderer(const string& objectPath)
+static ShadersSource ParseShader(const string shaderFilePath)
 {
-	string vsSource =
-		"#version 330 core\n"
-		"layout(location = 0) in vec4 pos;\n"
-		"out vec4 color;\n"
-		"uniform mat4 model;\n"
-		"uniform mat4 view;"
-		"uniform mat4 projection;\n"
-		"void main()\n"
-		"{\n"
-		"color = pos;\n"
-		"gl_Position = projection * view * model * pos;\n"
-		"//gl_Position = pos;\n"
-		"}";
+	std::ifstream stream(shaderFilePath);
 
-	string fsSource =
-		"#version 330 core\n"
-		"layout(location = 0) out vec4 outColor;\n"
-		"in vec4 color;\n"
-		"void main()\n"
-		"{\n"
-		"outColor =  color;//vec4(1.0f,1.0f,1.0f,1.0f);\n"
-		"}";
+	enum ShaderType
+	{
+		NONE = 2, VERTEX = 0, FRAGMENT = 1
+	};
 
-	Mesh* mesh = GetMesh(objectPath);
 
-	if (mesh == nullptr)
+	string line;
+	std::stringstream ss[2];
+	ShaderType type = ShaderType::NONE;
+
+	int sT = 0;
+
+	while (std::getline(stream, line))
+	{
+		std::cout << line << std::endl;
+
+		if (line.find("#shader") != string::npos)
+		{
+			if (line.find("VERTEX") != string::npos)
+			{
+				type = ShaderType::VERTEX;
+				sT = 0;
+			}
+			else if (line.find("FRAGMENT") != string::npos)
+			{
+				type = ShaderType::FRAGMENT;
+				sT = 1;
+			}
+		}
+		else
+		{
+			ss[sT] << line << '\n';
+		}
+
+		//std::cout << "-: " << ss[sT].str() << std::endl;
+	}
+
+	return { ss[0].str(), ss[1].str() };
+}
+
+
+vector<MeshRenderer*> LoadMeshRenderers(const string& objectPath)
+{
+	auto sources = ParseShader("UnlitShader.shader");
+
+	vector<Mesh*> meshes = GetMeshes(objectPath);
+	vector<MeshRenderer*> renderers;
+
+	if (meshes.size() == 0)
 	{
 		vector<float>* vertices = new vector<float>
 		{
@@ -66,32 +103,42 @@ MeshRenderer* GetSimpleMeshRenderer(const string& objectPath)
 			0, 4, 1
 		};
 
+		auto mesh = new Mesh(vertices, indices);
 
-		mesh = new Mesh(vertices, indices);
+		Shader* shader = new Shader(sources.vertexSource, sources.fragmentSource);
+		Material* material = new Material(shader);
+
+		MeshRenderer* meshRenderer = new MeshRenderer(mesh, material);
+		renderers.push_back(meshRenderer);
 	}
+	else
+	{
+		for (auto mesh : meshes)
+		{
+			Shader* shader = new Shader(sources.vertexSource, sources.fragmentSource);
+			Material* material = new Material(shader);
 
-	Shader* shader = new Shader(vsSource, fsSource);
-	Material* material = new Material(shader);
+			MeshRenderer* meshRenderer = new MeshRenderer(mesh, material);
+			renderers.push_back(meshRenderer);
+		}
 
-	MeshRenderer* meshRenderer = new MeshRenderer(mesh, material);
-
-	return meshRenderer;
+	}
+	
+	return renderers;
 }
 
-Mesh* GetMesh(const string& objectPath)
+vector<Mesh*> GetMeshes(const string& objectPath)
 {
 	Mesh* mesh = nullptr;
+	vector<Mesh*> meshes;
 
-	vector<float>* vertices = new vector<float>();
-	vector<unsigned int>* indices = new vector<unsigned int>();
-
+	
 
 	Loader loader;
 	bool loaded = loader.LoadFile(objectPath);
 
 	if (loaded)
 	{
-		objl::Mesh curMesh = loader.LoadedMeshes[0];
 
 		// Print Mesh Name
 		// file << "Mesh " << i << ": " << curMesh.MeshName << "\n";
@@ -103,11 +150,16 @@ Mesh* GetMesh(const string& objectPath)
 		//  position, normal, and texture coordinate
 		for (int i = 0; i < loader.LoadedMeshes.size(); i++)
 		{
+			objl::Mesh curMesh = loader.LoadedMeshes[i];
+
+			vector<float>* vertices = new vector<float>();
+			vector<unsigned int>* indices = new vector<unsigned int>();
+
 			for (int j = 0; j < curMesh.Vertices.size(); j++)
 			{
-				vertices->push_back(curMesh.Vertices[j].Position.X * 0.1f);
-				vertices->push_back(curMesh.Vertices[j].Position.Y * 0.1f);
-				vertices->push_back(-curMesh.Vertices[j].Position.Z * 0.1f);
+				vertices->push_back(curMesh.Vertices[j].Position.X * 0.2f);
+				vertices->push_back(curMesh.Vertices[j].Position.Y * 0.2f);
+				vertices->push_back(-curMesh.Vertices[j].Position.Z * 0.2f);
 
 				/*"P(" << curMesh.Vertices[j].Position.X << ", " << curMesh.Vertices[j].Position.Y << ", " << curMesh.Vertices[j].Position.Z << ") " <<
 				"N(" << curMesh.Vertices[j].Normal.X << ", " << curMesh.Vertices[j].Normal.Y << ", " << curMesh.Vertices[j].Normal.Z << ") " <<
@@ -123,8 +175,12 @@ Mesh* GetMesh(const string& objectPath)
 				indices->push_back(curMesh.Indices[j + 2]);
 				//file << "T" << j / 3 << ": " <<  << ", " << curMesh.Indices[j + 1] << ", " << curMesh.Indices[j + 2] << "\n";
 			}
+
+			mesh = new Mesh(vertices, indices);
+
+			meshes.push_back(mesh);
 		}
-		mesh = new Mesh(vertices, indices);
+		
 	}
 
 	/*auto obj = ParseOBJModel("../OBJModels/boat.obj");
@@ -143,7 +199,7 @@ Mesh* GetMesh(const string& objectPath)
 
 	mesh = new Mesh(vertices, indices);*/
 
-	return mesh;
+	return meshes;
 }
 
 //void MoveCamera()

@@ -25,6 +25,9 @@
     <Filter Include="Header Files\Internal">
       <UniqueIdentifier>{4d635005-b6ca-4460-947f-1c4789fbbf2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shaders">
+      <UniqueIdentifier>{48152665-e048-4f6b-9f8c-1d36a4337326}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -131,5 +134,10 @@
     <ClCompile Include="DebugCPP.h">
       <Filter>Header Files\MinityHeaders</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="UnlitShader.shader">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
