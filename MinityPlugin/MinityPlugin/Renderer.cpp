@@ -87,9 +87,8 @@ void Renderer::Draw()
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
-	for (auto rendererObj : _renderers)
+	for (auto renderer : _renderers)
 	{
-		MeshRenderer* renderer = rendererObj;
 		Mesh* mesh = renderer->GetMesh();
 		Material* material = renderer->GetMaterial();
 
@@ -113,9 +112,7 @@ void Renderer::Draw()
 		SetShader_MVP_MATRIX(shaderProgram);
 
 		//Debug::Log(shaderProgram);
-
 		glDrawElements(GL_TRIANGLES, mesh->GetIndices()->size(), GL_UNSIGNED_INT, 0);
-
 	}
 	glDeleteVertexArrays(1, &vao);
 }

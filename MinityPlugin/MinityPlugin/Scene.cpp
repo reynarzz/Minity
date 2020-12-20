@@ -25,6 +25,7 @@ Scene::Scene()
 
 	//auto meshRenderers = (LoadMeshRenderers("../OBJModels/worldtest2.obj"));
 	auto meshRenderers = LoadMeshRenderers("../OBJModels/DemoScene.obj");
+	//auto meshRenderers = LoadMeshRenderers("../OBJModels/Character.obj");
 
 	for (auto renderer : meshRenderers)
 	{
@@ -79,7 +80,7 @@ static ShadersSource ParseShader(const string shaderFilePath)
 
 vector<MeshRenderer*> LoadMeshRenderers(const string& objectPath)
 {
-	auto sources = ParseShader("UnlitShader.shader");
+	auto sources = ParseShader("DepthShader.shader");
 
 	vector<Mesh*> meshes = GetMeshes(objectPath);
 	vector<MeshRenderer*> renderers;
@@ -139,7 +140,6 @@ vector<Mesh*> GetMeshes(const string& objectPath)
 
 	if (loaded)
 	{
-
 		// Print Mesh Name
 		// file << "Mesh " << i << ": " << curMesh.MeshName << "\n";
 
@@ -157,9 +157,9 @@ vector<Mesh*> GetMeshes(const string& objectPath)
 
 			for (int j = 0; j < curMesh.Vertices.size(); j++)
 			{
-				vertices->push_back(curMesh.Vertices[j].Position.X * 0.2f);
-				vertices->push_back(curMesh.Vertices[j].Position.Y * 0.2f);
-				vertices->push_back(-curMesh.Vertices[j].Position.Z * 0.2f);
+				vertices->push_back(curMesh.Vertices[j].Position.X * 0.5f);
+				vertices->push_back(curMesh.Vertices[j].Position.Y * 0.5f);
+				vertices->push_back(-curMesh.Vertices[j].Position.Z * 0.5f);
 
 				/*"P(" << curMesh.Vertices[j].Position.X << ", " << curMesh.Vertices[j].Position.Y << ", " << curMesh.Vertices[j].Position.Z << ") " <<
 				"N(" << curMesh.Vertices[j].Normal.X << ", " << curMesh.Vertices[j].Normal.Y << ", " << curMesh.Vertices[j].Normal.Z << ") " <<

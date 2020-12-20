@@ -33,7 +33,7 @@ namespace MinityEngine
             rect.x = 3;
 
             MinityViewport.SetScreenValues(rect.width, 200f, rect.width / 200f);
-            EditorGUI.DrawRect(rect, Color.black * 0.65f);
+            EditorGUI.DrawRect(rect, Color.black * 0.5f);
 
             if (Event.current.type == EventType.Repaint)
             {
