@@ -1,7 +1,7 @@
 ![](smallpreview.gif)
 
 ## TODO
-- [ ] Urgent Refactor.
+- [ ] Refactor.
    - [ ] Fix renderer expensive calls.
    - [ ] Arquitecture.
 - [ ] Textures support.
