@@ -7,4 +7,4 @@
 - [ ] Textures support.
 - [ ] Directional light.
 - [ ] Shadow mapping.
-- [ ] GUI.
+- [ ] Simple GUI.
