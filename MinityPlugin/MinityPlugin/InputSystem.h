@@ -43,7 +43,7 @@ public:
 	
 
 	InputSystem(Camera* camera);
-	void Update();
+	void Update(float deltaTime);
 };
 
 

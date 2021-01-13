@@ -37,7 +37,7 @@ static ShadersSource ParseShader(const string shaderFilePath)
 {
 	std::ifstream stream(shaderFilePath);
 
-	enum ShaderType
+	enum class ShaderType
 	{
 		NONE = 2, VERTEX = 0, FRAGMENT = 1
 	};
@@ -76,7 +76,6 @@ static ShadersSource ParseShader(const string shaderFilePath)
 
 	return { ss[0].str(), ss[1].str() };
 }
-
 
 vector<MeshRenderer*> LoadMeshRenderers(const string& objectPath)
 {
@@ -157,9 +156,9 @@ vector<Mesh*> GetMeshes(const string& objectPath)
 
 			for (int j = 0; j < curMesh.Vertices.size(); j++)
 			{
-				vertices->push_back(-curMesh.Vertices[j].Position.X * 0.5f);
-				vertices->push_back(curMesh.Vertices[j].Position.Y * 0.5f);
-				vertices->push_back(-curMesh.Vertices[j].Position.Z * 0.5f);
+				vertices->push_back(-curMesh.Vertices[j].Position.X);
+				vertices->push_back(curMesh.Vertices[j].Position.Y);
+				vertices->push_back(-curMesh.Vertices[j].Position.Z);
 
 				/*"P(" << curMesh.Vertices[j].Position.X << ", " << curMesh.Vertices[j].Position.Y << ", " << curMesh.Vertices[j].Position.Z << ") " <<
 				"N(" << curMesh.Vertices[j].Normal.X << ", " << curMesh.Vertices[j].Normal.Y << ", " << curMesh.Vertices[j].Normal.Z << ") " <<
@@ -212,11 +211,11 @@ const vector<Camera*>& Scene::GetCameras() const
 	return _cameras;
 }
 
-void Scene::SetAspectRatio(float aspect)
+void Scene::Update(float aspect, float deltaTime)
 {
 	for (auto camera : _cameras)
 	{
-		camera->UpdateProjectionMatrix(aspect);
+		camera->Update(aspect, deltaTime);
 	}
 }
 

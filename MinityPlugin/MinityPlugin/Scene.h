@@ -17,6 +17,6 @@ public:
 
 	//model = glm::translate(model, _pos);
 	//model = glm::rotate(model, _time /* 3.14f / 180*/, glm::vec3(0.0f, 1.0f, 0.0f));
-	void SetAspectRatio(float aspect);
+	void Update(float aspect, float deltaTime);
 };
 

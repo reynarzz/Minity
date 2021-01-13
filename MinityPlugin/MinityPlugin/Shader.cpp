@@ -35,8 +35,8 @@ unsigned int Shader::BuildShader()
 		glDeleteShader(vsID);
 		glDeleteShader(fsID);
 
-		Debug::Log(_vertexSource);
-		Debug::Log(_fragmentSource);
+		//Debug::Log(_vertexSource);
+		//Debug::Log(_fragmentSource);
 	}
 	
 	return _programID;

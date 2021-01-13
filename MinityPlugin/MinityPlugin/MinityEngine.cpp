@@ -26,8 +26,8 @@ void MinityEngine::Update(float deltaTime, const ScreenInfo& screenInfo)
 	_screenInfo = screenInfo;
 
 	// Do your stuff below.--------------
-	_scene->SetAspectRatio(screenInfo._aspectRatio);
-	_inputSystem->Update();
+	_scene->Update(screenInfo._aspectRatio, deltaTime);
+	_inputSystem->Update(deltaTime);
 	
 	_renderer->Draw();
 }

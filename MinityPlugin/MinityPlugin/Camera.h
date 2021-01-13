@@ -27,7 +27,7 @@ public:
 
 	const mat4& GetViewMatrix();
 	const mat4& GetProjectionMatrix() const;
-	void UpdateProjectionMatrix(float aspectRatio);
+	void Update(float aspectRatio, float deltaTime);
 
 	void SetCameraPosition(glm::vec3 pos);
 	void SetCameraRotation(glm::vec2 mouseDelta);

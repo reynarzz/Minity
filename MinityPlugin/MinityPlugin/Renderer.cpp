@@ -62,24 +62,13 @@ void Renderer::AddMeshRendererToRenderer(MeshRenderer* meshRenderer)
 
 void Renderer::Draw()
 {
-	//Aqui es donde se dibuja,
-	//Render estate: glDepthFunc(GL_LEQUAL);
-	//Uso el shader program.
-	//se setea el vertex array object si se esta usando el core profile. (siempre se esta usando)
-
-	//glClear(GL_DEPTH_BUFFER_BIT);
-	//glDepthRangef(0.1f, 100.0f);
-
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_DEPTH_TEST);
 
-	//DepthMask needs to be true!
 	glDepthMask(GL_TRUE);
-
-	//gluPerspective(45.0f, _mainCam->GetAspectRatio(), 0.1f, 500.0f);
 
 	unsigned int vao;
 
@@ -99,7 +88,7 @@ void Renderer::Draw()
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * mesh->GetVertices()->size(), &mesh->GetVertices()->at(0));
 
 		// Set data layout for the shader.
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, 0);
 		glEnableVertexAttribArray(0);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer->_ibo);
