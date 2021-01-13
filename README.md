@@ -3,6 +3,6 @@
 ## TODO
 - [ ] Urgent Refactor.
 - [ ] Textures support.
-   - [ ] Directional lights.
+   - [ ] Directional light.
    - [ ] Shadow mapping.
 - [ ] GUI.
