@@ -2,7 +2,7 @@
 
 ## TODO
 - [ ] Urgent Refactor.
-   - [ ] Fix engine expensive calls.
+   - [ ] Fix renderer expensive calls.
    - [ ] Arquitecture.
 - [ ] Textures support.
 - [ ] Directional light.
