@@ -3,7 +3,7 @@
 
 ## TODO
 - [ ] Refactor.
-   - [ ] Fix renderer expensive calls.
+   - [ ] Fix some expensive calls.
    - [ ] Arquitecture.
 - [ ] Textures support.
 - [ ] Directional light.
