@@ -1,14 +1,31 @@
 #include "pch.h"
 
 #include "Shader.h"
-
+#include <iostream>
 
 Shader::Shader(const string vertexSource, const string fragmentSource) 
 	:_vertexSource(vertexSource), _fragmentSource(fragmentSource), _programID(0)
 {
 }
 
-unsigned int Shader::BuildShader()
+void Shader::Debug(const unsigned int& shaderID, const string& shaderType) 
+{
+	int result;
+	glGetShaderiv(shaderID, GL_COMPILE_STATUS, &result);
+
+	if (result == GL_FALSE) 
+	{
+		int length;
+		glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &length);
+		char* error = (char*)_malloca(length * sizeof(char));
+		glGetShaderInfoLog(shaderID, length, &length, error);
+
+		Debug::Log(shaderType);
+		Debug::Log(error);
+	}
+}
+
+unsigned int Shader::UseShader()
 {
 	if (_programID == 0) 
 	{
@@ -26,6 +43,9 @@ unsigned int Shader::BuildShader()
 		glCompileShader(vsID);
 		glCompileShader(fsID);
 
+		/*Debug(vsID, "Vertex shader");
+		Debug(vsID, "Fragment shader");
+		Debug::Log("Create shader");*/
 		glAttachShader(_programID, vsID);
 		glAttachShader(_programID, fsID);
 
@@ -40,6 +60,16 @@ unsigned int Shader::BuildShader()
 	}
 	
 	return _programID;
+}
+void Shader::SetUniforms(mat4 model, Camera* camera)
+{
+	unsigned int uniformModelID = glGetUniformLocation(_programID, "_MVP");
+
+	mat4 viewProjM = camera->GetViewProjMatrix();
+
+	//modelTest = glm::rotate(modelTest, glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
+
+	glUniformMatrix4fv(uniformModelID, 1, GL_FALSE, glm::value_ptr(viewProjM * model));
 }
 
 unsigned int Shader::GetProgramID() const 

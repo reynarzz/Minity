@@ -42,13 +42,22 @@ namespace MinityEngine
 
         public static void Open()
         {
-            _window = GetWindow<MinityWindow>("Minity Editor");
+            _window = GetWindow<MinityWindow>("Minity Engine");
             _isOpened = true;
         }
 
         private void OnEnable()
         {
             _isOpened = true;
+
+            if (_stopWatch == null)
+            {
+                _stopWatch = new System.Diagnostics.Stopwatch();
+                _stopWatch.Start();
+                _totalSecs = _stopWatch.Elapsed.TotalSeconds / 1000.0f;
+            }
+
+
         }
 
         private void OnDestroy()
@@ -63,51 +72,74 @@ namespace MinityEngine
 
         private void OnGUI()
         {
-            if (_stopWatch == null) 
-            {
-                _stopWatch = new System.Diagnostics.Stopwatch();
-                _stopWatch.Start();
-                _totalSecs = _stopWatch.Elapsed.TotalSeconds / 1000.0f;
-            }
+            var hierarchyRect = new Rect(0, 0, 300, Screen.height);
+            var sceneViewRect = new Rect(hierarchyRect.width, 0, 600, Screen.height - 300);
 
-            Rect rect = GUILayoutUtility.GetRect(Screen.width, Screen.height);
-            EditorGUI.DrawRect(rect, Color.black * 0.5f);
+            var offset = 2;
+            var inspectorRect = new Rect((sceneViewRect.x + sceneViewRect.width) + offset, 0, Screen.width - (sceneViewRect.x + sceneViewRect.width) + offset, Screen.height);
+
+            BeginWindows();
+
+            EditorGUI.DrawRect(hierarchyRect, Color.black * 0.3f);
+
+            GUI.Window(0, hierarchyRect, HierarchyView, "");
+
+            //  Rect rect = GUILayoutUtility.GetRect(100, 100);
+            EditorGUI.DrawRect(sceneViewRect, Color.black * 0.5f);
+
+            GUI.Window(1, sceneViewRect, (id) => SceneWindow(id, sceneViewRect), "", GUIStyle.none);
 
 
-            rect.width += rect.x - 3;
-            rect.x = 3;
+            EditorGUI.DrawRect(inspectorRect, Color.black * 0.3f);
+
+            GUI.Window(2, inspectorRect, InspectorView, "", GUIStyle.none);
+
+
+            EndWindows();
+
+            Repaint();
+        }
+
+        private void HierarchyView(int id) 
+        {
+        
+        }
+
+        private void InspectorView(int id)
+        {
+            GUILayout.Button("Add Component");
+            return;
+        }
+
+        private void SceneWindow(int id, Rect windowRect)
+        {
+            // GUI.DragWindow();
+
+            Rect rect = new Rect(windowRect.x, Screen.height - windowRect.height, windowRect.width, windowRect.height);
 
             var deltaTime = _stopWatch.Elapsed.TotalMilliseconds / 1000.0f - _totalSecs;
             _totalSecs = _stopWatch.Elapsed.TotalMilliseconds / 1000.0f;
 
             MinityScene.SetTime((float)_stopWatch.Elapsed.TotalMilliseconds, (float)deltaTime);
 
-            MinityScene.SetScreenValues(rect.width, Screen.height, rect.width / Screen.height);
-            MinityScene.SetMoveSpeed(10f);
+            MinityScene.SetScreenValues((int)rect.width, (int)rect.height, rect.width / rect.height);
 
+            MinityScene.SetMoveSpeed(10f);
 
             // Background.
 
             // if (Event.current.type == EventType.Repaint)
             {
-                GUI.BeginClip(rect);
                 //rect.y = rect.height /;
+                GUI.BeginClip(rect);
                 rect.y -= 20;
                 GL.Viewport(rect);
 
                 GL.IssuePluginEvent(MinityScene.Run(), 0);
-
                 GUI.EndClip();
             }
 
-            GUILayout.Space(5);
-            if (GUILayout.Button("Open In Window"))
-            {
-                MinityWindow.Open();
-            }
-
             Event current = Event.current;
-
             MinityScene.SetMouseData(current.mousePosition.x, current.mousePosition.y, current.delta.x, current.delta.y);
 
             if (current.type == EventType.ScrollWheel)
@@ -185,8 +217,6 @@ namespace MinityEngine
                 //    Debug.Log("Release D");
                 //}
             }
-
-            Repaint();
         }
     }
 }

@@ -2,13 +2,7 @@
 #include "MeshRenderer.h"
 #include "Renderer.h"
 #include "InputSystem.h"
-
-class ScreenInfo
-{
-public:
-	glm::vec2 _dimensions;
-	float _aspectRatio;
-};
+#include "ScreenInfo.h"
 
 class MinityEngine
 {

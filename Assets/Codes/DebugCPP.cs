@@ -27,7 +27,7 @@ using UnityEngine;
 
 namespace MinityEngine
 {
- 
+    [ExecuteAlways]
     public class DebugCPP : MonoBehaviour
     {
         // Use this for initialization

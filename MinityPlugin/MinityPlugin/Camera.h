@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "ScreenInfo.h"
 
 using glm::mat4;
 using glm::vec3;
@@ -14,6 +15,7 @@ private:
 	vec3 _cameraPos;
 	vec2 _cameraRot;
 	mat4 _projectionMatrix;
+	mat4 _viewProjM;
 	float _aspectRatio;
 
 public:
@@ -27,9 +29,11 @@ public:
 
 	const mat4& GetViewMatrix();
 	const mat4& GetProjectionMatrix() const;
-	void Update(float aspectRatio, float deltaTime);
+	void Update(float deltaTime);
 
 	void SetCameraPosition(glm::vec3 pos);
 	void SetCameraRotation(glm::vec2 mouseDelta);
 	float GetAspectRatio() const;
+	mat4 GetViewProjMatrix() const;
+	void OnScreenSizeChanged(float width, float height);
 };

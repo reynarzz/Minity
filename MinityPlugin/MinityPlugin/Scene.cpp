@@ -123,7 +123,7 @@ vector<MeshRenderer*> LoadMeshRenderers(const string& objectPath)
 		}
 
 	}
-	
+
 	return renderers;
 }
 
@@ -132,7 +132,7 @@ vector<Mesh*> GetMeshes(const string& objectPath)
 	Mesh* mesh = nullptr;
 	vector<Mesh*> meshes;
 
-	
+
 
 	Loader loader;
 	bool loaded = loader.LoadFile(objectPath);
@@ -179,7 +179,7 @@ vector<Mesh*> GetMeshes(const string& objectPath)
 
 			meshes.push_back(mesh);
 		}
-		
+
 	}
 
 	/*auto obj = ParseOBJModel("../OBJModels/boat.obj");
@@ -211,11 +211,19 @@ const vector<Camera*>& Scene::GetCameras() const
 	return _cameras;
 }
 
-void Scene::Update(float aspect, float deltaTime)
+void Scene::Update(ScreenInfo screenInfo, float deltaTime)
 {
 	for (auto camera : _cameras)
 	{
-		camera->Update(aspect, deltaTime);
+		/*if (_screenInfo._dimensions.x != screenInfo._dimensions.x)
+		{
+			_screenInfo._dimensions.x = screenInfo._dimensions.x;
+
+			camera->OnScreenSizeChanged(screenInfo._dimensions.x, screenInfo._dimensions.y);
+			Debug::Log("Size changed");
+		}*/
+
+		camera->Update(deltaTime);
 	}
 }
 

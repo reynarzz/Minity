@@ -184,6 +184,7 @@
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="MinityEngine.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="ScreenInfo.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Unity_PluginAPI\IUnityEventQueue.h" />
     <ClInclude Include="Unity_PluginAPI\IUnityGraphics.h" />

@@ -10,7 +10,7 @@ static IUnityGraphics* s_Graphics = NULL;
 static UnityGfxRenderer s_RendererType = kUnityGfxRendererNull;
 
 MinityEngine* _minityEngine;
-ScreenInfo _screenInfo;
+ScreenInfo _scrInfo_;
 
 float _time;
 float _deltaTime;
@@ -25,11 +25,11 @@ extern "C"
 		_deltaTime = deltaTime;
 	}
 
-	void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetScreenValues(float width, float height, float aspect)
+	void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetScreenValues(int width, int height, float aspect)
 	{
-		_screenInfo._dimensions.x = width;
-		_screenInfo._dimensions.y = height;
-		_screenInfo._aspectRatio = aspect;
+		_scrInfo_._dimensions.x = width;
+		_scrInfo_._dimensions.y = height;
+		_scrInfo_._aspectRatio = aspect;
 	}
 
 	UnityRenderingEvent UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API Run()
@@ -40,7 +40,7 @@ extern "C"
 
 static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 {
-	_minityEngine->Update(_deltaTime, _screenInfo);
+	_minityEngine->Update(_deltaTime, _scrInfo_);
 }
 
 static void UNITY_INTERFACE_API

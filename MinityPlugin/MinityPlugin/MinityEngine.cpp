@@ -26,8 +26,8 @@ void MinityEngine::Update(float deltaTime, const ScreenInfo& screenInfo)
 	_screenInfo = screenInfo;
 
 	// Do your stuff below.--------------
-	_scene->Update(screenInfo._aspectRatio, deltaTime);
 	_inputSystem->Update(deltaTime);
+	_scene->Update(screenInfo, deltaTime);
 	
 	_renderer->Draw();
 }
@@ -39,5 +39,5 @@ float MinityEngine::GetDeltaTime()
 
 MinityEngine::~MinityEngine()
 {
-	delete _scene, _renderer;
+	delete _scene, _renderer, _inputSystem;
 }

@@ -3,15 +3,13 @@
 #version 330 core
 layout(location = 0) in vec4 pos;
 
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
+uniform mat4 _MVP;
 
 out vec4 posColor;
 
 void main()
 {
-	gl_Position = projection * view * model * pos;
+	gl_Position = _MVP * pos;
     posColor = pos;
 };
 
@@ -33,6 +31,6 @@ float LinearizeDepth(float depth)
 
 void main()
 {
-    float depth = LinearizeDepth(gl_FragCoord.z) / far; // divide by far for demonstration
+    float depth = LinearizeDepth(gl_FragCoord.z) / far; // divide by far for demostration
     FragColor = vec4(vec3(depth) * -1.0 + vec3(0.9f), 1.0) * posColor;
 }

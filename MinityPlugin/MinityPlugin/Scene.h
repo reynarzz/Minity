@@ -1,12 +1,14 @@
 #pragma once
 #include "Camera.h"
 #include "MeshRenderer.h"
+#include "ScreenInfo.h"
 
 class Scene
 {
 private:
 	vector<Camera*> _cameras;
 	vector<MeshRenderer*> _objects;
+	ScreenInfo _screenInfo;
 public:
 	Scene();
 	~Scene();
@@ -17,6 +19,6 @@ public:
 
 	//model = glm::translate(model, _pos);
 	//model = glm::rotate(model, _time /* 3.14f / 180*/, glm::vec3(0.0f, 1.0f, 0.0f));
-	void Update(float aspect, float deltaTime);
+	void Update(ScreenInfo screenInfo, float deltaTime);
 };
 

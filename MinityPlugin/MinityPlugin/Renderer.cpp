@@ -44,6 +44,7 @@ void Renderer::SetScene(Scene* scene)
 	_mainCam = _scene->GetCameras().at(0);
 }
 
+// Move to another place
 void Renderer::AddMeshRendererToRenderer(MeshRenderer* meshRenderer)
 {
 	Mesh* mesh = meshRenderer->GetMesh();
@@ -94,11 +95,7 @@ void Renderer::Draw()
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer->_ibo);
 		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(unsigned int) * mesh->GetIndices()->size(), &mesh->GetIndices()->at(0));
 
-		unsigned int shaderProgram = shader->BuildShader();
-
-		glUseProgram(shaderProgram);
-
-		SetShader_MVP_MATRIX(shaderProgram);
+		material->UseMaterial(_mainCam);
 
 		//Debug::Log(shaderProgram);
 		glDrawElements(GL_TRIANGLES, mesh->GetIndices()->size(), GL_UNSIGNED_INT, 0);
@@ -106,33 +103,8 @@ void Renderer::Draw()
 	glDeleteVertexArrays(1, &vao);
 }
 
-float angle = 0.0f;
-
-void Renderer::SetShader_MVP_MATRIX(unsigned int shaderProgram)
-{
-	unsigned int uniformModelID = glGetUniformLocation(shaderProgram, "model");
-	unsigned int uniformViewID = glGetUniformLocation(shaderProgram, "view");
-	unsigned int uniformProjectionID = glGetUniformLocation(shaderProgram, "projection");
-
-	vector<Camera*> cameras = _scene->GetCameras();
-
-	Camera* mainCamera = cameras.at(0);
-
-	glm::mat4 modelTest(1.0f);
-
-	angle += 0.20f;
-
-	modelTest = glm::translate(modelTest, glm::vec3(0.0f, 0.0f, -5.0f));
-	//modelTest = glm::rotate(modelTest, glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
-
-	glUniformMatrix4fv(uniformModelID, 1, GL_FALSE, glm::value_ptr(modelTest));
-	glUniformMatrix4fv(uniformViewID, 1, GL_FALSE, glm::value_ptr(mainCamera->GetViewMatrix()));
-	glUniformMatrix4fv(uniformProjectionID, 1, GL_FALSE, glm::value_ptr(mainCamera->GetProjectionMatrix()));
-}
-
 Renderer::~Renderer()
 {
-	// Be carefull, clear deletes all.
 	_renderers.clear();
 	_renderers.shrink_to_fit();
 }

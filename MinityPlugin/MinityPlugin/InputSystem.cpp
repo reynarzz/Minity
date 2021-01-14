@@ -15,9 +15,10 @@ extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetMouseData(float xP
 {
 	//_mousePos = glm::vec2(xPos, yPos);
 	_mouseDelta = glm::vec2(deltaX, deltaY);
-	Debug::Log(deltaX);
+	/*Debug::Log("Delta x");
+	Debug::Log(deltaX);*/
 }
-
+ 
 extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetKeyDow(int keyType, int key)
 {
 	if (keyType == 0)

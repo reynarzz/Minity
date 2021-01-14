@@ -41,7 +41,7 @@ namespace MinityEngine
         {
             _minity = (target as MinityScene);
 
-            MinityScene.SetScreenValues(Screen.width, 230f, Screen.width / 230f);
+            MinityScene.SetScreenValues(Screen.width, 230, Screen.width / 230f);
             _stopWatch = new System.Diagnostics.Stopwatch();
             _stopWatch.Start();
             _totalSecs = _stopWatch.Elapsed.TotalSeconds / 1000.0f;

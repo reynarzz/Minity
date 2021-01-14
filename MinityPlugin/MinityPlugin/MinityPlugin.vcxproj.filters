@@ -93,6 +93,9 @@
     <ClInclude Include="MyOBJParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ScreenInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugCPP.cpp">

@@ -32,7 +32,7 @@ Camera::Camera(vec3 cameraPos, vec2 cameraRot, float aspectRatio)
 {
 	_aspectRatio = aspectRatio;
 	_inmmediateRot = cameraRot;
-	_projectionMatrix = glm::perspective(45.0f, aspectRatio, 0.01f, 1000.0f);
+	_projectionMatrix = glm::perspective(45.0f, 1.0f, 0.1f, 100.0f);
 }
 
 const mat4& Camera::GetViewMatrix()
@@ -45,10 +45,8 @@ const mat4& Camera::GetProjectionMatrix() const
 	return _projectionMatrix;
 }
 
-void Camera::Update(float aspectRatio, float deltaTime)
+void Camera::Update(float deltaTime)
 {
-	_aspectRatio = aspectRatio;
-
 	_forward = glm::vec3(0.0f, 0.0f, -1.0f);
 
 	_inmmediateRot.x += -_mouseDeltaCam.y;
@@ -65,14 +63,17 @@ void Camera::Update(float aspectRatio, float deltaTime)
 	_right = glm::vec3(glm::normalize(glm::cross(_forward, glm::vec3(0.0f, 1.0, 0.0f))));
 	_up = glm::vec3(glm::normalize(glm::cross(_right, _forward)));
 
-	_cameraPos = Lerp(_cameraPos, _inmmediatePos, deltaTime * 5.0f);
+	_cameraPos =  Lerp(_cameraPos, _inmmediatePos, deltaTime * 5.0f);
 
 	_viewMatrix = glm::lookAt(_cameraPos, _cameraPos + _forward, _up);
+
+	_viewProjM = _projectionMatrix * _viewMatrix;
 }
 
 void Camera::SetCameraRotation(glm::vec2 mouseDelta)
 {
 	_mouseDeltaCam = mouseDelta;
+
 }
 
 void Camera::SetCameraPosition(glm::vec3 pos)
@@ -83,6 +84,18 @@ void Camera::SetCameraPosition(glm::vec3 pos)
 float Camera::GetAspectRatio() const
 {
 	return _aspectRatio;
+}
+
+
+mat4 Camera::GetViewProjMatrix() const
+{
+	return _viewProjM;
+}
+
+void Camera::OnScreenSizeChanged(float width, float height)
+{
+	// using perspective for now.
+	_projectionMatrix = glm::perspective(45.0f, width/height, 0.1f, 100.0f);
 }
 
 Camera::~Camera()
