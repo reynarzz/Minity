@@ -35,11 +35,13 @@ namespace MinityEngine
     {
         private static EditorWindow _window;
         private System.Diagnostics.Stopwatch _stopWatch;
+        private float _deltaTime;
         private double _totalSecs;
 
         private static bool _isOpened;
         public static bool IsOpened => _isOpened;
 
+        [MenuItem("Window/Minity")]
         public static void Open()
         {
             _window = GetWindow<MinityWindow>("Minity Engine");
@@ -70,11 +72,15 @@ namespace MinityEngine
 
         private void OnGUI()
         {
+            _deltaTime = (float)(_stopWatch.Elapsed.TotalMilliseconds / 1000.0f - _totalSecs);
+            _totalSecs = _stopWatch.Elapsed.TotalMilliseconds / 1000.0f;
+
 
             var windowsOffset = 1;
 
             var hierarchyRect = new Rect(0, 0, 270, Screen.height);
-            var sceneViewRect = new Rect(hierarchyRect.width + windowsOffset, 0, 750, Screen.height - 300);
+            var playModeRect = new Rect(hierarchyRect.width + windowsOffset, 0, 750, 30);
+            var sceneViewRect = new Rect(hierarchyRect.width + windowsOffset, playModeRect.height, 750, Screen.height - 300 + playModeRect.height);
             var inspectorXPos = (sceneViewRect.x + sceneViewRect.width) + windowsOffset;
 
             var inspectorRect = new Rect(inspectorXPos, 0, Screen.width - inspectorXPos, Screen.height);
@@ -86,15 +92,20 @@ namespace MinityEngine
             GUI.SetNextControlName("Hierarchy");
             GUI.Window(0, hierarchyRect, HierarchyView, "", GUIStyle.none);
 
+            // Scene info
+            EditorGUI.DrawRect(playModeRect, Color.black * 0.3f);
+            GUI.SetNextControlName("PlayMode");
+            GUI.Window(1, playModeRect, (id) => PlayModeControls(id, playModeRect), "", GUIStyle.none);
+
             // Scene window
-            EditorGUI.DrawRect(sceneViewRect, Color.black * 0.5f);
+            EditorGUI.DrawRect(sceneViewRect, Color.black * 0.4f);
             GUI.SetNextControlName("SceneView");
-            GUI.Window(1, sceneViewRect, (id) => SceneWindow(id, sceneViewRect), "", GUIStyle.none);
+            GUI.Window(2, sceneViewRect, (id) => SceneWindow(id, sceneViewRect), "", GUIStyle.none);
 
             // Inspector window
             EditorGUI.DrawRect(inspectorRect, Color.black * 0.3f);
             GUI.SetNextControlName("Inspector");
-            GUI.Window(2, inspectorRect, InspectorView, "", GUIStyle.none);
+            GUI.Window(3, inspectorRect, InspectorView, "", GUIStyle.none);
 
             EndWindows();
 
@@ -123,7 +134,7 @@ namespace MinityEngine
 
             GUILayout.BeginVertical(EditorStyles.helpBox);
             GUILayout.Space(2);
-            if (_transformFoldout = EditorGUILayout.Foldout(_transformFoldout, "Transforms"))
+            if (_transformFoldout = EditorGUILayout.Foldout(_transformFoldout, "Model Transform"))
             {
                 var labelSpacing = 60;
 
@@ -148,7 +159,6 @@ namespace MinityEngine
             }
             GUILayout.EndVertical();
 
-            model.SetTRS(position, rotation, scale);
             model.SetColumn(3, position);
         }
 
@@ -157,32 +167,43 @@ namespace MinityEngine
 
         }
 
+        private void PlayModeControls(int id, Rect rect)
+        {
+            var buttonsWidth = 45;
+            var buttons = 3;
+            var spacing = 3;
+
+            var areaWidth = buttons * buttonsWidth + spacing * buttons;
+
+            GUILayout.BeginArea(new Rect(rect.width / 2 - areaWidth / 2, 20 / 4, areaWidth, 20));
+            GUILayout.BeginHorizontal();
+            GUILayout.Button(">", GUILayout.Width(buttonsWidth));
+            GUILayout.Button("||", GUILayout.Width(buttonsWidth));
+            GUILayout.Button(">|", GUILayout.Width(buttonsWidth));
+            GUILayout.EndHorizontal();
+            GUILayout.EndArea();
+        }
+
         private void SceneWindow(int id, Rect windowRect)
         {
-            Rect rect = new Rect(windowRect.x, Screen.height - windowRect.height, windowRect.width, windowRect.height);
+            var windowVerticalOffset = 20;
 
-            var deltaTime = _stopWatch.Elapsed.TotalMilliseconds / 1000.0f - _totalSecs;
-            _totalSecs = _stopWatch.Elapsed.TotalMilliseconds / 1000.0f;
+            Rect rect = new Rect(windowRect.x, Screen.height - windowRect.height - windowRect.y - windowVerticalOffset, windowRect.width, windowRect.height);
 
-            MinityScene.SetTime((float)_stopWatch.Elapsed.TotalMilliseconds, (float)deltaTime);
+           
+            MinityScene.SetTime((float)_stopWatch.Elapsed.TotalMilliseconds, (float)_deltaTime);
 
             MinityScene.SetScreenValues((int)rect.width, (int)rect.height, rect.width / rect.height);
 
             MinityScene.SetMoveSpeed(10f);
 
-            // Background.
-            // if (Event.current.type == EventType.Repaint)
-            {
-                //rect.y = rect.height /;
-                //  GUI.BeginClip(rect);
-                rect.y -= 20;
-                GL.Viewport(rect);
-
-                GL.IssuePluginEvent(MinityScene.Run(), 0);
-                GL.Clear(true, false, default);
-            }
+            // Issue Draw call.
+            GL.Viewport(rect);
+            GL.IssuePluginEvent(MinityScene.Run(), 0);
+            GL.Clear(true, false, default);
 
             Event current = Event.current;
+            
             MinityScene.SetMouseData(current.mousePosition.x, current.mousePosition.y, current.delta.x, current.delta.y);
 
             if (current.type == EventType.ScrollWheel)

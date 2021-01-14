@@ -32,7 +32,7 @@ Camera::Camera(vec3 cameraPos, vec2 cameraRot, float aspectRatio)
 {
 	_aspectRatio = aspectRatio;
 	_inmmediateRot = cameraRot;
-	_projectionMatrix = glm::perspective(45.0f, 1.0f, 0.1f, 2000.0f);
+	_projectionMatrix = glm::perspective(45.0f, 1.0f, 0.1f, 1000.0f);
 }
 
 const mat4& Camera::GetViewMatrix()
@@ -94,7 +94,7 @@ mat4 Camera::GetViewProjMatrix() const
 void Camera::OnScreenSizeChanged(float width, float height)
 {
 	// using perspective for now.
-	_projectionMatrix = glm::perspective(45.0f, width/height, 0.1f, 2000.0f);
+	_projectionMatrix = glm::perspective(45.0f, width/height, 0.1f, 1000.0f);
 }
 
 Camera::~Camera()
