@@ -11,4 +11,5 @@ An engine inside another engine.
 - [ ] Directional light.
 - [ ] Shadow mapping.
 - [ ] Simple GUI.
+- [ ] FMOD audio integration.
 - [ ] Physics.
