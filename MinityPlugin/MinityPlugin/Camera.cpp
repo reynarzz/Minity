@@ -86,7 +86,6 @@ float Camera::GetAspectRatio() const
 	return _aspectRatio;
 }
 
-
 mat4 Camera::GetViewProjMatrix() const
 {
 	return _viewProjM;

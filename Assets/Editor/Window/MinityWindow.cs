@@ -72,26 +72,29 @@ namespace MinityEngine
 
         private void OnGUI()
         {
-            var hierarchyRect = new Rect(0, 0, 300, Screen.height);
-            var sceneViewRect = new Rect(hierarchyRect.width, 0, 600, Screen.height - 300);
+            var windowsOffset = 1;
 
-            var offset = 2;
-            var inspectorRect = new Rect((sceneViewRect.x + sceneViewRect.width) + offset, 0, Screen.width - (sceneViewRect.x + sceneViewRect.width) + offset, Screen.height);
+            var hierarchyRect = new Rect(0, 0, 300, Screen.height);
+            var sceneViewRect = new Rect(hierarchyRect.width + windowsOffset, 0, 700, Screen.height - 300);
+            var inspectorXPos = (sceneViewRect.x + sceneViewRect.width) + windowsOffset;
+
+            var inspectorRect = new Rect(inspectorXPos, 0, Screen.width - inspectorXPos, Screen.height);
 
             BeginWindows();
 
+            // Hierarchy window
             EditorGUI.DrawRect(hierarchyRect, Color.black * 0.3f);
+            GUI.SetNextControlName("Hierarchy");
+            GUI.Window(0, hierarchyRect, HierarchyView, "", GUIStyle.none);
 
-            GUI.Window(0, hierarchyRect, HierarchyView, "");
-
-            //  Rect rect = GUILayoutUtility.GetRect(100, 100);
+            // Scene window
             EditorGUI.DrawRect(sceneViewRect, Color.black * 0.5f);
-
+            GUI.SetNextControlName("SceneView");
             GUI.Window(1, sceneViewRect, (id) => SceneWindow(id, sceneViewRect), "", GUIStyle.none);
 
-
+            // Inspector window
             EditorGUI.DrawRect(inspectorRect, Color.black * 0.3f);
-
+            GUI.SetNextControlName("Inspector");
             GUI.Window(2, inspectorRect, InspectorView, "", GUIStyle.none);
 
 
@@ -100,21 +103,64 @@ namespace MinityEngine
             Repaint();
         }
 
-        private void HierarchyView(int id) 
+        private void ObjectNameControl(ref string name)
         {
-        
+            GUILayout.BeginVertical(EditorStyles.helpBox);
+
+            GUILayout.BeginHorizontal();
+            EditorGUILayout.Toggle(true, GUILayout.Width(20));
+            name = EditorGUILayout.TextField(name);
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
         }
 
-        private void InspectorView(int id)
+        private bool _transformFoldout = true;
+        private void TransformControl(ref Matrix4x4 model)
         {
-            GUILayout.Button("Add Component");
-            return;
+            var position = model.GetColumn(3);
+            var rotation = Quaternion.identity; //model.rotation;
+            var scale = default(Vector3);
+
+            GUI.SetNextControlName("Transform");
+
+            GUILayout.BeginVertical(EditorStyles.helpBox);
+            GUILayout.Space(2);
+            if (_transformFoldout = EditorGUILayout.Foldout(_transformFoldout, "Transform"))
+            {
+                var labelSpacing = 60;
+
+                GUILayout.Space(2);
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Position", GUILayout.Width(labelSpacing));
+                position = EditorGUILayout.Vector3Field("", position);
+                GUILayout.EndHorizontal();
+
+                GUILayout.Space(2);
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Rotation", GUILayout.Width(labelSpacing));
+                rotation = Quaternion.Euler(EditorGUILayout.Vector3Field("", rotation.eulerAngles));
+                GUILayout.EndHorizontal();
+
+                GUILayout.Space(2);
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Scale", GUILayout.Width(labelSpacing));
+                scale = EditorGUILayout.Vector3Field("", scale);
+                GUILayout.EndHorizontal();
+                GUILayout.Space(5);
+            }
+            GUILayout.EndVertical();
+
+            model.SetTRS(position, rotation, scale);
+            model.SetColumn(3, position);
+        }
+
+        private void HierarchyView(int id)
+        {
+
         }
 
         private void SceneWindow(int id, Rect windowRect)
         {
-            // GUI.DragWindow();
-
             Rect rect = new Rect(windowRect.x, Screen.height - windowRect.height, windowRect.width, windowRect.height);
 
             var deltaTime = _stopWatch.Elapsed.TotalMilliseconds / 1000.0f - _totalSecs;
@@ -127,7 +173,6 @@ namespace MinityEngine
             MinityScene.SetMoveSpeed(10f);
 
             // Background.
-
             // if (Event.current.type == EventType.Repaint)
             {
                 //rect.y = rect.height /;
@@ -217,6 +262,22 @@ namespace MinityEngine
                 //    Debug.Log("Release D");
                 //}
             }
+        }
+
+        private Matrix4x4 modelM = Matrix4x4.identity;
+        private string _objName = "Entity";
+
+        private void InspectorView(int id)
+        {
+            ObjectNameControl(ref _objName);
+            TransformControl(ref modelM);
+
+            GUILayout.Space(5);
+            if (GUILayout.Button("New Component", GUILayout.Height(25)))
+            {
+
+            }
+            return;
         }
     }
 }
