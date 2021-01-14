@@ -1,8 +1,11 @@
+## Minity
 ![](smallpreview.gif)
 
 ## TODO
-- [ ] Urgent Refactor.
+- [ ] Refactor.
+   - [ ] Fix some expensive calls.
+   - [ ] Arquitecture.
 - [ ] Textures support.
-   - [ ] Directional lights.
-   - [ ] Shadow mapping.
-- [ ] GUI.
+- [ ] Directional light.
+- [ ] Shadow mapping.
+- [ ] Simple GUI.
