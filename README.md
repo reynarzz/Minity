@@ -3,7 +3,7 @@ An engine inside another engine.
 
 ![](smallpreview.gif)
 
-## TODO
+## v1 TODO
 - [ ] Refactor.
    - [ ] Fix some expensive calls.
    - [ ] Arquitecture.
@@ -11,3 +11,4 @@ An engine inside another engine.
 - [ ] Directional light.
 - [ ] Shadow mapping.
 - [ ] Simple GUI.
+- [ ] Physics.
