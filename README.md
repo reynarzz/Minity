@@ -1,7 +1,9 @@
 ## Minity
+An engine inside another engine.
+
 ![](smallpreview.gif)
 
-## TODO
+## v1 TODO
 - [ ] Refactor.
    - [ ] Fix some expensive calls.
    - [ ] Arquitecture.
@@ -9,3 +11,5 @@
 - [ ] Directional light.
 - [ ] Shadow mapping.
 - [ ] Simple GUI.
+- [ ] FMOD integration.
+- [ ] Physics.
