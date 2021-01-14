@@ -1,4 +1,5 @@
 ## Minity
+An engine inside another engine.
 ![](smallpreview.gif)
 
 ## TODO
