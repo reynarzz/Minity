@@ -57,7 +57,6 @@ namespace MinityEngine
                 _totalSecs = _stopWatch.Elapsed.TotalSeconds / 1000.0f;
             }
 
-
         }
 
         private void OnDestroy()
@@ -67,15 +66,15 @@ namespace MinityEngine
 
         private void Update()
         {
-
         }
 
         private void OnGUI()
         {
+
             var windowsOffset = 1;
 
-            var hierarchyRect = new Rect(0, 0, 300, Screen.height);
-            var sceneViewRect = new Rect(hierarchyRect.width + windowsOffset, 0, 700, Screen.height - 300);
+            var hierarchyRect = new Rect(0, 0, 270, Screen.height);
+            var sceneViewRect = new Rect(hierarchyRect.width + windowsOffset, 0, 750, Screen.height - 300);
             var inspectorXPos = (sceneViewRect.x + sceneViewRect.width) + windowsOffset;
 
             var inspectorRect = new Rect(inspectorXPos, 0, Screen.width - inspectorXPos, Screen.height);
@@ -96,7 +95,6 @@ namespace MinityEngine
             EditorGUI.DrawRect(inspectorRect, Color.black * 0.3f);
             GUI.SetNextControlName("Inspector");
             GUI.Window(2, inspectorRect, InspectorView, "", GUIStyle.none);
-
 
             EndWindows();
 
@@ -125,7 +123,7 @@ namespace MinityEngine
 
             GUILayout.BeginVertical(EditorStyles.helpBox);
             GUILayout.Space(2);
-            if (_transformFoldout = EditorGUILayout.Foldout(_transformFoldout, "Transform"))
+            if (_transformFoldout = EditorGUILayout.Foldout(_transformFoldout, "Transforms"))
             {
                 var labelSpacing = 60;
 
@@ -176,12 +174,12 @@ namespace MinityEngine
             // if (Event.current.type == EventType.Repaint)
             {
                 //rect.y = rect.height /;
-                GUI.BeginClip(rect);
+                //  GUI.BeginClip(rect);
                 rect.y -= 20;
                 GL.Viewport(rect);
 
                 GL.IssuePluginEvent(MinityScene.Run(), 0);
-                GUI.EndClip();
+                GL.Clear(true, false, default);
             }
 
             Event current = Event.current;

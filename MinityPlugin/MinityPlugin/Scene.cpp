@@ -24,7 +24,7 @@ Scene::Scene()
 	_cameras.push_back(new Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, -90.0f), 0));
 
 	//auto meshRenderers = (LoadMeshRenderers("../OBJModels/worldtest2.obj"));
-	auto meshRenderers = LoadMeshRenderers("../OBJModels/DemoScene.obj");
+	auto meshRenderers = LoadMeshRenderers("OBJModels/DemoScene.obj");
 	//auto meshRenderers = LoadMeshRenderers("../OBJModels/Character.obj");
 
 	for (auto renderer : meshRenderers)
