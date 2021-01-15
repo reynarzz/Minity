@@ -1,5 +1,5 @@
 ## Minity
-An engine inside another engine.
+An OpenGL renderer inside unity.
 
 ![](smallpreview.gif)
 
