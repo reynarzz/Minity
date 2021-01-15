@@ -36,29 +36,19 @@ void Renderer::SetScene(Scene* scene)
 
 	auto meshRenderers = scene->GetMeshRenderers();
 
+	unsigned int vao;
+
+	//Generate vertex array object
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
 	for (MeshRenderer* meshRenderer : meshRenderers)
 	{
-		AddMeshRendererToRenderer(meshRenderer);
+		meshRenderer->Init();
+		_renderers.push_back(meshRenderer);
 	}
 
 	_mainCam = _scene->GetCameras().at(0);
-}
-
-// Move to another place
-void Renderer::AddMeshRendererToRenderer(MeshRenderer* meshRenderer)
-{
-	Mesh* mesh = meshRenderer->GetMesh();
-	Material* material = meshRenderer->GetMaterial();
-
-	glGenBuffers(1, &meshRenderer->_vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, meshRenderer->_vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->GetVertices()->size(), &mesh->GetVertices()->at(0), GL_STREAM_DRAW);
-
-	glGenBuffers(1, &meshRenderer->_ibo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, meshRenderer->_ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * mesh->GetIndices()->size(), &mesh->GetIndices()->at(0), GL_STREAM_DRAW);
-
-	_renderers.push_back(meshRenderer);
 }
 
 void Renderer::Draw()
@@ -71,36 +61,14 @@ void Renderer::Draw()
 
 	glDepthMask(GL_TRUE);
 
-	unsigned int vao;
-
-	//Generate vertex array object
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
 	for (auto renderer : _renderers)
 	{
+		renderer->Bind(_mainCam);
+
 		Mesh* mesh = renderer->GetMesh();
-		Material* material = renderer->GetMaterial();
 
-		Shader* shader = material->GetShader();
-
-		// Bind buffer and set data.
-		glBindBuffer(GL_ARRAY_BUFFER, renderer->_vbo);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * mesh->GetVertices()->size(), &mesh->GetVertices()->at(0));
-
-		// Set data layout for the shader.
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, 0);
-		glEnableVertexAttribArray(0);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer->_ibo);
-		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(unsigned int) * mesh->GetIndices()->size(), &mesh->GetIndices()->at(0));
-
-		material->UseMaterial(_mainCam);
-
-		//Debug::Log(shaderProgram);
 		glDrawElements(GL_TRIANGLES, mesh->GetIndices()->size(), GL_UNSIGNED_INT, 0);
 	}
-	glDeleteVertexArrays(1, &vao);
 }
 
 Renderer::~Renderer()

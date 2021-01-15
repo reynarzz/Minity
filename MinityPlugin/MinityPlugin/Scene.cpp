@@ -17,14 +17,13 @@ struct ShadersSource
 	string fragmentSource;
 };
 
-
 Scene::Scene()
 {
 	// I have to remove this later. An scene is able to exist without camera.
-	_cameras.push_back(new Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, -90.0f), 0));
+	_cameras.push_back(new Camera(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec2(0.0f, -90.0f), 0));
 
 	//auto meshRenderers = (LoadMeshRenderers("../OBJModels/worldtest2.obj"));
-	auto meshRenderers = LoadMeshRenderers("OBJModels/DemoScene.obj");
+	auto meshRenderers = LoadMeshRenderers("OBJModels/Medieval/House.obj");
 	//auto meshRenderers = LoadMeshRenderers("../OBJModels/Character.obj");
 
 	for (auto renderer : meshRenderers)
@@ -79,7 +78,7 @@ static ShadersSource ParseShader(const string shaderFilePath)
 
 vector<MeshRenderer*> LoadMeshRenderers(const string& objectPath)
 {
-	auto sources = ParseShader("DepthShader.shader");
+	auto sources = ParseShader("OBJModels/Shaders/Texture.shader");
 
 	vector<Mesh*> meshes = GetMeshes(objectPath);
 	vector<MeshRenderer*> renderers;
@@ -116,12 +115,13 @@ vector<MeshRenderer*> LoadMeshRenderers(const string& objectPath)
 		for (auto mesh : meshes)
 		{
 			Shader* shader = new Shader(sources.vertexSource, sources.fragmentSource);
+			//Texture* texture = new Texture("OBJModels/Medieval/MillCat_color.jpg");
+
 			Material* material = new Material(shader);
 
 			MeshRenderer* meshRenderer = new MeshRenderer(mesh, material);
 			renderers.push_back(meshRenderer);
 		}
-
 	}
 
 	return renderers;
@@ -129,10 +129,7 @@ vector<MeshRenderer*> LoadMeshRenderers(const string& objectPath)
 
 vector<Mesh*> GetMeshes(const string& objectPath)
 {
-	Mesh* mesh = nullptr;
 	vector<Mesh*> meshes;
-
-
 
 	Loader loader;
 	bool loaded = loader.LoadFile(objectPath);
@@ -149,55 +146,44 @@ vector<Mesh*> GetMeshes(const string& objectPath)
 		//  position, normal, and texture coordinate
 		for (int i = 0; i < loader.LoadedMeshes.size(); i++)
 		{
-			objl::Mesh curMesh = loader.LoadedMeshes[i];
+			objl::Mesh mesh = loader.LoadedMeshes[i];
 
 			vector<float>* vertices = new vector<float>();
 			vector<unsigned int>* indices = new vector<unsigned int>();
 
-			for (int j = 0; j < curMesh.Vertices.size(); j++)
+			for (int j = 0; j < mesh.Vertices.size(); j++)
 			{
-				vertices->push_back(-curMesh.Vertices[j].Position.X);
-				vertices->push_back(curMesh.Vertices[j].Position.Y);
-				vertices->push_back(-curMesh.Vertices[j].Position.Z);
+				vertices->push_back(-mesh.Vertices[j].Position.X);
+				vertices->push_back(mesh.Vertices[j].Position.Y);
+				vertices->push_back(-mesh.Vertices[j].Position.Z);
 
-				/*"P(" << curMesh.Vertices[j].Position.X << ", " << curMesh.Vertices[j].Position.Y << ", " << curMesh.Vertices[j].Position.Z << ") " <<
-				"N(" << curMesh.Vertices[j].Normal.X << ", " << curMesh.Vertices[j].Normal.Y << ", " << curMesh.Vertices[j].Normal.Z << ") " <<
-				"TC(" << curMesh.Vertices[j].TextureCoordinate.X << ", " << curMesh.Vertices[j].TextureCoordinate.Y << ")\n";*/
+				vertices->push_back(mesh.Vertices[j].TextureCoordinate.X);
+				vertices->push_back(mesh.Vertices[j].TextureCoordinate.Y);
+
+				vertices->push_back(mesh.Vertices[j].Normal.X);
+				vertices->push_back(mesh.Vertices[j].Normal.Y);
+				vertices->push_back(mesh.Vertices[j].Normal.Z);
 			}
 
 			// Go through every 3rd index and print the
 			//	triangle that these indices represent
-			for (int j = 0; j < curMesh.Indices.size(); j += 3)
+			for (int j = 0; j < mesh.Indices.size(); j += 3)
 			{
-				indices->push_back(curMesh.Indices[j]);
-				indices->push_back(curMesh.Indices[j + 1]);
-				indices->push_back(curMesh.Indices[j + 2]);
-				//file << "T" << j / 3 << ": " <<  << ", " << curMesh.Indices[j + 1] << ", " << curMesh.Indices[j + 2] << "\n";
+				indices->push_back(mesh.Indices[j]);
+
+				if (mesh.Indices.size() > j + 1)
+				{
+					indices->push_back(mesh.Indices[j + 1]);
+				}
+
+				if (mesh.Indices.size() > j + 2)
+				indices->push_back(mesh.Indices[j + 2]);
 			}
 
-			mesh = new Mesh(vertices, indices);
-
-			meshes.push_back(mesh);
+			meshes.push_back(new Mesh(vertices, indices));
 		}
 
 	}
-
-	/*auto obj = ParseOBJModel("../OBJModels/boat.obj");
-
-	for (auto vert : obj.verts)
-	{
-		vertices->push_back(vert.x * 0.2f);
-		vertices->push_back(vert.y * 0.2f);
-		vertices->push_back(-vert.z * 0.2f);
-	}
-
-	for (auto indice : obj.elements)
-	{
-		indices->push_back(indice);
-	}
-
-	mesh = new Mesh(vertices, indices);*/
-
 	return meshes;
 }
 

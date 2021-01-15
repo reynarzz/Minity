@@ -176,6 +176,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Dependencies\image\stb_image.h" />
     <ClInclude Include="MyOBJParser.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="InputSystem.h" />
@@ -186,6 +187,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ScreenInfo.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Unity_PluginAPI\IUnityEventQueue.h" />
     <ClInclude Include="Unity_PluginAPI\IUnityGraphics.h" />
     <ClInclude Include="Unity_PluginAPI\IUnityGraphicsD3D11.h" />
@@ -202,6 +204,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DebugCPP.cpp" />
     <ClCompile Include="DebugCPP.h" />
+    <ClCompile Include="Dependencies\image\stb_image.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -217,9 +220,11 @@
     <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DepthShader.shader" />
+    <None Include="Texture.shader" />
     <None Include="UnlitShader.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

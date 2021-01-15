@@ -96,6 +96,12 @@
     <ClInclude Include="ScreenInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\image\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugCPP.cpp">
@@ -137,12 +143,21 @@
     <ClCompile Include="DebugCPP.h">
       <Filter>Header Files\MinityHeaders</Filter>
     </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Dependencies\image\stb_image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="UnlitShader.shader">
       <Filter>Source Files\Shaders</Filter>
     </None>
     <None Include="DepthShader.shader">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="Texture.shader">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

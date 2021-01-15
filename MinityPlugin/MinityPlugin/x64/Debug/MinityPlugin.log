@@ -1,3 +1,6 @@
-﻿  Camera.cpp
+﻿  Material.cpp
+  Scene.cpp
+D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\Dependencies\OBJReader\Obj\OBJ_Loader.h(949,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
   MinityPlugin.vcxproj -> D:\Unity_Projects\Minity\MinityPlugin\MinityPlugin\x64\Debug\MinityPlugin.dll
           1 file(s) copied.
