@@ -3,7 +3,7 @@ An OpenGL renderer inside unity.
 
 ![](smallpreview.gif)
 
-##$ To Do v1 
+### To Do v1 
 - [ ] Refactor.
    - [ ] Fix some expensive calls.
    - [ ] Arquitecture.
