@@ -71,7 +71,7 @@ void Camera::Update(float deltaTime)
 
 	_viewProjM = _projectionMatrix * _viewMatrix;
 }
-
+	
 void Camera::SetCameraRotation(glm::vec2 mouseDelta)
 {
 	_mouseDeltaCam = mouseDelta;
