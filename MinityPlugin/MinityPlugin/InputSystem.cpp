@@ -8,7 +8,7 @@ NormalKey _normalKey;
 MouseKeys _mouseKey;
 ModifierKeys _modifierKey;
 glm::vec2 _mouseDelta;
-glm::vec3 _position;
+glm::vec3 _position = glm::vec3(132.0f, 111.0f, 124.0f);
 float _i_moveSpeed;
 
 extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetMouseData(float xPos, float yPos, float deltaX, float deltaY)

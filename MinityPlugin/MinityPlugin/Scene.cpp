@@ -24,7 +24,7 @@ struct ShadersSource
 Scene::Scene()
 {
 	// I have to remove this later. An scene is able to exist without camera.
-	_cameras.push_back(new Camera(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec2(0.0f, -90.0f), 0));
+	_cameras.push_back(new Camera(glm::vec3(.0f, .0f, .0f), glm::vec2(-363, 220), 0));
 
 	//auto meshRenderers = (LoadMeshRenderers("../OBJModels/worldtest2.obj"));
 	auto meshRenderers = LoadMeshRenderers("OBJModels/Medieval/house.obj");
@@ -114,14 +114,29 @@ vector<MeshRenderer*> LoadMeshRenderers(const string& objectPath)
 	}
 	else
 	{
-		for (auto mesh : meshes)
+		vector<string> texturePath = 
+		{ 
+			"OBJModels/Medieval/ground_shadow.jpg",
+			"OBJModels/Medieval/Ground_color.jpg",
+			"OBJModels/Medieval/MillCat_color.jpg",
+		};
+
+		vector<Texture> textures;
+
+		for (size_t i = 0; i < meshes.size(); i++)
 		{
 			Shader* shader = new Shader(sources.vertexSource, sources.fragmentSource);
-			Texture* texture = new Texture("OBJModels/Medieval/MillCat_color.jpg");
+
+			/*for (size_t i = 0; i < texturePath.size(); i++)
+			{
+
+			}*/
+
+			Texture* texture = new Texture(texturePath[i]);
 
 			Material* material = new Material(shader, texture);
 
-			MeshRenderer* meshRenderer = new MeshRenderer(mesh, material);
+			MeshRenderer* meshRenderer = new MeshRenderer(meshes[i], material);
 			renderers.push_back(meshRenderer);
 		}
 	}
@@ -156,7 +171,8 @@ vector<Mesh*> GetMeshes(const string& objectPath)
 				int fv = shapes[s].mesh.num_face_vertices[f];
 
 				// Loop over vertices in the face.
-				for (size_t v = 0; v < fv; v++) {
+				for (size_t v = 0; v < fv; v++) 
+				{
 					// access to vertex
 					tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
 
@@ -184,7 +200,7 @@ vector<Mesh*> GetMeshes(const string& objectPath)
 				}
 
 				index_offset += fv;
-
+				
 				// per-face material
 				shapes[s].mesh.material_ids[f];
 			}

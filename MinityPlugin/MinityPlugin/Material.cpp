@@ -18,6 +18,12 @@ Material::Material(Shader* shader, Texture* texture) :
 	_textures.push_back(texture);
 }
 
+Material::Material(Shader* shader, std::vector<Texture*> texture) :
+	_shader(shader), _modelM(1.0f), _textures(texture)
+{
+	_textures = texture;
+}
+
 Shader* Material::GetShader() const
 {
 	return _shader;

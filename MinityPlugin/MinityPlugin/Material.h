@@ -16,6 +16,7 @@ private:
 public:
 	Material(Shader* shader);
 	Material(Shader* shader, Texture* texture);
+	Material(Shader* shader, std::vector<Texture*> texture);
 	~Material();
 	void UseMaterial(Camera* camera);
 	Shader* GetShader() const;

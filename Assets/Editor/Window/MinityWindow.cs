@@ -195,7 +195,7 @@ namespace MinityEngine
 
             MinityScene.SetScreenValues((int)rect.width, (int)rect.height, rect.width / rect.height);
 
-            MinityScene.SetMoveSpeed(10f);
+            MinityScene.SetMoveSpeed(30f);
 
             // Issue Draw call.
             GL.Viewport(rect);
