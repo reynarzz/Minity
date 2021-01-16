@@ -102,6 +102,21 @@
     <ClInclude Include="Dependencies\image\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Dependencies\Obj_load2\list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\Obj_load2\obj_parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\Obj_load2\objLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\Obj_load2\string_extra.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\Obj_load2\tiny_obj_loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugCPP.cpp">
@@ -160,5 +175,9 @@
     <None Include="Texture.shader">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="Dependencies\Obj_load2\objTester.vcproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Dependencies\Obj_load2\ReadMe.txt" />
   </ItemGroup>
 </Project>

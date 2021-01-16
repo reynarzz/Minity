@@ -177,6 +177,11 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Dependencies\image\stb_image.h" />
+    <ClInclude Include="Dependencies\Obj_load2\list.h" />
+    <ClInclude Include="Dependencies\Obj_load2\objLoader.h" />
+    <ClInclude Include="Dependencies\Obj_load2\obj_parser.h" />
+    <ClInclude Include="Dependencies\Obj_load2\string_extra.h" />
+    <ClInclude Include="Dependencies\Obj_load2\tiny_obj_loader.h" />
     <ClInclude Include="MyOBJParser.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="InputSystem.h" />
@@ -223,9 +228,13 @@
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Dependencies\Obj_load2\objTester.vcproj" />
     <None Include="DepthShader.shader" />
     <None Include="Texture.shader" />
     <None Include="UnlitShader.shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Dependencies\Obj_load2\ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

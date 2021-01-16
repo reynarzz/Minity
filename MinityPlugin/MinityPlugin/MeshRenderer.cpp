@@ -28,6 +28,8 @@ void MeshRenderer::Init()
 	glGenBuffers(1, &_ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * _mesh->GetIndices()->size(), &_mesh->GetIndices()->at(0), GL_STREAM_DRAW);
+
+	_material->BindTextures();
 }
 
 void MeshRenderer::Bind(Camera* camera)
@@ -49,7 +51,7 @@ void MeshRenderer::Bind(Camera* camera)
 	glEnableVertexAttribArray(1);
 
 	// Normals layout
-	glVertexAttribPointer(2, 3, GL_FLOAT, false, stride, (void*)(sizeof(float) * 8));
+	glVertexAttribPointer(2, 3, GL_FLOAT, false, stride, (void*)(sizeof(float) * 5));
 	glEnableVertexAttribArray(2);
 	
 	_material->UseMaterial(camera);
