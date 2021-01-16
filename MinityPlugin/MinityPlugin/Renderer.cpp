@@ -66,6 +66,7 @@ void Renderer::Draw()
 		renderer->Bind(_mainCam);
 
 		Mesh* mesh = renderer->GetMesh();
+		//glDrawArrays(GL_POINTS, 0, mesh->GetVertices()->size());
 
 		glDrawElements(GL_TRIANGLES, mesh->GetIndices()->size(), GL_UNSIGNED_INT, 0);
 	}

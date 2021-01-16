@@ -181,7 +181,7 @@
     <ClInclude Include="Dependencies\Obj_load2\objLoader.h" />
     <ClInclude Include="Dependencies\Obj_load2\obj_parser.h" />
     <ClInclude Include="Dependencies\Obj_load2\string_extra.h" />
-    <ClInclude Include="Dependencies\Obj_load2\tiny_obj_loader.h" />
+    <ClInclude Include="Dependencies\ObjectsLoaderAPIs\tiny_obj_loader.h" />
     <ClInclude Include="MyOBJParser.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="InputSystem.h" />

@@ -15,7 +15,13 @@ Material::Material(Shader* shader, Texture* texture) :
 		//texture = new Texture("OBJModels/Medieval/emptyTex.png");
 	}
 
-	//_textures.push_back(texture);
+	_textures.push_back(texture);
+}
+
+Material::Material(Shader* shader, std::vector<Texture*> texture) :
+	_shader(shader), _modelM(1.0f), _textures(texture)
+{
+	_textures = texture;
 }
 
 Shader* Material::GetShader() const
@@ -25,8 +31,6 @@ Shader* Material::GetShader() const
 
 void Material::BindTextures()
 {
-	Texture* texture = new Texture("OBJModels/Medieval/MillCat_color.jpg");
-	_textures.push_back(texture);
 }
 
 void Material::UseMaterial(Camera* camera)
@@ -35,7 +39,7 @@ void Material::UseMaterial(Camera* camera)
 
 	glUseProgram(id);
 
-	auto value = _textures.size();
+	//auto value = _textures.size();
 
 	for (unsigned int i = 0; i < _textures.size(); i++)
 	{

@@ -3,6 +3,7 @@
 #include "glm/matrix.hpp"
 #include "glm/glm.hpp"
 #include "Camera.h"
+#include "DebugCPP.h"
 
 float _angleX;
 float _angleY;
@@ -31,6 +32,7 @@ Camera::Camera(vec3 cameraPos, vec2 cameraRot, float aspectRatio)
 	: _cameraPos(cameraPos), _cameraRot(cameraRot), _viewMatrix(mat4(1.0f))
 {
 	_aspectRatio = aspectRatio;
+	_inmmediatePos = cameraPos;
 	_inmmediateRot = cameraRot;
 	_projectionMatrix = glm::perspective(45.0f, 1.0f, 0.1f, 1000.0f);
 }
@@ -69,7 +71,7 @@ void Camera::Update(float deltaTime)
 
 	_viewProjM = _projectionMatrix * _viewMatrix;
 }
-
+	
 void Camera::SetCameraRotation(glm::vec2 mouseDelta)
 {
 	_mouseDeltaCam = mouseDelta;
