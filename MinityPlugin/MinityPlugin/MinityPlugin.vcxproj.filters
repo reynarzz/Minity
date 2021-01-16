@@ -114,7 +114,7 @@
     <ClInclude Include="Dependencies\Obj_load2\string_extra.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Dependencies\Obj_load2\tiny_obj_loader.h">
+    <ClInclude Include="Dependencies\ObjectsLoaderAPIs\tiny_obj_loader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
