@@ -58,7 +58,6 @@ namespace MinityEngine
                 _stopWatch.Start();
                 _totalSecs = _stopWatch.Elapsed.TotalSeconds / 1000.0f;
             }
-
         }
 
         private void OnDestroy()
@@ -76,7 +75,7 @@ namespace MinityEngine
             _totalSecs = _stopWatch.Elapsed.TotalMilliseconds / 1000.0f;
 
 
-            var windowsOffset = 1;
+            var windowsOffset = 2;
 
             var hierarchyRect = new Rect(0, 0, 270, Screen.height);
             var playModeRect = new Rect(hierarchyRect.width + windowsOffset, 0, 750, 30);
@@ -90,7 +89,7 @@ namespace MinityEngine
             // Hierarchy window
             EditorGUI.DrawRect(hierarchyRect, Color.black * 0.3f);
             GUI.SetNextControlName("Hierarchy");
-            GUI.Window(0, hierarchyRect, HierarchyView, "", GUIStyle.none);
+            GUI.Window(0, hierarchyRect, (id)=> HierarchyView(id, ref hierarchyRect), "", GUIStyle.none);
 
             // Scene info
             EditorGUI.DrawRect(playModeRect, Color.black * 0.3f);
@@ -105,9 +104,17 @@ namespace MinityEngine
             // Inspector window
             EditorGUI.DrawRect(inspectorRect, Color.black * 0.3f);
             GUI.SetNextControlName("Inspector");
-            GUI.Window(3, inspectorRect, InspectorView, "", GUIStyle.none);
+            GUI.Window(3, inspectorRect, (id) => InspectorView(id, inspectorRect), "", GUIStyle.none);
 
             EndWindows();
+
+            ResizeControl(new Vector2(hierarchyRect.x, hierarchyRect.y), hierarchyRect.width);
+            var current = Event.current;
+
+            if (current.type == EventType.MouseDown && GUIUtility.hotControl == 0)
+            {
+               // GUI.FocusControl("SceneView");
+            }
 
             Repaint();
         }
@@ -162,9 +169,9 @@ namespace MinityEngine
             model.SetColumn(3, position);
         }
 
-        private void HierarchyView(int id)
+        private void HierarchyView(int id, ref Rect hierarchyRect)
         {
-
+            ResizeControl(new Vector2(hierarchyRect.x, hierarchyRect.y), hierarchyRect.width);
         }
 
         private void PlayModeControls(int id, Rect rect)
@@ -195,7 +202,7 @@ namespace MinityEngine
 
             MinityScene.SetScreenValues((int)rect.width, (int)rect.height, rect.width / rect.height);
 
-            MinityScene.SetMoveSpeed(30f);
+            MinityScene.SetMoveSpeed(50f);
 
             // Issue Draw call.
             GL.Viewport(rect);
@@ -286,10 +293,64 @@ namespace MinityEngine
         private Matrix4x4 modelM = Matrix4x4.identity;
         private string _objName = "Entity";
 
-        private void InspectorView(int id)
+        private Rect _lineRect;
+        private bool _canDragLine;
+
+        private float ResizeControl(Vector2 pos, float width) 
+        {
+            if(_lineRect == default)
+            _lineRect = new Rect(pos.x + width, pos.y, 2, Screen.height);
+
+            EditorGUI.DrawRect(_lineRect, Color.black);
+
+            Event current = Event.current;
+
+            //if (current.type == EventType.muse)
+            {
+                // Debug.Log("Mouse down");
+
+                var testRect = new Rect(_lineRect);
+
+                testRect.x -= 7;
+                testRect.width += 14;
+
+                if (current.type == EventType.MouseDown && testRect.Contains(current.mousePosition))
+                {
+                    DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+
+                    _canDragLine = true;
+                }
+                else if (current.type == EventType.MouseUp) 
+                {
+                    DragAndDrop.visualMode = DragAndDropVisualMode.None;
+
+                    _canDragLine = false;
+                }
+
+                if (_canDragLine)
+                {
+                    Debug.Log("Above");
+                    DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+
+                    _lineRect.x = current.mousePosition.x;
+                }
+               
+
+
+                //Event.current.Use();
+                // DragAndDrop.visualMode = DragAndDropVisualMode.Rejected;
+                // DragAndDrop.StartDrag("Drag");
+                // Event.current.Use();
+
+            }
+            return width;
+        }
+
+        private void InspectorView(int id, Rect inspectorRect)
         {
             ObjectNameControl(ref _objName);
             TransformControl(ref modelM);
+
 
             GUILayout.Space(5);
             if (GUILayout.Button("New Component", GUILayout.Height(25)))

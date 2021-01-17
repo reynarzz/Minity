@@ -26,9 +26,8 @@ Scene::Scene()
 	// I have to remove this later. An scene is able to exist without camera.
 	_cameras.push_back(new Camera(glm::vec3(.0f, .0f, .0f), glm::vec2(-363, 220), 0));
 
-	//auto meshRenderers = (LoadMeshRenderers("../OBJModels/worldtest2.obj"));
-	auto meshRenderers = LoadMeshRenderers("OBJModels/Medieval/house.obj");
-	//auto meshRenderers = LoadMeshRenderers("../OBJModels/Character.obj");
+	auto meshRenderers = LoadMeshRenderers("MinityRes/Models/House.obj");
+	//auto meshRenderers = LoadMeshRenderers("MinityRes/Models/Marina_1276_OBJ.obj");
 
 	for (auto renderer : meshRenderers)
 	{
@@ -82,7 +81,7 @@ static ShadersSource ParseShader(const string shaderFilePath)
 
 vector<MeshRenderer*> LoadMeshRenderers(const string& objectPath)
 {
-	auto sources = ParseShader("OBJModels/Shaders/Texture.shader");
+	auto sources = ParseShader("MinityRes/Shaders/TextureUnlit.shader");
 
 	vector<Mesh*> meshes = GetMeshes(objectPath);
 	vector<MeshRenderer*> renderers;
@@ -96,7 +95,7 @@ vector<MeshRenderer*> LoadMeshRenderers(const string& objectPath)
 			1.0f, 0.0f, -1.0f,
 			-1.0f, 0.0f, -1.0f,
 		};
-
+		 
 		vector<unsigned int>* indices = new vector<unsigned int>
 		{
 			0, 1, 2,
@@ -116,10 +115,14 @@ vector<MeshRenderer*> LoadMeshRenderers(const string& objectPath)
 	{
 		vector<string> texturePath = 
 		{ 
-			"OBJModels/Medieval/ground_shadow.jpg",
-			"OBJModels/Medieval/Ground_color.jpg",
-			"OBJModels/Medieval/MillCat_color.jpg",
+			"MinityRes/Models/ground_shadow.jpg",
+			"MinityRes/Models/Ground_color.jpg",
+			"MinityRes/Models/MillCat_color.jpg",
 		};
+		/*vector<string> texturePath = 
+		{ 
+			"MinityResources/Models/smooth.png"
+		};*/
 
 		vector<Texture> textures;
 
@@ -131,9 +134,8 @@ vector<MeshRenderer*> LoadMeshRenderers(const string& objectPath)
 			{
 
 			}*/
-
 			Texture* texture = new Texture(texturePath[i]);
-
+			
 			Material* material = new Material(shader, texture);
 
 			MeshRenderer* meshRenderer = new MeshRenderer(meshes[i], material);
@@ -154,7 +156,7 @@ vector<Mesh*> GetMeshes(const string& objectPath)
 	std::string warn;
 	std::string err;
 
-	bool load = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, objectPath.c_str(), "OBJModels/", true);
+	bool load = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, objectPath.c_str(), "MinityRes/", true);
 
 	if (load)
 	{
@@ -191,9 +193,9 @@ vector<Mesh*> GetMeshes(const string& objectPath)
 					}
 					else
 					{
-						vertices->push_back(0);
-						vertices->push_back(0);
-						vertices->push_back(0);
+						vertices->push_back(1);
+						vertices->push_back(1);
+						vertices->push_back(1);
 					}
 
 					indices->push_back(index_offset + v);
@@ -203,6 +205,7 @@ vector<Mesh*> GetMeshes(const string& objectPath)
 				
 				// per-face material
 				shapes[s].mesh.material_ids[f];
+				
 			}
 
 			meshes.push_back(new Mesh(vertices, indices));
@@ -227,13 +230,13 @@ void Scene::Update(ScreenInfo screenInfo, float deltaTime)
 {
 	for (auto camera : _cameras)
 	{
-		/*if (_screenInfo._dimensions.x != screenInfo._dimensions.x)
+	if (_screenInfo._dimensions.x != screenInfo._dimensions.x)
 		{
 			_screenInfo._dimensions.x = screenInfo._dimensions.x;
 
 			camera->OnScreenSizeChanged(screenInfo._dimensions.x, screenInfo._dimensions.y);
-			Debug::Log("Size changed");
-		}*/
+			//Debug::Log("Size changed");
+		}
 
 		camera->Update(deltaTime);
 	}
