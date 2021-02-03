@@ -182,8 +182,202 @@ namespace MinityEngine
             model.SetColumn(3, position);
         }
 
+        private class HierarchyObj
+        {
+            private const float _hSpacing = 15;
+            private const float _vSpacing = 3;
+
+            public int Elements => _children.Count;
+            private List<HierarchyObj> _children;
+            public string Name { get; set; }
+
+            private readonly Rect _defaultRect;
+
+            public Rect Rect { get; set; }
+
+            private bool _foldOut = false;
+
+            public bool FoldOut 
+            {
+                get => _foldOut;
+
+                set 
+                {
+                    if (_foldOut != value) 
+                    {
+                        OnFoldedOut();
+                    }
+
+                    _foldOut = value;
+                }
+            }
+            public event Action OnFoldedOut;
+
+            public HierarchyObj(string name, Rect rect)
+            {
+                _defaultRect = rect;
+                Rect = _defaultRect;
+
+                _children = new List<HierarchyObj>();
+
+                if (string.IsNullOrEmpty(name))
+                {
+                    name = "EmptyObj";
+                }
+                Name = name;
+            }
+
+            public void CreateChild(string name)
+            {
+                var child = new HierarchyObj(name, new Rect(Rect.x + _hSpacing, GetChildrensHeightSum(), 100, 20));
+                child.Name = name;
+
+                _children.Add(child);
+            }
+
+            public float GetChildrensHeightSum()
+            {
+                var sum = 0f;
+
+                for (int i = 0; i < _children.Count; i++)
+                {
+                    sum += _children[i].Rect.height + _vSpacing;
+                }
+
+                return sum + Rect.height + _vSpacing + Rect.y;
+            }
+
+            public HierarchyObj GetChild(int index)
+            {
+                return _children.ElementAtOrDefault(index);
+            }
+
+            public void RestartRect() 
+            {
+                Rect = _defaultRect;
+            }
+        }
+
+
+        private class HierarchyLayout
+        {
+            private const float _hSpacing = 15;
+            private const float _vSpacing = 3;
+
+            private readonly List<HierarchyObj> _hierarchyObjs;
+            public List<HierarchyObj> HierarchyObjs => _hierarchyObjs;
+
+            public HierarchyLayout()
+            {
+                _hierarchyObjs = new List<HierarchyObj>();
+            }
+
+            public void AddObj(string name)
+            {
+                var child = new HierarchyObj(name, new Rect(_hSpacing, GetChildrensHeightSum(), 100, 20));
+                child.OnFoldedOut += RecalculateLayout;
+
+                _hierarchyObjs.Add(child);
+            }
+
+            public HierarchyObj GetObj(int index)
+            {
+                return _hierarchyObjs.ElementAtOrDefault(index);
+            }
+
+            public float GetChildrensHeightSum()
+            {
+                var sum = 0f;
+
+                for (int i = 0; i < _hierarchyObjs.Count; i++)
+                {
+                    var childHeight = 0f;
+
+                    var parent = _hierarchyObjs[i];
+
+                    if (parent.FoldOut)
+                    {
+                        childHeight = parent.GetChildrensHeightSum();
+                    }
+
+                    sum += parent.Rect.height + _vSpacing + childHeight;
+                }
+
+                return sum;
+            }
+             
+            private void RecalculateLayout()
+            {
+                Debug.Log("recalculate");
+
+                for (int i = 1; i < _hierarchyObjs.Count; i++)
+                {
+                    var prevParent = _hierarchyObjs[i - 1];
+                    var parent = _hierarchyObjs[i];
+                     
+                    if (!prevParent.FoldOut)
+                    {
+                        parent.Rect = new Rect(parent.Rect.x, prevParent.GetChildrensHeightSum(), parent.Rect.width, parent.Rect.height);
+                    }
+                    else 
+                    {
+                        parent.RestartRect();
+                    }
+                }
+            }
+        }
+
+        private HierarchyLayout _layout;
+
         private void HierarchyView(int id, ref Rect hierarchyRect)
         {
+            if (_layout == null) 
+            {
+                _layout = new HierarchyLayout();
+
+                _layout.AddObj("ParentObj");
+                _layout.AddObj("ParentObj2");
+
+                var parent = _layout.GetObj(0);
+                var parent2 = _layout.GetObj(1);
+
+                parent.CreateChild("Windmil");
+                parent.CreateChild("Windmil2");
+                parent.CreateChild("Windmil3");
+                parent.CreateChild("Windmil4");
+            }
+
+            DrawLayout();
+        }
+
+        private void DrawLayout()
+        {
+            for (int i = 0; i < _layout.HierarchyObjs.Count; i++)
+            {
+                var showChild = GameObjectUI(_layout.HierarchyObjs[i]);
+
+                if (showChild)
+                {
+                    for (int j = 0; j < _layout.HierarchyObjs[i].Elements; j++)
+                    {
+                        GameObjectUI(_layout.HierarchyObjs[i].GetChild(j));
+                    }
+                }
+            }
+        }
+
+        private bool GameObjectUI(HierarchyObj obj)
+        {
+            if (obj.Elements > 0)
+            {
+                return obj.FoldOut = EditorGUI.Foldout(obj.Rect, obj.FoldOut, obj.Name);
+            }
+            else
+            {
+                EditorGUI.LabelField(obj.Rect, obj.Name);
+                return true;
+            }
+            //EditorGUI.DrawRect(obj.Rect, Color.red);
         }
 
         private void PlayModeControls(int id, Rect rect)
@@ -229,8 +423,6 @@ namespace MinityEngine
             GL.Viewport(rect);
             GL.IssuePluginEvent(MinityScene.Run(), 0);
             GL.Clear(true, false, default);
-
-            Debug.Log("rect: " + windowRect + ", mousePos: " + current.mousePosition + ", detect: " + windowRect.Contains(current.mousePosition));
 
             if (current.type == EventType.ScrollWheel)
             {
