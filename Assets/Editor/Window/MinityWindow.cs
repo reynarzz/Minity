@@ -58,7 +58,7 @@ namespace MinityEngine
                 _stopWatch.Start();
                 _totalSecs = _stopWatch.Elapsed.TotalSeconds / 1000.0f;
             }
-
+            _hierarchyRect.width = 230;
             _sceneViewRect.width = 700;
         }
 
@@ -76,31 +76,37 @@ namespace MinityEngine
 
         private void OnGUI()
         {
+
             _deltaTime = (float)(_stopWatch.Elapsed.TotalMilliseconds / 1000.0f - _totalSecs);
             _totalSecs = _stopWatch.Elapsed.TotalMilliseconds / 1000.0f;
 
-             
-            var windowsOffset = 2;
 
-            _hierarchyRect.height = Screen.height;
+            EditorGUI.DrawRect(new Rect(0, 0, Screen.width, Screen.height), Color.black * 0.5f);
+
+
             //_hierarchyRect.width = ResizeControl(new Vector2(_hierarchyRect.x, _hierarchyRect.y), _hierarchyRect.width);
 
-            var playModeRect = new Rect(_hierarchyRect.width + windowsOffset, 0, _sceneViewRect.width, 30);
-            _sceneViewRect = new Rect(_hierarchyRect.width + windowsOffset, playModeRect.height, _sceneViewRect.width, Screen.height - 300 + playModeRect.height);
-            _sceneViewRect.width = ResizeControl(new Vector2(_sceneViewRect.x, 0), _sceneViewRect.width);
-             
+            var playModeRect = new Rect(0, 0, Screen.width, 30);
+
+            var windowsOffset = 2;
+            _hierarchyRect.height = Screen.height;
+            _hierarchyRect.y = playModeRect.height;
+
+            _sceneViewRect = new Rect(_hierarchyRect.width + windowsOffset, playModeRect.height + windowsOffset, _sceneViewRect.width, Screen.height - 300 + playModeRect.height);
+            _sceneViewRect.width = ResizeControl(new Vector2(_sceneViewRect.x, playModeRect.height), _sceneViewRect.width);
+
             var inspectorXPos = (_sceneViewRect.x + _sceneViewRect.width) + windowsOffset;
-            var inspectorRect = new Rect(inspectorXPos, 0, Screen.width - inspectorXPos, Screen.height);
+            var inspectorRect = new Rect(inspectorXPos, playModeRect.height, Screen.width - inspectorXPos, Screen.height);
 
             BeginWindows();
 
             // Hierarchy window
-            EditorGUI.DrawRect(_hierarchyRect, Color.black * 0.3f);
+            EditorGUI.DrawRect(_hierarchyRect, new Color(0.14f, 0.14f, 0.14f, 1));
             GUI.SetNextControlName("Hierarchy");
-            GUI.Window(0, _hierarchyRect, (id)=> HierarchyView(id, ref _hierarchyRect), "", GUIStyle.none);
+            GUI.Window(0, _hierarchyRect, (id) => HierarchyView(id, ref _hierarchyRect), "", GUIStyle.none);
 
-            // Scene info
-            EditorGUI.DrawRect(playModeRect, Color.black * 0.3f);
+            // Toolbar info
+            EditorGUI.DrawRect(playModeRect, new Color(0.1f, 0.1f, 0.1f, 1));
             GUI.SetNextControlName("PlayMode");
             GUI.Window(1, playModeRect, (id) => PlayModeControls(id, playModeRect), "", GUIStyle.none);
 
@@ -110,7 +116,7 @@ namespace MinityEngine
             GUI.Window(2, _sceneViewRect, (id) => SceneWindow(id, _sceneViewRect), "", GUIStyle.none);
 
             // Inspector window
-            EditorGUI.DrawRect(inspectorRect, Color.black * 0.3f);
+            EditorGUI.DrawRect(inspectorRect, new Color(0.14f, 0.14f, 0.14f, 1));
             GUI.SetNextControlName("Inspector");
             GUI.Window(3, inspectorRect, (id) => InspectorView(id, inspectorRect), "", GUIStyle.none);
 
@@ -120,7 +126,7 @@ namespace MinityEngine
 
             if (current.type == EventType.MouseDown && GUIUtility.hotControl == 0)
             {
-               // GUI.FocusControl("SceneView");
+                // GUI.FocusControl("SceneView");
             }
 
             Repaint();
@@ -179,7 +185,7 @@ namespace MinityEngine
         private void HierarchyView(int id, ref Rect hierarchyRect)
         {
         }
-         
+
         private void PlayModeControls(int id, Rect rect)
         {
             var buttonsWidth = 45;
@@ -203,22 +209,28 @@ namespace MinityEngine
 
             Rect rect = new Rect(windowRect.x, Screen.height - windowRect.height - windowRect.y - windowVerticalOffset, windowRect.width, windowRect.height);
 
-           
             MinityScene.SetTime((float)_stopWatch.Elapsed.TotalMilliseconds, (float)_deltaTime);
 
             MinityScene.SetScreenValues((int)rect.width, (int)rect.height, rect.width / rect.height);
 
             MinityScene.SetMoveSpeed(50f);
 
+            Event current = Event.current;
+
+            windowRect.x = 0;
+            windowRect.y = 0;
+
+            if (!_canDragLine && windowRect.Contains(current.mousePosition))
+                MinityScene.SetMouseData(current.mousePosition.x, current.mousePosition.y, current.delta.x, current.delta.y);
+
+            //EditorGUI.DrawRect(windowRect, Color.red);
+
             // Issue Draw call.
             GL.Viewport(rect);
             GL.IssuePluginEvent(MinityScene.Run(), 0);
             GL.Clear(true, false, default);
 
-            Event current = Event.current;
-             
-            if(!_canDragLine && windowRect.Contains(current.mousePosition))
-            MinityScene.SetMouseData(current.mousePosition.x, current.mousePosition.y, current.delta.x, current.delta.y);
+            Debug.Log("rect: " + windowRect + ", mousePos: " + current.mousePosition + ", detect: " + windowRect.Contains(current.mousePosition));
 
             if (current.type == EventType.ScrollWheel)
             {
@@ -259,7 +271,7 @@ namespace MinityEngine
                 {
                     MinityScene.SetKeyDow(0, 4);
                 }
-                 
+
                 if (current.keyCode == KeyCode.W)
                 {
                     MinityScene.SetKeyDow(0, 1);
@@ -302,13 +314,13 @@ namespace MinityEngine
 
         private bool _canDragLine;
 
-        private float ResizeControl(Vector2 pos, float width) 
+        private float ResizeControl(Vector2 pos, float width)
         {
             //if(_lineRect == default)
             var lineRect = new Rect(pos.x + width, pos.y, 2, Screen.height);
 
             EditorGUI.DrawRect(lineRect, Color.black);
-             
+
             Event current = Event.current;
 
             //if (current.type == EventType.muse)
@@ -326,7 +338,7 @@ namespace MinityEngine
 
                     _canDragLine = true;
                 }
-                else if (current.type == EventType.MouseUp) 
+                else if (current.type == EventType.MouseUp)
                 {
                     DragAndDrop.visualMode = DragAndDropVisualMode.None;
 
@@ -335,17 +347,12 @@ namespace MinityEngine
 
                 if (_canDragLine)
                 {
-                    Debug.Log("Above");
+                    //Debug.Log("Above");
                     DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
 
                     var minSpace = 50;
                     lineRect.x = Mathf.Clamp(current.mousePosition.x, pos.x + lineRect.width + minSpace, Screen.width - lineRect.width - minSpace);
                 }
-
-                //Event.current.Use();
-                // DragAndDrop.visualMode = DragAndDropVisualMode.Rejected;
-                // DragAndDrop.StartDrag("Drag");
-                // Event.current.Use();
             }
 
             return lineRect.x - pos.x;
