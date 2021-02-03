@@ -206,10 +206,9 @@ namespace MinityEngine
                 {
                     if (_foldOut != value)
                     {
+                        _foldOut = value;
                         OnFoldedOut(_index);
                     }
-
-                    _foldOut = value;
                 }
             }
 
@@ -254,7 +253,8 @@ namespace MinityEngine
             {
                 for (int i = 0; i < _children.Count; i++)
                 {
-                    _children[i].Rect = new Rect(_children[i].Rect.x, _children[i].Rect.height * i + (Rect.y + Rect.height), _children[i].Rect.width, _children[i].Rect.height);
+                    var child = _children[i];
+                    _children[i].Rect = new Rect(child.Rect.x, child.Rect.height * i + (Rect.y + Rect.height), child.Rect.width, child.Rect.height);
                 }
             }
 
@@ -272,7 +272,7 @@ namespace MinityEngine
 
         private class HierarchyLayout
         {
-            private const float _hSpacing = 15;
+            private const float _hSpacing = 10;
             private const float _vSpacing = 3;
 
             private readonly List<HierarchyObj> _hierarchyObjs;
@@ -282,10 +282,11 @@ namespace MinityEngine
             {
                 _hierarchyObjs = new List<HierarchyObj>();
             }
-
+             
             public void AddObj(string name)
             {
                 var child = new HierarchyObj(_hierarchyObjs.Count, name, new Rect(_hSpacing, GetChildrensHeightSum(), 100, 20));
+                // this need to find subs children (Depth search)
                 child.OnFoldedOut += RecalculateLayout;
 
                 _hierarchyObjs.Add(child);
@@ -316,37 +317,27 @@ namespace MinityEngine
 
                 return sum;
             }
-             
+
             private void RecalculateLayout(int index)
             {
                 for (int i = index; i < _hierarchyObjs.Count; i++)
                 {
-                    if (i > 0)
+                    var current = _hierarchyObjs[i];
+
+                    var next = _hierarchyObjs.ElementAtOrDefault(i + 1);
+
+                    if (next == null) break;
+
+                    if (current.ShowContent)
                     {
-                        var prevParent = _hierarchyObjs[i - 1];
-
-                        var parent = _hierarchyObjs[i];
-
-                        if (prevParent.ShowContent)
-                        {
-                            parent.Rect = new Rect(parent.Rect.x, prevParent.GetChildrensHeightSum(), parent.Rect.width, parent.Rect.height);
-                            parent.RecalculateChildren();
-
-                            Debug.Log("Show " + (i - 1));
-                        }
-                        else
-                        {
-                            parent.RestartRect();
-                            Debug.Log(parent.Name +  ", Hide " + (i - 1));
-
-                            //parent.RecalculateChildren();
-                        }
+                        next.Rect = new Rect(next.Rect.x, current.GetChildrensHeightSum(), next.Rect.width, next.Rect.height);
+                        next.RecalculateChildren();
+                    } 
+                    else 
+                    {
+                        next.Rect = new Rect(next.Rect.x, current.Rect.y + next.Rect.height + _vSpacing, next.Rect.width, next.Rect.height);
+                        next.RecalculateChildren();
                     }
-                   
-                    //else if (!parent.FoldOut) 
-                    //{
-
-                    //}
                 }
             }
         }
@@ -362,10 +353,12 @@ namespace MinityEngine
                 _layout.AddObj("ParentObj");
                 _layout.AddObj("Second");
                 _layout.AddObj("Another");
+                _layout.AddObj("Final");
 
                 var parent = _layout.GetObj(0);
                 var parent2 = _layout.GetObj(1);
                 var parent3 = _layout.GetObj(2);
+                var parent4 = _layout.GetObj(3);
 
                 parent.CreateChild("Windmil");
                 parent.CreateChild("Windmil2");
@@ -373,6 +366,9 @@ namespace MinityEngine
                 parent.CreateChild("Windmil4");
 
                 parent2.CreateChild("House1");
+                //var child =parent2.GetChild(0);
+                //child.CreateChild("Sub1");
+
                 parent2.CreateChild("House2");
                 parent2.CreateChild("House3");
 
@@ -380,11 +376,14 @@ namespace MinityEngine
                 parent3.CreateChild("Door2");
                 parent3.CreateChild("Door3");
 
+                parent4.CreateChild("Road1");
+                parent4.CreateChild("Road2");
             }
 
             DrawLayout();
         }
 
+        // Depth search here
         private void DrawLayout()
         {
             for (int i = 0; i < _layout.HierarchyObjs.Count; i++)
@@ -395,7 +394,14 @@ namespace MinityEngine
                 {
                     for (int j = 0; j < _layout.HierarchyObjs[i].Elements; j++)
                     {
-                        GameObjectUI(_layout.HierarchyObjs[i].GetChild(j));
+                        var child = _layout.HierarchyObjs[i].GetChild(j);
+
+                        GameObjectUI(child);
+
+                        for (int k = 0; k < child.Elements; k++)
+                        {
+                            GameObjectUI(child.GetChild(k));
+                        }
                     }
                 }
             }
@@ -403,7 +409,6 @@ namespace MinityEngine
 
         private void GameObjectUI(HierarchyObj obj)
         {
-
             if (obj.Elements > 0)
             {
                 obj.ShowContent = EditorGUI.Foldout(obj.Rect, obj.ShowContent, obj.Name);
