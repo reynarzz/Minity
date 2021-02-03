@@ -58,6 +58,8 @@ namespace MinityEngine
                 _stopWatch.Start();
                 _totalSecs = _stopWatch.Elapsed.TotalSeconds / 1000.0f;
             }
+
+            _sceneViewRect.width = 700;
         }
 
         private void OnDestroy()
@@ -69,27 +71,33 @@ namespace MinityEngine
         {
         }
 
+        private Rect _hierarchyRect;
+        private Rect _sceneViewRect;
+
         private void OnGUI()
         {
             _deltaTime = (float)(_stopWatch.Elapsed.TotalMilliseconds / 1000.0f - _totalSecs);
             _totalSecs = _stopWatch.Elapsed.TotalMilliseconds / 1000.0f;
 
-
+             
             var windowsOffset = 2;
 
-            var hierarchyRect = new Rect(0, 0, 270, Screen.height);
-            var playModeRect = new Rect(hierarchyRect.width + windowsOffset, 0, 750, 30);
-            var sceneViewRect = new Rect(hierarchyRect.width + windowsOffset, playModeRect.height, 750, Screen.height - 300 + playModeRect.height);
-            var inspectorXPos = (sceneViewRect.x + sceneViewRect.width) + windowsOffset;
+            _hierarchyRect.height = Screen.height;
+            //_hierarchyRect.width = ResizeControl(new Vector2(_hierarchyRect.x, _hierarchyRect.y), _hierarchyRect.width);
 
+            var playModeRect = new Rect(_hierarchyRect.width + windowsOffset, 0, _sceneViewRect.width, 30);
+            _sceneViewRect = new Rect(_hierarchyRect.width + windowsOffset, playModeRect.height, _sceneViewRect.width, Screen.height - 300 + playModeRect.height);
+            _sceneViewRect.width = ResizeControl(new Vector2(_sceneViewRect.x, 0), _sceneViewRect.width);
+             
+            var inspectorXPos = (_sceneViewRect.x + _sceneViewRect.width) + windowsOffset;
             var inspectorRect = new Rect(inspectorXPos, 0, Screen.width - inspectorXPos, Screen.height);
 
             BeginWindows();
 
             // Hierarchy window
-            EditorGUI.DrawRect(hierarchyRect, Color.black * 0.3f);
+            EditorGUI.DrawRect(_hierarchyRect, Color.black * 0.3f);
             GUI.SetNextControlName("Hierarchy");
-            GUI.Window(0, hierarchyRect, (id)=> HierarchyView(id, ref hierarchyRect), "", GUIStyle.none);
+            GUI.Window(0, _hierarchyRect, (id)=> HierarchyView(id, ref _hierarchyRect), "", GUIStyle.none);
 
             // Scene info
             EditorGUI.DrawRect(playModeRect, Color.black * 0.3f);
@@ -97,9 +105,9 @@ namespace MinityEngine
             GUI.Window(1, playModeRect, (id) => PlayModeControls(id, playModeRect), "", GUIStyle.none);
 
             // Scene window
-            EditorGUI.DrawRect(sceneViewRect, Color.black * 0.4f);
+            EditorGUI.DrawRect(_sceneViewRect, Color.black * 0.4f);
             GUI.SetNextControlName("SceneView");
-            GUI.Window(2, sceneViewRect, (id) => SceneWindow(id, sceneViewRect), "", GUIStyle.none);
+            GUI.Window(2, _sceneViewRect, (id) => SceneWindow(id, _sceneViewRect), "", GUIStyle.none);
 
             // Inspector window
             EditorGUI.DrawRect(inspectorRect, Color.black * 0.3f);
@@ -108,7 +116,6 @@ namespace MinityEngine
 
             EndWindows();
 
-            ResizeControl(new Vector2(hierarchyRect.x, hierarchyRect.y), hierarchyRect.width);
             var current = Event.current;
 
             if (current.type == EventType.MouseDown && GUIUtility.hotControl == 0)
@@ -171,9 +178,8 @@ namespace MinityEngine
 
         private void HierarchyView(int id, ref Rect hierarchyRect)
         {
-            ResizeControl(new Vector2(hierarchyRect.x, hierarchyRect.y), hierarchyRect.width);
         }
-
+         
         private void PlayModeControls(int id, Rect rect)
         {
             var buttonsWidth = 45;
@@ -210,7 +216,8 @@ namespace MinityEngine
             GL.Clear(true, false, default);
 
             Event current = Event.current;
-            
+             
+            if(!_canDragLine && windowRect.Contains(current.mousePosition))
             MinityScene.SetMouseData(current.mousePosition.x, current.mousePosition.y, current.delta.x, current.delta.y);
 
             if (current.type == EventType.ScrollWheel)
@@ -252,7 +259,7 @@ namespace MinityEngine
                 {
                     MinityScene.SetKeyDow(0, 4);
                 }
-
+                 
                 if (current.keyCode == KeyCode.W)
                 {
                     MinityScene.SetKeyDow(0, 1);
@@ -293,23 +300,22 @@ namespace MinityEngine
         private Matrix4x4 modelM = Matrix4x4.identity;
         private string _objName = "Entity";
 
-        private Rect _lineRect;
         private bool _canDragLine;
 
         private float ResizeControl(Vector2 pos, float width) 
         {
-            if(_lineRect == default)
-            _lineRect = new Rect(pos.x + width, pos.y, 2, Screen.height);
+            //if(_lineRect == default)
+            var lineRect = new Rect(pos.x + width, pos.y, 2, Screen.height);
 
-            EditorGUI.DrawRect(_lineRect, Color.black);
-
+            EditorGUI.DrawRect(lineRect, Color.black);
+             
             Event current = Event.current;
 
             //if (current.type == EventType.muse)
             {
                 // Debug.Log("Mouse down");
 
-                var testRect = new Rect(_lineRect);
+                var testRect = new Rect(lineRect);
 
                 testRect.x -= 7;
                 testRect.width += 14;
@@ -332,18 +338,17 @@ namespace MinityEngine
                     Debug.Log("Above");
                     DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
 
-                    _lineRect.x = current.mousePosition.x;
+                    var minSpace = 50;
+                    lineRect.x = Mathf.Clamp(current.mousePosition.x, pos.x + lineRect.width + minSpace, Screen.width - lineRect.width - minSpace);
                 }
-               
-
 
                 //Event.current.Use();
                 // DragAndDrop.visualMode = DragAndDropVisualMode.Rejected;
                 // DragAndDrop.StartDrag("Drag");
                 // Event.current.Use();
-
             }
-            return width;
+
+            return lineRect.x - pos.x;
         }
 
         private void InspectorView(int id, Rect inspectorRect)
