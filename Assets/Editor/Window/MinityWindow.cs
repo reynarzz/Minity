@@ -226,6 +226,7 @@ namespace MinityEngine
                 {
                     name = "EmptyObj";
                 }
+
                 Name = name;
             }
 
@@ -256,6 +257,15 @@ namespace MinityEngine
                     var child = _children[i];
                     _children[i].Rect = new Rect(child.Rect.x, child.Rect.height * i + (Rect.y + Rect.height), child.Rect.width, child.Rect.height);
                 }
+            }
+
+            public void TraverseChildren() 
+            {
+                for (int i = 0; i < _children.Count; i++)
+                {
+                    _children[i].TraverseChildren();
+                }
+                
             }
 
             public HierarchyObj GetChild(int index)
@@ -304,7 +314,7 @@ namespace MinityEngine
                 for (int i = 0; i < _hierarchyObjs.Count; i++)
                 {
                     var childHeight = 0f;
-
+                     
                     var parent = _hierarchyObjs[i];
 
                     if (parent.ShowContent)
@@ -312,7 +322,7 @@ namespace MinityEngine
                         childHeight = parent.GetChildrensHeightSum();
                     }
 
-                    sum += parent.Rect.height + _vSpacing + childHeight;
+                    sum += parent.Rect.height + childHeight;
                 }
 
                 return sum;
@@ -409,6 +419,9 @@ namespace MinityEngine
 
         private void GameObjectUI(HierarchyObj obj)
         {
+            //this name have to be an unique ID
+            GUI.SetNextControlName(obj.Name);
+            
             if (obj.Elements > 0)
             {
                 obj.ShowContent = EditorGUI.Foldout(obj.Rect, obj.ShowContent, obj.Name);
