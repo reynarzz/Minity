@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include "Texture.h"
 #include <vector>
+#include <glm/glm.hpp>
 
 class Material
 {
@@ -13,11 +14,11 @@ public:
 		std::string name;
 
 		// 3 element array
-		float* ambient;
-		float* diffuse;
-		float* specular;
-		float* transmittance;
-		float* emission;
+		vec3 ambient;
+		vec3 diffuse;
+		vec3 specular;
+		vec3 transmittance;
+		vec3 emission;
 
 		float shininess;
 		float ior;       // index of refraction

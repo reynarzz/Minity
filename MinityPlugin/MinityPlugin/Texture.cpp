@@ -33,6 +33,12 @@ void Texture::Bind(unsigned int slot)
 {
 	glActiveTexture(GL_TEXTURE_2D + slot);
 
+	if (!_rendererID) 
+	{
+		glGenTextures(1, &_rendererID);
+		glBindTexture(GL_TEXTURE_2D, _rendererID);
+	}
+
 	glBindTexture(GL_TEXTURE_2D, _rendererID);
 }
 

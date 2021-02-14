@@ -12,6 +12,7 @@
 #include "Shader.h"
 
 #include "Renderer.h"
+#include <iostream>
 
 bool _glewInit;
 Camera* _mainCam;
@@ -61,6 +62,8 @@ void Renderer::Draw()
 	glEnable(GL_DEPTH_TEST);
 
 	glDepthMask(GL_TRUE);
+	printf("You entered");
+	std::cout << "Opened" << std::endl;
 
 	for (auto renderer : _renderers)
 	{

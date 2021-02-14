@@ -11,13 +11,30 @@ vector<MeshData*> LoadMeshes(const string& objectPath)
 {
 	vector<MeshData*> meshes;
 
-	tinyobj::attrib_t attrib;
-	std::vector<tinyobj::shape_t> shapes;
-	std::vector<tinyobj::material_t> materials;
-	std::string warn;
-	std::string err;
+	
+	std::string inputfile = objectPath;
+	tinyobj::ObjReaderConfig reader_config;
+	reader_config.mtl_search_path = "MinityRes/Models/"; // Path to material files
 
-	bool load = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, objectPath.c_str(), "MinityRes/", true);
+	tinyobj::ObjReader reader;
+
+	bool load = reader.ParseFromFile(inputfile, reader_config);
+
+	//if (!reader.ParseFromFile(inputfile, reader_config)) {
+	//	if (!reader.Error().empty()) {
+	//		//std::cerr << "TinyObjReader: " << reader.Error();
+	//	}
+	//	//exit(1);
+	//}
+
+	//if (!reader.Warning().empty()) {
+	//	//std::cout << "TinyObjReader: " << reader.Warning();
+	//}
+
+	auto& attrib = reader.GetAttrib();
+	auto& shapes = reader.GetShapes();
+	auto& materials = reader.GetMaterials();
+
 
 	if (load)
 	{

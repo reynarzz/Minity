@@ -4,7 +4,7 @@
 #include "Material.h"
 
 Material::Material(Shader* shader, MatAttribs attribs) :
-	Material::Material(shader, attribs, new Texture("OBJModels/Medieval/emptyTex.png"))
+	Material::Material(shader, attribs, new Texture("MinityRes/Textures/defaultText.png"))
 {
 }
 
@@ -52,7 +52,7 @@ void Material::UseMaterial(Camera* camera)
 		_textures[i]->Bind(i);
 	}
 
-	_shader->SetUniforms(_modelM, camera);
+	_shader->SetUniforms(_modelM, attribs.ambient, camera);
 }
 
 Material::~Material()

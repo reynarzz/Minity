@@ -28,11 +28,10 @@ in vec2 _uvCoord;
 uniform sampler2D _texture;
 vec3 lightDir;
 in vec3 _normal;
-
+uniform vec4 _AMBIENT;
 
 void main() 
 {
 	lightDir = vec3(0.5, -0.3, -0.5);
-
-	color = texture(_texture, _uvCoord) * step(normalize(dot(vec3(1.), lightDir), 0.3) + 0.2) * vec4(1.0, 1.0, 1.0, 1.0);
+	color = texture(_texture, _uvCoord) * (step(normalize(dot(_normal, lightDir)), 0.3) + 0.2) * _AMBIENT;
 }

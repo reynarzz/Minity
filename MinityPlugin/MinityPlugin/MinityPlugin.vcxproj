@@ -176,6 +176,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Console.h" />
     <ClInclude Include="Dependencies\image\stb_image.h" />
     <ClInclude Include="Dependencies\Obj_load2\list.h" />
     <ClInclude Include="Dependencies\Obj_load2\objLoader.h" />
@@ -210,6 +211,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Console.cpp" />
     <ClCompile Include="DebugCPP.cpp" />
     <ClCompile Include="DebugCPP.h" />
     <ClCompile Include="Dependencies\image\stb_image.cpp" />

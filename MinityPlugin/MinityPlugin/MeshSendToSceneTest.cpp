@@ -7,17 +7,22 @@ Material::MatAttribs ConvertToMatAttribs(tinyobj::material_t mat);
 
 vector<MeshRenderer*> MeshSendToSceneTest::LoadMeshRenderers(const string& objectPath)
 {
-	auto sources = ParseShader("MinityRes/Shaders/TextureUnlit.shader");
+	auto sources = ParseShader("MinityRes/Shaders/TextureLight.shader");
 
 	vector<MeshData*> meshes = LoadMeshes(objectPath);
 	vector<MeshRenderer*> renderers;
 
 	vector<string> texturePath =
 	{
+		"MinityRes/Models/smooth.png",
+	};
+	
+	/*vector<string> texturePath =
+	{
 		"MinityRes/Models/ground_shadow.jpg",
 		"MinityRes/Models/Ground_color.jpg",
 		"MinityRes/Models/MillCat_color.jpg",
-	};
+	};*/
 
 	vector<Texture> textures;
 
@@ -27,11 +32,11 @@ vector<MeshRenderer*> MeshSendToSceneTest::LoadMeshRenderers(const string& objec
 
 		Shader* shader = new Shader(sources.vertexSource, sources.fragmentSource);
 
-		Texture* texture = new Texture(texturePath[i]);
+		//Texture* texture = new Texture(texturePath[0]);
 		
 		Material::MatAttribs attribs = ConvertToMatAttribs(meshes[i]->mat);
 		
-		Material* material = new Material(shader, attribs, texture);
+		Material* material = new Material(shader, attribs);
 
 		MeshRenderer* meshRenderer = new MeshRenderer(meshes[i]->mesh, material);
 		renderers.push_back(meshRenderer);
@@ -43,7 +48,8 @@ vector<MeshRenderer*> MeshSendToSceneTest::LoadMeshRenderers(const string& objec
 Material::MatAttribs ConvertToMatAttribs(tinyobj::material_t mat)
 {
 	Material::MatAttribs attribs;
-	attribs.ambient = mat.ambient;
+
+	attribs.ambient = vec3(mat.ambient[0], mat.ambient[1], mat.ambient[2]);
 	
 	attribs.ior = mat.ior;
 
@@ -53,7 +59,7 @@ Material::MatAttribs ConvertToMatAttribs(tinyobj::material_t mat)
 // testing
 void MeshSendToSceneTest::SetMeshRenderersToScene(Scene* scene)
 {
-	auto meshRenderers = LoadMeshRenderers("MinityRes/Models/House.obj");
+	auto meshRenderers = LoadMeshRenderers("MinityRes/Models/CoffyRestaurant.obj");
 	//auto meshRenderers = LoadMeshRenderers("MinityRes/Models/Marina_1276_OBJ.obj");
 	
 	for (auto renderer : meshRenderers)

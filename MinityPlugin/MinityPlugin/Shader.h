@@ -20,7 +20,7 @@ public:
 	~Shader();
 	/// <summary>Sets up the shader program and returns it</summary>
 	/// <returns>Shader program ID</returns>
-	void SetUniforms(mat4 model, Camera* camera);
+	void SetUniforms(mat4 model, glm::vec3 ambient, Camera* camera);
 	unsigned int UseShader();
 	unsigned int GetProgramID() const;
 	void Clear();
