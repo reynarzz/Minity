@@ -27,6 +27,15 @@ vector<unsigned int>* Mesh::GetIndices() const
 	return _indices;
 }
 
+void Mesh::SetName(string name) 
+{
+	_name = name;
+}
+
+string Mesh::GetName() const 
+{
+	return _name;
+}
 
 Mesh::~Mesh()
 {

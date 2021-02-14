@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "Scene.h"
 
-
 Scene::Scene()
 {
 	// I have to remove this later. An scene is able to exist without camera.

@@ -22,8 +22,6 @@ MinityEngine::MinityEngine()
 	_renderer = new Renderer(_scene);
 
 	_inputSystem = new InputSystem(_scene->GetCameras().at(0));
-
-	
 }
 
 void MinityEngine::Update(float deltaTime, const ScreenInfo& screenInfo)
@@ -34,7 +32,7 @@ void MinityEngine::Update(float deltaTime, const ScreenInfo& screenInfo)
 	// Do your stuff below.--------------
 	_inputSystem->Update(deltaTime);
 	_scene->Update(screenInfo, deltaTime);
-	
+
 	_renderer->Draw();
 }
 

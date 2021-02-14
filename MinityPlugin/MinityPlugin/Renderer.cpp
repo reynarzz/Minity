@@ -21,13 +21,14 @@ Renderer::Renderer(Scene* startScene) : _scene(startScene)
 	if (glewInit() == GLEW_OK)
 	{
 		_glewInit = true;
+
+		SetScene(startScene);
 	}
 	else
 	{
 		_glewInit = false;
 	}
 
-	SetScene(startScene);
 }
 
 void Renderer::SetScene(Scene* scene)

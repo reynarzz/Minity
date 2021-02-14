@@ -1,15 +1,15 @@
 #include "pch.h"
-#include "MeshUtils.h"
 #ifndef TINYOBJLOADER_IMPLEMENTATION
 #define TINYOBJLOADER_IMPLEMENTATION
 #endif 
 
-#include "../ObjectsLoaderAPIs/tiny_obj_loader.h"
+#include "MeshUtils.h"
 #include "MeshRenderer.h"
 
-vector<Mesh*> LoadMeshes(const string& objectPath)
+
+vector<MeshData*> LoadMeshes(const string& objectPath)
 {
-	vector<Mesh*> meshes;
+	vector<MeshData*> meshes;
 
 	tinyobj::attrib_t attrib;
 	std::vector<tinyobj::shape_t> shapes;
@@ -28,6 +28,8 @@ vector<Mesh*> LoadMeshes(const string& objectPath)
 
 			size_t index_offset = 0;
 
+			int testMat = 0;
+			// Face
 			for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)
 			{
 				int fv = shapes[s].mesh.num_face_vertices[f];
@@ -65,11 +67,18 @@ vector<Mesh*> LoadMeshes(const string& objectPath)
 
 				index_offset += fv;
 
-				// per-face material
-				shapes[s].mesh.material_ids[f];
+				// per-face material -- (but for now using it for the entire mesh)
+				testMat = shapes[s].mesh.material_ids[f];
 			}
 
-			meshes.push_back(new Mesh(vertices, indices));
+			Mesh* mesh = new Mesh(vertices, indices);
+			mesh->SetName(shapes[s].name);
+
+			MeshData* data = new MeshData();
+			data->mesh = mesh;
+			data->mat = materials[testMat];
+
+			meshes.push_back(data);
 		}
 	}
 
