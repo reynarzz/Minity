@@ -42,8 +42,6 @@ namespace MinityEngine
         [DllImport(MinityPluginName)]
         public static extern void SetScreenValues(int width, int height, float aspect);
          
-        [SerializeField] private Material _mat;
-
         //[DllImport(MinityPluginName)]
         //public static extern void SetPos(float x, float y, float z);
 

@@ -29,6 +29,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEditor;
 
+// This class needs huge refactor
 namespace MinityEngine
 {
     public class MinityWindow : EditorWindow

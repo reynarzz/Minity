@@ -52,7 +52,7 @@ void Material::UseMaterial(Camera* camera)
 		_textures[i]->Bind(i);
 	}
 
-	_shader->SetUniforms(_modelM, attribs.ambient, camera);
+	_shader->SetUniforms(_modelM,  attribs.ambient, camera);
 }
 
 Material::~Material()

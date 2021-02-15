@@ -12,13 +12,12 @@ vector<MeshData*> LoadMeshes(const string& objectPath)
 	vector<MeshData*> meshes;
 
 	
-	std::string inputfile = objectPath;
 	tinyobj::ObjReaderConfig reader_config;
 	reader_config.mtl_search_path = "MinityRes/Models/"; // Path to material files
 
 	tinyobj::ObjReader reader;
 
-	bool load = reader.ParseFromFile(inputfile, reader_config);
+	bool load = reader.ParseFromFile(objectPath, reader_config);
 
 	//if (!reader.ParseFromFile(inputfile, reader_config)) {
 	//	if (!reader.Error().empty()) {
@@ -93,8 +92,20 @@ vector<MeshData*> LoadMeshes(const string& objectPath)
 
 			MeshData* data = new MeshData();
 			data->mesh = mesh;
-			data->mat = materials[testMat];
 
+			if(materials.size() > 0)
+			data->mat = materials[testMat];
+			else 
+			{
+				tinyobj::material_t defaultMat;
+				
+				defaultMat.ambient[0] = 1;
+				defaultMat.ambient[1] = 1;
+				defaultMat.ambient[2] = 1;
+
+				data->mat = defaultMat;
+
+			}
 			meshes.push_back(data);
 		}
 	}
