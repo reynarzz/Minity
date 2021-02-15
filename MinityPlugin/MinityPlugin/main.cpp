@@ -4,6 +4,8 @@
 #include <glm/glm.hpp>
 
 #include "MinityEngine.h"
+#include "Console.h"
+#include <iostream>
 
 static IUnityInterfaces* s_UnityInterfaces = NULL;
 static IUnityGraphics* s_Graphics = NULL;
@@ -16,6 +18,8 @@ float _time;
 float _deltaTime;
 
 void OnRenderEvent(int eventID);
+
+bool openConsole = false;
 
 extern "C" 
 {
@@ -40,6 +44,15 @@ extern "C"
 
 static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 {
+	if (!openConsole) 
+	{
+		openConsole = true;
+		OpenConsole();
+		std::cout << "Opened world";
+	}
+	
+
+
 	_minityEngine->Update(_deltaTime, _scrInfo_);
 }
 
@@ -55,7 +68,9 @@ OnGraphicsDeviceEvent(UnityGfxDeviceEventType eventType)
 		//This engine only runs in OpenGL (for now), unity has to be using the OpenGL backend to not crash.
 		if (s_RendererType == kUnityGfxRendererOpenGLCore)
 		{
+			
 			_minityEngine = new MinityEngine();
+			//RedirectIOToConsole();
 		}
 
 		//TODO: user initialization code
@@ -65,7 +80,6 @@ OnGraphicsDeviceEvent(UnityGfxDeviceEventType eventType)
 	{
 		s_RendererType = kUnityGfxRendererNull;
 
-		Debug::Log("Close Device");
 		delete _minityEngine;
 
 		//TODO: user shutdown code

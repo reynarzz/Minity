@@ -6,6 +6,7 @@
 class Scene
 {
 private:
+	string name;
 	vector<Camera*> _cameras;
 	vector<MeshRenderer*> _objects;
 	ScreenInfo _screenInfo;
@@ -15,6 +16,10 @@ public:
 
 	const vector<MeshRenderer*>& GetMeshRenderers() const;
 	const vector<Camera*>& GetCameras() const;
+
+	void AddMeshRenderer(MeshRenderer* renderer);
+	void RemoveMeshRenderer(MeshRenderer* renderer);
+
 	//mat4 model = glm::mat4(1.0f);
 
 	//model = glm::translate(model, _pos);

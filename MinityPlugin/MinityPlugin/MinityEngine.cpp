@@ -3,6 +3,7 @@
 
 #include "MinityEngine.h"
 #include "Scene.h"
+#include "MeshSendToSceneTest.h"
 
 Scene* _scene;
 InputSystem* _inputSystem;
@@ -14,6 +15,9 @@ MinityEngine::MinityEngine()
 {
 	//I will have to remove this later
 	_scene = new Scene();
+
+	MeshSendToSceneTest loadMeshTest;
+	loadMeshTest.SetMeshRenderersToScene(_scene);
 
 	_renderer = new Renderer(_scene);
 
@@ -28,7 +32,7 @@ void MinityEngine::Update(float deltaTime, const ScreenInfo& screenInfo)
 	// Do your stuff below.--------------
 	_inputSystem->Update(deltaTime);
 	_scene->Update(screenInfo, deltaTime);
-	
+
 	_renderer->Draw();
 }
 

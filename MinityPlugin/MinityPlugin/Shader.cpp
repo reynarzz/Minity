@@ -61,14 +61,15 @@ unsigned int Shader::UseShader()
 	
 	return _programID;
 }
-void Shader::SetUniforms(mat4 model, Camera* camera)
+void Shader::SetUniforms(mat4 model, glm::vec3 ambient,  Camera* camera)
 {
 	unsigned int uniformModelID = glGetUniformLocation(_programID, "_MVP");
+	unsigned int matAmbientID = glGetUniformLocation(_programID, "_AMBIENT");
 
 	mat4 viewProjM = camera->GetViewProjMatrix();
 
 	//modelTest = glm::rotate(modelTest, glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
-
+	glUniform4f(matAmbientID, ambient.r, ambient.g, ambient.b, 1.);
 	glUniformMatrix4fv(uniformModelID, 1, GL_FALSE, glm::value_ptr(viewProjM * model));
 }
 

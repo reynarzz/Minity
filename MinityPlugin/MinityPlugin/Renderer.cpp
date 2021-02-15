@@ -12,6 +12,7 @@
 #include "Shader.h"
 
 #include "Renderer.h"
+#include <iostream>
 
 bool _glewInit;
 Camera* _mainCam;
@@ -21,13 +22,14 @@ Renderer::Renderer(Scene* startScene) : _scene(startScene)
 	if (glewInit() == GLEW_OK)
 	{
 		_glewInit = true;
+
+		SetScene(startScene);
 	}
 	else
 	{
 		_glewInit = false;
 	}
 
-	SetScene(startScene);
 }
 
 void Renderer::SetScene(Scene* scene)
@@ -60,13 +62,14 @@ void Renderer::Draw()
 	glEnable(GL_DEPTH_TEST);
 
 	glDepthMask(GL_TRUE);
+	printf("You entered");
+	std::cout << "Opened" << std::endl;
 
 	for (auto renderer : _renderers)
 	{
 		renderer->Bind(_mainCam);
 
-		Mesh* mesh = renderer->GetMesh();
-		//glDrawArrays(GL_POINTS, 0, mesh->GetVertices()->size());
+		Mesh* mesh = renderer->GetMesh();;
 
 		glDrawElements(GL_TRIANGLES, mesh->GetIndices()->size(), GL_UNSIGNED_INT, 0);
 	}
