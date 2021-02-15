@@ -44,6 +44,10 @@ vector<MeshData*> LoadMeshes(const string& objectPath)
 
 			size_t index_offset = 0;
 
+			// To render a face per material i will have to create an 
+			//array and organize the faces per material types.
+
+
 			int testMat = 0;
 			// Face
 			for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)

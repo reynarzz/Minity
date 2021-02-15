@@ -9,7 +9,7 @@ Material::Material(Shader* shader, MatAttribs attribs) :
 }
 
 Material::Material(Shader* shader, MatAttribs attribs, Texture* texture) :
-	_shader(shader), attribs(attribs), _modelM(1.0f)
+	_shader(shader), attribs(attribs), _modelM(1.0f), _renderingOrder(RenderingOrder::Opaque)
 {
 	if (texture == nullptr)
 	{
@@ -20,7 +20,7 @@ Material::Material(Shader* shader, MatAttribs attribs, Texture* texture) :
 }
 
 Material::Material(Shader* shader, MatAttribs attribs, std::vector<Texture*> textures) :
-	_shader(shader), attribs(attribs), _modelM(1.0f), _textures(textures)
+	_shader(shader), attribs(attribs), _modelM(1.0f), _textures(textures), _renderingOrder(RenderingOrder::Opaque)
 {
 }
 

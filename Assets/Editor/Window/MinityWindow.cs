@@ -500,7 +500,7 @@ namespace MinityEngine
 
             MinityScene.SetScreenValues((int)rect.width, (int)rect.height, rect.width / rect.height);
 
-            MinityScene.SetMoveSpeed(50f);
+            MinityScene.SetMoveSpeed(10f);
 
             Event current = Event.current;
 

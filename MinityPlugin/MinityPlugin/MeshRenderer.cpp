@@ -57,9 +57,9 @@ void MeshRenderer::Bind(Camera* camera)
 	_material->UseMaterial(camera);
 }
 
-bool MeshRenderer::AlphaBlend() const 
+bool MeshRenderer::DepthWrite() const 
 {
-	return _material->GetMatAttribs().dissolve < 0.9999f;
+	return _material->_depthWrite;
 }
 
 MeshRenderer::~MeshRenderer()

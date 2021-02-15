@@ -108,12 +108,6 @@
     <ClInclude Include="Dependencies\Obj_load2\list.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Dependencies\Obj_load2\obj_parser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Dependencies\Obj_load2\objLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Dependencies\Obj_load2\string_extra.h">
       <Filter>Header Files</Filter>
     </ClInclude>

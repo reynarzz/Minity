@@ -29,7 +29,6 @@ Renderer::Renderer(Scene* startScene) : _scene(startScene)
 	{
 		_glewInit = false;
 	}
-
 }
 
 void Renderer::SetScene(Scene* scene)
@@ -40,59 +39,90 @@ void Renderer::SetScene(Scene* scene)
 
 	unsigned int vao;
 
-	//Generate vertex array object
+	// Generate vertex array object
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
 	for (MeshRenderer* meshRenderer : meshRenderers)
 	{
 		meshRenderer->Init();
-		_renderers.push_back(meshRenderer);
+
+		AddRendererToQueue(meshRenderer, meshRenderer->GetMaterial()->_renderingOrder);
+
+		//_renderers.push_back(meshRenderer);
 	}
 
 	_mainCam = _scene->GetCameras().at(0);
+}
+
+void CreateGroupIfEmpty(int order, map<int, vector<MeshRenderer*>*>& renderers)
+{
+	vector<MeshRenderer*>* renders = new vector<MeshRenderer*>();
+	bool contains = renderers.count(order) > 0;
+
+	if (!contains)
+	{
+		renderers.insert(std::make_pair(order, renders));
+	}
+}
+
+void Renderer::AddRendererToQueue(MeshRenderer* renderer, RenderingOrder order)
+{
+	CreateGroupIfEmpty(order, _renderers);
+
+	_renderers[order]->push_back(renderer);
 }
 
 void Renderer::Draw()
 {
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
-
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_DEPTH_TEST);
 
 	glDepthMask(GL_TRUE);
 
-	for (auto renderer : _renderers)
+	// Do proper ordering.
+	for (auto rendererGroup : _renderers)
 	{
-		renderer->Bind(_mainCam);
+		auto group = *rendererGroup.second;
 
-		// Testing: Alpha blending
-		if (renderer->AlphaBlend()) 
+		for (auto renderer : group)
 		{
-			glDisable(GL_DEPTH_TEST);
-			glDepthMask(GL_FALSE);
+			renderer->Bind(_mainCam);
+			const Material* mat = renderer->GetMaterial();
+			
+			// Testing: Alpha blending, i need a Queuing system.
+			if (mat->_srcFactor != 0 && mat->_dstFactor != 0) 
+			{
+				glEnable(GL_BLEND);
+				glBlendFunc(mat->_srcFactor, mat->_dstFactor);
+			}
+			else 
+			{
+				glDisable(GL_BLEND);
+			}
 
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			if (renderer->DepthWrite())
+			{
+				glEnable(GL_DEPTH_TEST);
+				glDepthMask(GL_TRUE);
+			}
+			else
+			{
+				glDisable(GL_DEPTH_TEST);
+				glDepthMask(GL_FALSE);
+			}
+
+			Mesh* mesh = renderer->GetMesh();;
+
+			glDrawElements(GL_TRIANGLES, mesh->GetIndices()->size(), GL_UNSIGNED_INT, 0);
 		}
-		else 
-		{
-			glDisable(GL_BLEND);
-			glEnable(GL_DEPTH_TEST);
-
-			glDepthMask(GL_TRUE);
-		}
-
-
-		Mesh* mesh = renderer->GetMesh();;
-
-		glDrawElements(GL_TRIANGLES, mesh->GetIndices()->size(), GL_UNSIGNED_INT, 0);
 	}
 }
 
 Renderer::~Renderer()
 {
 	_renderers.clear();
-	_renderers.shrink_to_fit();
+	//_renderers.shrink_to_fit();
 }
