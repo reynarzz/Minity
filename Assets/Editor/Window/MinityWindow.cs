@@ -42,6 +42,9 @@ namespace MinityEngine
         private static bool _isOpened;
         public static bool IsOpened => _isOpened;
 
+        private List<string> _consoleMessages;
+
+
         [MenuItem("Window/Minity")]
         public static void Open()
         {
@@ -61,6 +64,14 @@ namespace MinityEngine
             }
             _hierarchyRect.width = 230;
             _sceneViewRect.width = 700;
+
+            DebugCPP.OnMessageSent = SetConsoleMessage;
+            _consoleMessages = new List<string>();
+        }
+
+        public void SetConsoleMessage(string message) 
+        {
+            _consoleMessages.Add(message);
         }
 
         private void OnDestroy()
@@ -74,6 +85,7 @@ namespace MinityEngine
 
         private Rect _hierarchyRect;
         private Rect _sceneViewRect;
+
 
         private void OnGUI()
         {
@@ -99,6 +111,8 @@ namespace MinityEngine
             var inspectorXPos = (_sceneViewRect.x + _sceneViewRect.width) + windowsOffset;
             var inspectorRect = new Rect(inspectorXPos, playModeRect.height, Screen.width - inspectorXPos, Screen.height);
 
+            var consoleRect = new Rect(_hierarchyRect.width, _sceneViewRect.height + _sceneViewRect.y, inspectorXPos - _hierarchyRect.width - windowsOffset, (Screen.height - (_sceneViewRect.height +_sceneViewRect.y)) - 17);
+
             BeginWindows();
 
             // Hierarchy window
@@ -116,10 +130,17 @@ namespace MinityEngine
             GUI.SetNextControlName("SceneView");
             GUI.Window(2, _sceneViewRect, (id) => SceneWindow(id, _sceneViewRect), "", GUIStyle.none);
 
+            //Console
+            EditorGUI.DrawRect(consoleRect, new Color(0.10f, 0.10f, 0.10f, 1));
+            GUI.SetNextControlName("Console");
+            GUI.Window(3, consoleRect, (id) => ConsoleWindow(id, consoleRect), "", GUIStyle.none);
+
+
             // Inspector window
             EditorGUI.DrawRect(inspectorRect, new Color(0.14f, 0.14f, 0.14f, 1));
             GUI.SetNextControlName("Inspector");
-            GUI.Window(3, inspectorRect, (id) => InspectorView(id, inspectorRect), "", GUIStyle.none);
+            GUI.Window(4, inspectorRect, (id) => InspectorView(id, inspectorRect), "", GUIStyle.none);
+
 
             EndWindows();
 
@@ -131,6 +152,25 @@ namespace MinityEngine
             }
 
             Repaint();
+        }
+
+        private Vector2 _consoleScroll;
+
+        private void ConsoleWindow(int id, Rect consoleRect) 
+        {
+            GUILayout.Label("Debug Console:");
+           
+            _consoleScroll = GUILayout.BeginScrollView(_consoleScroll);
+
+            for (int i = 0; i < _consoleMessages.Count; i++)
+            {
+                GUILayout.Label(_consoleMessages[i], EditorStyles.helpBox);
+                //if (GUILayout.Button(_consoleMessages[i], EditorStyles.helpBox)) 
+                //{
+                //    Debug.Log(_consoleMessages[i]);
+                //}
+            }
+             GUILayout.EndScrollView();
         }
 
         private void ObjectNameControl(ref string name)

@@ -23,4 +23,5 @@ public:
 	Material* GetMaterial() const;
 	void Init();
 	void Bind(Camera* camera);
+	bool AlphaBlend() const;
 };

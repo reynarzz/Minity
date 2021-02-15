@@ -93,9 +93,9 @@ vector<MeshData*> LoadMeshes(const string& objectPath)
 			MeshData* data = new MeshData();
 			data->mesh = mesh;
 
-			if(materials.size() > 0)
+			//if(materials.size() > 0)
 			data->mat = materials[testMat];
-			else 
+			/*else 
 			{
 				tinyobj::material_t defaultMat;
 				
@@ -105,7 +105,7 @@ vector<MeshData*> LoadMeshes(const string& objectPath)
 
 				data->mat = defaultMat;
 
-			}
+			}*/
 			meshes.push_back(data);
 		}
 	}

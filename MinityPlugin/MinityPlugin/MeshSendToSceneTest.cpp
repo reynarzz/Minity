@@ -17,12 +17,12 @@ vector<MeshRenderer*> MeshSendToSceneTest::LoadMeshRenderers(const string& objec
 		"MinityRes/Models/smooth.png",
 	};*/
 	
-	vector<string> texturePath =
+	/*vector<string> texturePath =
 	{
 		"MinityRes/Models/ground_shadow.jpg",
 		"MinityRes/Models/Ground_color.jpg",
 		"MinityRes/Models/MillCat_color.jpg",
-	};
+	};*/
 
 	vector<Texture> textures;
 
@@ -32,11 +32,11 @@ vector<MeshRenderer*> MeshSendToSceneTest::LoadMeshRenderers(const string& objec
 
 		Shader* shader = new Shader(sources.vertexSource, sources.fragmentSource);
 
-		Texture* texture = new Texture(texturePath[i]);
+		//Texture* texture = new Texture(texturePath[i]);
 		
 		Material::MatAttribs attribs = ConvertToMatAttribs(meshes[i]->mat);
 		
-		Material* material = new Material(shader, attribs, texture);
+		Material* material = new Material(shader, attribs/*, texture*/);
 
 		MeshRenderer* meshRenderer = new MeshRenderer(meshes[i]->mesh, material);
 		renderers.push_back(meshRenderer);
@@ -51,6 +51,7 @@ Material::MatAttribs ConvertToMatAttribs(tinyobj::material_t mat)
 
 	attribs.ambient = vec3(mat.ambient[0], mat.ambient[1], mat.ambient[2]);
 	attribs.diffuse = vec3(mat.diffuse[0], mat.diffuse[1], mat.diffuse[2]);
+	attribs.dissolve = mat.dissolve;
 
 	attribs.ior = mat.ior;
 
@@ -60,7 +61,7 @@ Material::MatAttribs ConvertToMatAttribs(tinyobj::material_t mat)
 // testing
 void MeshSendToSceneTest::SetMeshRenderersToScene(Scene* scene)
 {
-	auto meshRenderers = LoadMeshRenderers("MinityRes/Models/House.obj");
+	auto meshRenderers = LoadMeshRenderers("MinityRes/Models/CoffeeRestaurant.obj");
 	//auto meshRenderers = LoadMeshRenderers("MinityRes/Models/Marina_1276_OBJ.obj");
 	
 	for (auto renderer : meshRenderers)

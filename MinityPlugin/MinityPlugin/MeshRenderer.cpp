@@ -57,6 +57,11 @@ void MeshRenderer::Bind(Camera* camera)
 	_material->UseMaterial(camera);
 }
 
+bool MeshRenderer::AlphaBlend() const 
+{
+	return _material->GetMatAttribs().dissolve < 0.9999f;
+}
+
 MeshRenderer::~MeshRenderer()
 {
 	delete _mesh, _material;

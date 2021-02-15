@@ -62,12 +62,28 @@ void Renderer::Draw()
 	glEnable(GL_DEPTH_TEST);
 
 	glDepthMask(GL_TRUE);
-	printf("You entered");
-	std::cout << "Opened" << std::endl;
 
 	for (auto renderer : _renderers)
 	{
 		renderer->Bind(_mainCam);
+
+		// Testing: Alpha blending
+		if (renderer->AlphaBlend()) 
+		{
+			glDisable(GL_DEPTH_TEST);
+			glDepthMask(GL_FALSE);
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		}
+		else 
+		{
+			glDisable(GL_BLEND);
+			glEnable(GL_DEPTH_TEST);
+
+			glDepthMask(GL_TRUE);
+		}
+
 
 		Mesh* mesh = renderer->GetMesh();;
 

@@ -45,14 +45,12 @@ void Material::UseMaterial(Camera* camera)
 
 	glUseProgram(id);
 
-	//auto value = _textures.size();
-
 	for (unsigned int i = 0; i < _textures.size(); i++)
 	{
 		_textures[i]->Bind(i);
 	}
 
-	_shader->SetUniforms(_modelM,  attribs.ambient, camera);
+	_shader->SetUniforms(_modelM, glm::vec4(attribs.ambient * attribs.diffuse, attribs.dissolve), camera);
 }
 
 Material::~Material()

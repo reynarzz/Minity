@@ -33,5 +33,5 @@ uniform vec4 _AMBIENT;
 void main() 
 {
 	lightDir = vec3(0.5, -0.3, -0.5);
-	color = texture(_texture, _uvCoord) * (step(normalize(dot(_normal, lightDir)), 0.3) + 0.2) * _AMBIENT;
+	color = texture(_texture, _uvCoord) * (step(normalize(dot(_normal, lightDir)), 0.4) + 0.4) * _AMBIENT;
 }

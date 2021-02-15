@@ -19,8 +19,6 @@ float _deltaTime;
 
 void OnRenderEvent(int eventID);
 
-bool openConsole = false;
-
 extern "C" 
 {
 	void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetTime(float time, float deltaTime)
@@ -44,14 +42,7 @@ extern "C"
 
 static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 {
-	if (!openConsole) 
-	{
-		openConsole = true;
-		OpenConsole();
-		std::cout << "Opened world";
-	}
-	
-
+	//Debug::Log("Hello new console");
 
 	_minityEngine->Update(_deltaTime, _scrInfo_);
 }
@@ -68,9 +59,8 @@ OnGraphicsDeviceEvent(UnityGfxDeviceEventType eventType)
 		//This engine only runs in OpenGL (for now), unity has to be using the OpenGL backend to not crash.
 		if (s_RendererType == kUnityGfxRendererOpenGLCore)
 		{
-			
 			_minityEngine = new MinityEngine();
-			//RedirectIOToConsole();
+			OpenConsole();
 		}
 
 		//TODO: user initialization code
