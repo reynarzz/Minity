@@ -2,8 +2,11 @@
 
 #include "Mesh.h"
 #include "Material.h"
+#include "GameComponent.h"
 
-class MeshRenderer
+class GameEntity;
+
+class MeshRenderer : public GameComponent
 {
 private:
 	
@@ -16,9 +19,11 @@ public:
 	unsigned int _vbo;
 	/// <summary>Index buffer obj.</summary>
 	unsigned int _ibo;
-	MeshRenderer(Mesh* mesh, Material* material);
+	MeshRenderer(GameEntity* gameEntity);
+	MeshRenderer(GameEntity* gameEntity, Mesh* mesh, Material* material);
 	~MeshRenderer();
 
+	void Update() override;
 	Mesh* GetMesh() const;
 	Material* GetMaterial() const;
 	void Init();

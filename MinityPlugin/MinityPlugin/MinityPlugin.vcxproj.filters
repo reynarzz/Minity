@@ -34,6 +34,18 @@
     <Filter Include="Header Files\Entity">
       <UniqueIdentifier>{3be5bdf1-2d8c-42b7-98ad-7c8beeb66c4d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\EngineObjects">
+      <UniqueIdentifier>{272ac4aa-cb93-4ca4-8be0-da9d5d0b2aca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\MinityHeaders\Objs">
+      <UniqueIdentifier>{5f0fddb4-5af1-48ee-ad01-ceeec449ea4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\MinityHeaders\Objs\Components">
+      <UniqueIdentifier>{2c6590a9-8f44-49d0-b9bb-56be8bc1a63b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\EngineObjects\Components">
+      <UniqueIdentifier>{c17cb76a-a5a6-4b5e-9734-b02b7b3e189f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -129,6 +141,18 @@
     <ClInclude Include="Console.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Header Files\MinityHeaders\Objs</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEntity.h">
+      <Filter>Header Files\MinityHeaders\Objs</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Header Files\MinityHeaders\Objs\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GameComponent.h">
+      <Filter>Header Files\MinityHeaders\Objs\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugCPP.cpp">
@@ -187,6 +211,18 @@
     </ClCompile>
     <ClCompile Include="MinityEngine.cpp">
       <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Source Files\EngineObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEntity.cpp">
+      <Filter>Source Files\EngineObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Source Files\EngineObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GameComponent.cpp">
+      <Filter>Source Files\EngineObjects\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

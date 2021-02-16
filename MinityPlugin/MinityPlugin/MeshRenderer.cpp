@@ -1,9 +1,14 @@
 #include "pch.h"
 
+#include "GameEntity.h"
 #include "MeshRenderer.h"
 
-MeshRenderer::MeshRenderer(Mesh* mesh, Material* material) :
-	_mesh(mesh), _material(material), _vbo(-1), _ibo(-1)
+MeshRenderer::MeshRenderer(GameEntity* gameEntity) : GameComponent(gameEntity)
+{
+	
+}
+MeshRenderer::MeshRenderer(GameEntity* gameEntity, Mesh* mesh, Material* material) :
+	GameComponent(gameEntity), _mesh(mesh), _material(material), _vbo(-1), _ibo(-1)
 {
 }
 
@@ -15,6 +20,11 @@ Mesh* MeshRenderer::GetMesh() const
 Material* MeshRenderer::GetMaterial() const
 {
 	return _material;
+}
+
+void MeshRenderer::Update() 
+{
+
 }
 
 void MeshRenderer::Init()

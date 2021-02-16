@@ -17,7 +17,7 @@ void SendRenders_Test(Renderer* renderer, Scene* scene)
 		meshRenderer->Init();
 
 		Material* mat = meshRenderer->GetMaterial();
-
+		//Test
 		if (meshRenderer->GetMaterial()->GetMatAttribs().dissolve < 0.9999f)
 		{
 			mat->_renderingOrder = RenderingOrder::Transparent;
@@ -25,6 +25,7 @@ void SendRenders_Test(Renderer* renderer, Scene* scene)
 			mat->_blending.enabled = true;
 			mat->_blending._srcFactor = GL_SRC_ALPHA;
 			mat->_blending._dstFactor = GL_ONE_MINUS_SRC_ALPHA;
+			//mat->_depthWrite = false;
 			mat->culling._enabled = false;
 		}
 		else 

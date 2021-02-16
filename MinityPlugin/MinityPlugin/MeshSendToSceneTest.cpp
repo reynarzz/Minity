@@ -1,16 +1,17 @@
 #include "pch.h"
 #include "MeshSendToSceneTest.h"
-
-
+#include "GameEntity.h"
+#include <iostream>
+#include <sstream>
 
 MatAttribs ConvertToMatAttribs(tinyobj::material_t mat);
 
-vector<MeshRenderer*> MeshSendToSceneTest::LoadMeshRenderers(const string& objectPath)
+vector<GameEntity*> MeshSendToSceneTest::LoadGameEntities(const string& objectPath)
 {
 	auto sources = ParseShader("MinityRes/Shaders/TextureLight.shader");
 
 	vector<MeshData*> meshes = LoadMeshes(objectPath);
-	vector<MeshRenderer*> renderers;
+	vector<GameEntity*> gameEntities;
 
 	/*vector<string> texturePath =
 	{
@@ -26,9 +27,11 @@ vector<MeshRenderer*> MeshSendToSceneTest::LoadMeshRenderers(const string& objec
 
 	vector<Texture> textures;
 
+	int entityCount = 0;
+
 	for (size_t i = 0; i < meshes.size(); i++)
 	{
-		string name = meshes[i]->mat.name;
+		string name = meshes[i]->mesh->GetName();
 
 		Shader* shader = new Shader(sources.vertexSource, sources.fragmentSource);
 
@@ -38,11 +41,19 @@ vector<MeshRenderer*> MeshSendToSceneTest::LoadMeshRenderers(const string& objec
 		
 		Material* material = new Material(shader, attribs/*, texture*/);
 
-		MeshRenderer* meshRenderer = new MeshRenderer(meshes[i]->mesh, material);
-		renderers.push_back(meshRenderer);
+		std::stringstream ss;
+		ss << entityCount;
+
+		string fullName = name + ss.str();
+
+		GameEntity* gameEntity = new GameEntity(fullName);
+
+		gameEntity->AddComponent(new MeshRenderer(gameEntity, meshes[i]->mesh, material));
+
+		gameEntities.push_back(gameEntity);
 	}
 
-	return renderers;
+	return gameEntities;
 }
 
 MatAttribs ConvertToMatAttribs(tinyobj::material_t mat)
@@ -61,11 +72,11 @@ MatAttribs ConvertToMatAttribs(tinyobj::material_t mat)
 // testing
 void MeshSendToSceneTest::SetMeshRenderersToScene(Scene* scene)
 {
-	auto meshRenderers = LoadMeshRenderers("MinityRes/Models/CoffeeRestaurant.obj");
+	auto gameEntities = LoadGameEntities("MinityRes/Models/CoffeeRestaurant.obj");
 	//auto meshRenderers = LoadMeshRenderers("MinityRes/Models/Marina_1276_OBJ.obj");
-	
-	for (auto renderer : meshRenderers)
+
+	for (auto gameEntity : gameEntities)
 	{
-		scene->AddMeshRenderer(renderer);
+		scene->AddGameEntity(gameEntity);
 	}
 }

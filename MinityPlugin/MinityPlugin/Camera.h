@@ -8,7 +8,7 @@ using glm::mat4;
 using glm::vec3;
 using glm::vec2;
 
-class Camera
+class Camera// : Component
 {
 private:
 	mat4 _viewMatrix;
