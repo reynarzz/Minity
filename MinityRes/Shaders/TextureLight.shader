@@ -28,10 +28,13 @@ in vec2 _uvCoord;
 uniform sampler2D _texture;
 vec3 lightDir;
 in vec3 _normal;
-uniform vec4 _AMBIENT;
+
+
+uniform vec3 _diffuse_;
+uniform float _alpha_;
 
 void main() 
 {
 	lightDir = vec3(0.5, -0.3, -0.5);
-	color = texture(_texture, _uvCoord) * (step(normalize(dot(_normal, lightDir)), 0.4) + 0.4) * _AMBIENT;
+	color = texture(_texture, _uvCoord) * (step(normalize(dot(_normal, lightDir)), 0.4) + 0.4) * vec4(_diffuse_, _alpha_);
 }

@@ -23,5 +23,4 @@ public:
 	Material* GetMaterial() const;
 	void Init();
 	void Bind(Camera* camera);
-	bool DepthWrite() const;
 };

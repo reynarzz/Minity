@@ -14,45 +14,19 @@
 #include "Renderer.h"
 #include <iostream>
 
-bool _glewInit;
-Camera* _mainCam;
-
-Renderer::Renderer(Scene* startScene) : _scene(startScene)
+Renderer::Renderer(Camera* camera) : _camera(camera)
 {
 	if (glewInit() == GLEW_OK)
 	{
-		_glewInit = true;
-
-		SetScene(startScene);
-	}
-	else
-	{
-		_glewInit = false;
+		// Generate vertex array object
+		glGenVertexArrays(1, &_vao);
+		glBindVertexArray(_vao);
 	}
 }
 
-void Renderer::SetScene(Scene* scene)
+void Renderer::SetCamera(Camera* camera)
 {
-	_scene = scene;
-
-	auto meshRenderers = scene->GetMeshRenderers();
-
-	unsigned int vao;
-
-	// Generate vertex array object
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
-	for (MeshRenderer* meshRenderer : meshRenderers)
-	{
-		meshRenderer->Init();
-
-		AddRendererToQueue(meshRenderer, meshRenderer->GetMaterial()->_renderingOrder);
-
-		//_renderers.push_back(meshRenderer);
-	}
-
-	_mainCam = _scene->GetCameras().at(0);
+	_camera = camera;
 }
 
 void CreateGroupIfEmpty(int order, map<int, vector<MeshRenderer*>*>& renderers)
@@ -66,22 +40,17 @@ void CreateGroupIfEmpty(int order, map<int, vector<MeshRenderer*>*>& renderers)
 	}
 }
 
-void Renderer::AddRendererToQueue(MeshRenderer* renderer, RenderingOrder order)
+void Renderer::AddRendererToQueue(MeshRenderer* renderer)
 {
-	CreateGroupIfEmpty(order, _renderers);
+	RenderingOrder order = renderer->GetMaterial()->_renderingOrder;
 
+	CreateGroupIfEmpty(order, _renderers);
 	_renderers[order]->push_back(renderer);
 }
 
 void Renderer::Draw()
 {
-	glDisable(GL_CULL_FACE);
-	glDisable(GL_BLEND);
-	glDepthFunc(GL_LEQUAL);
-	glEnable(GL_DEPTH_TEST);
-
-	glDepthMask(GL_TRUE);
-
+	
 	// Do proper ordering.
 	for (auto rendererGroup : _renderers)
 	{
@@ -89,23 +58,23 @@ void Renderer::Draw()
 
 		for (auto renderer : group)
 		{
-			renderer->Bind(_mainCam);
+			renderer->Bind(_camera);
 			const Material* mat = renderer->GetMaterial();
-			
-			// Testing: Alpha blending, i need a Queuing system.
-			if (mat->_srcFactor != 0 && mat->_dstFactor != 0) 
+
+			if (mat->_blending.enabled)
 			{
 				glEnable(GL_BLEND);
-				glBlendFunc(mat->_srcFactor, mat->_dstFactor);
+				glBlendFunc(mat->_blending._srcFactor, mat->_blending._dstFactor);
 			}
-			else 
+			else
 			{
 				glDisable(GL_BLEND);
 			}
 
-			if (renderer->DepthWrite())
+			if (mat->_depthWrite)
 			{
 				glEnable(GL_DEPTH_TEST);
+				glDepthFunc(GL_LEQUAL);
 				glDepthMask(GL_TRUE);
 			}
 			else
@@ -114,12 +83,45 @@ void Renderer::Draw()
 				glDepthMask(GL_FALSE);
 			}
 
+			if (mat->culling._enabled)
+			{
+				glEnable(GL_CULL_FACE);
+				glFrontFace(GL_CCW);
+				glCullFace(mat->culling.face);
+			}
+			else 
+			{
+				glDisable(GL_CULL_FACE);
+			}
+
 			Mesh* mesh = renderer->GetMesh();;
 
 			glDrawElements(GL_TRIANGLES, mesh->GetIndices()->size(), GL_UNSIGNED_INT, 0);
 		}
 	}
 }
+
+// This should be listening to a object destruction. delegate event in destructor.
+void Renderer::RemoveRenderer(MeshRenderer* renderer)
+{
+	Material* mat = renderer->GetMaterial();
+	auto list = _renderers[mat->_renderingOrder];
+
+	for (auto it = list->begin(); it != list->end(); it++)
+	{
+		if (renderer == *it._Unwrapped())
+		{
+			_renderers[mat->_renderingOrder]->erase(it);
+
+			if (_renderers[mat->_renderingOrder]->size() == 0)
+			{
+				_renderers[mat->_renderingOrder]->clear();
+			}
+			break;
+		}
+	}
+}
+
 
 Renderer::~Renderer()
 {

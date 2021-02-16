@@ -15,30 +15,47 @@ enum RenderingOrder
 	UI = 4000
 };
 
+class Culling 
+{
+public:
+	bool _enabled;
+	int face;
+};
+
+class Blending 
+{
+public:
+	bool enabled;
+	int _srcFactor;
+	int _dstFactor;
+
+};
+
+struct MatAttribs
+{
+public:
+	std::string name;
+
+	// 3 element array
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+	vec3 transmittance;
+	vec3 emission;
+
+	float shininess;
+	float ior;       // index of refraction
+	float dissolve;  // 1 == opaque; 0 == fully transparent
+	int illum;
+};
+
+
 class Material
 {
 public:
 
-	struct MatAttribs 
-	{
-	public:
-		std::string name;
-
-		// 3 element array
-		vec3 ambient;
-		vec3 diffuse;
-		vec3 specular;
-		vec3 transmittance;
-		vec3 emission;
-
-		float shininess;
-		float ior;       // index of refraction
-		float dissolve;  // 1 == opaque; 0 == fully transparent
-		int illum;
-	};
-
-	int _srcFactor;
-	int _dstFactor;
+	
+	Blending _blending;
 
 	RenderingOrder _renderingOrder = RenderingOrder::Opaque;
 
@@ -48,9 +65,9 @@ public:
 	~Material();
 	void UseMaterial(Camera* camera);
 	Shader* GetShader() const;
-	void BindTextures();
 	bool _depthWrite = true;
 	MatAttribs GetMatAttribs() const;
+	Culling culling;
 
 private:
 	Shader* _shader;

@@ -31,6 +31,9 @@
     <Filter Include="Source Files\Utils">
       <UniqueIdentifier>{07375e89-7ed3-478e-adcd-726e5f34c100}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Entity">
+      <UniqueIdentifier>{3be5bdf1-2d8c-42b7-98ad-7c8beeb66c4d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -158,9 +161,6 @@
     <ClCompile Include="Material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MinityEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -184,6 +184,9 @@
     </ClCompile>
     <ClCompile Include="Console.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MinityEngine.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

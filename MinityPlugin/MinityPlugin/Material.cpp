@@ -29,12 +29,7 @@ Shader* Material::GetShader() const
 	return _shader;
 }
 
-void Material::BindTextures()
-{
-
-}
-
-Material::MatAttribs Material::GetMatAttribs() const 
+MatAttribs Material::GetMatAttribs() const 
 {
 	return attribs;
 }
@@ -50,7 +45,7 @@ void Material::UseMaterial(Camera* camera)
 		_textures[i]->Bind(i);
 	}
 
-	_shader->SetUniforms(_modelM, glm::vec4(attribs.ambient * attribs.diffuse, attribs.dissolve), camera);
+	_shader->SetUniforms(_modelM, attribs, camera);
 }
 
 Material::~Material()

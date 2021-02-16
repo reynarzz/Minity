@@ -3,7 +3,7 @@
 
 
 
-Material::MatAttribs ConvertToMatAttribs(tinyobj::material_t mat);
+MatAttribs ConvertToMatAttribs(tinyobj::material_t mat);
 
 vector<MeshRenderer*> MeshSendToSceneTest::LoadMeshRenderers(const string& objectPath)
 {
@@ -34,7 +34,7 @@ vector<MeshRenderer*> MeshSendToSceneTest::LoadMeshRenderers(const string& objec
 
 		//Texture* texture = new Texture(texturePath[i]);
 		
-		Material::MatAttribs attribs = ConvertToMatAttribs(meshes[i]->mat);
+		MatAttribs attribs = ConvertToMatAttribs(meshes[i]->mat);
 		
 		Material* material = new Material(shader, attribs/*, texture*/);
 
@@ -45,9 +45,9 @@ vector<MeshRenderer*> MeshSendToSceneTest::LoadMeshRenderers(const string& objec
 	return renderers;
 }
 
-Material::MatAttribs ConvertToMatAttribs(tinyobj::material_t mat)
+MatAttribs ConvertToMatAttribs(tinyobj::material_t mat)
 {
-	Material::MatAttribs attribs;
+	MatAttribs attribs;
 
 	attribs.ambient = vec3(mat.ambient[0], mat.ambient[1], mat.ambient[2]);
 	attribs.diffuse = vec3(mat.diffuse[0], mat.diffuse[1], mat.diffuse[2]);

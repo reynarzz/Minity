@@ -29,7 +29,7 @@ void MeshRenderer::Init()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * _mesh->GetIndices()->size(), &_mesh->GetIndices()->at(0), GL_STREAM_DRAW);
 
-	_material->BindTextures();
+	//_material->BindTextures();
 }
 
 void MeshRenderer::Bind(Camera* camera)
@@ -55,11 +55,6 @@ void MeshRenderer::Bind(Camera* camera)
 	glEnableVertexAttribArray(2);
 	
 	_material->UseMaterial(camera);
-}
-
-bool MeshRenderer::DepthWrite() const 
-{
-	return _material->_depthWrite;
 }
 
 MeshRenderer::~MeshRenderer()
