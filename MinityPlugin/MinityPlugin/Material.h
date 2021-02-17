@@ -1,11 +1,10 @@
 #pragma once
 #include "Shader.h"
-#include <glm/glm.hpp>
+#include <glm/mat4x4.hpp>
 #include "Texture.h"
 #include <vector>
-#include <glm/glm.hpp>
 
-
+using glm::mat4;
 
 enum RenderingOrder
 {
@@ -53,8 +52,6 @@ public:
 class Material
 {
 public:
-
-	
 	Blending _blending;
 
 	RenderingOrder _renderingOrder = RenderingOrder::Opaque;
@@ -68,7 +65,7 @@ public:
 	bool _depthWrite = true;
 	MatAttribs GetMatAttribs() const;
 	Culling culling;
-
+	void SetModelMatrix(mat4 modelM);
 private:
 	Shader* _shader;
 	mat4 _modelM;

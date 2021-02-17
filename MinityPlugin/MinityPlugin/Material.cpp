@@ -34,6 +34,11 @@ MatAttribs Material::GetMatAttribs() const
 	return attribs;
 }
 
+void Material::SetModelMatrix(mat4 model) 
+{
+	_modelM = model;
+}
+
 void Material::UseMaterial(Camera* camera)
 {
 	unsigned int id = _shader->UseShader();

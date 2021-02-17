@@ -23,6 +23,11 @@ void Scene::Update(ScreenInfo screenInfo, float deltaTime)
 
 		camera->Update(deltaTime);
 	}
+
+	for (GameEntity* entity : _gameEntities)
+	{
+		entity->Update();
+	}
 }
 
 void Scene::AddGameEntity(GameEntity* gameEntity) 

@@ -8,13 +8,11 @@ GameEntity::GameEntity(string name)
 {
 	_name = name;
 
-	Transform* transform = new Transform(this);
-	transform->_name = name;
-
-	AddComponent(transform);
+	_transform = new Transform(this);
+	_transform->_name = name;
 }
 
-void GameEntity::Update() 
+void GameEntity::Update()
 {
 	for (auto component: _components)
 	{
@@ -38,7 +36,14 @@ void GameEntity::AddComponent(GameComponent* component)
 	_components.push_back(component);
 }
 
+Transform* GameEntity::GetTransform() const 
+{
+	return _transform;
+}
+
 GameEntity::~GameEntity() 
 {
+	_components.clear();
 
+	delete _transform;
 }

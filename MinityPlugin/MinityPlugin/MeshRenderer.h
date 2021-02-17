@@ -3,6 +3,7 @@
 #include "Mesh.h"
 #include "Material.h"
 #include "GameComponent.h"
+#include "Transform.h"
 
 class GameEntity;
 

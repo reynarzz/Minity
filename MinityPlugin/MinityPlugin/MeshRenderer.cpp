@@ -1,5 +1,4 @@
 #include "pch.h"
-
 #include "GameEntity.h"
 #include "MeshRenderer.h"
 
@@ -25,7 +24,7 @@ Material* MeshRenderer::GetMaterial() const
 
 void MeshRenderer::Update() 
 {
-
+	_material->SetModelMatrix(GetTransform()->GetModelMatrix());
 }
 
 void MeshRenderer::Init()
