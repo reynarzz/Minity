@@ -2,9 +2,8 @@
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 #include "GameComponent.h"
-#include "GameEntity.h"
 
-
+class GameEntity;
 using glm::vec4;
 using glm::mat4;
 using glm::vec3;

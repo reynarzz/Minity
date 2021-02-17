@@ -1,7 +1,7 @@
 #pragma once
 #include "Scene.h"
 #include "Unity_PluginAPI/IUnityInterface.h"
-
+#include <gainput/gainput.h>
 
 enum class NormalKey
 {
@@ -37,13 +37,15 @@ enum class ModifierKeys
 
 class InputSystem
 {
+
 public:
-	Camera* _camera;
 	// Use function pointers.
 	
-
-	InputSystem(Camera* camera);
+	InputSystem();
 	void Update(float deltaTime);
+
+private:
+	gainput::InputManager _manager;
 };
 
 

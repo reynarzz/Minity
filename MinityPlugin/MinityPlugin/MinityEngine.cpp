@@ -66,7 +66,7 @@ MinityEngine::MinityEngine()
 
 	_renderer = new Renderer(_scene->GetCameras().at(0));
 
-	_inputSystem = new InputSystem(_scene->GetCameras().at(0));
+	_inputSystem = new InputSystem();
 
 	SendRenders_Test(_renderer, _scene);
 }

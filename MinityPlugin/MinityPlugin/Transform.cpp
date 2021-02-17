@@ -1,12 +1,13 @@
 #include "pch.h"
 
 #include <glm/ext/matrix_transform.hpp>
+#include "GameComponent.h"
+#include "GameEntity.h"
 
 #include "Transform.h"
 
 Transform::Transform(GameEntity* gameEntity) : GameComponent(gameEntity),
 					 _model(1.f)
-		  
 {
 	
 }
@@ -38,7 +39,6 @@ void Transform::SetRotation(vec3 rotation)
 		_model = glm::rotate(_model, glm::radians(rotation.z), vec3(0, 0, 1.f));
 	}
 }
- 
 
 void Transform::SetScale(vec3 scale) 
 {

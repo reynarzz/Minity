@@ -30,8 +30,8 @@ vec3 lightDir;
 in vec3 _normal;
 
 
-uniform vec3 _diffuse_;
-uniform float _alpha_;
+uniform vec3 _diffuse_; // from material
+uniform float _alpha_; 	// from material
 
 void main() 
 {
