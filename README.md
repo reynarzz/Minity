@@ -1,7 +1,7 @@
 ## Minity
 An OpenGL game engine that runs in a Unity3D EditorWindow.
 
-### Current Renderer: Unity 2019.4.17f1
+### Current Renderer: 
 ![](smallpreview.gif)
 
 ### To Do v1 
@@ -14,3 +14,6 @@ An OpenGL game engine that runs in a Unity3D EditorWindow.
 - [ ] Simple GUI.
 - [ ] FMOD integration.
 - [ ] Physics.
+
+## Version:
+Unity 2019.4.17f1
