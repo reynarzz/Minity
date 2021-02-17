@@ -1,5 +1,6 @@
 ## Minity
-An OpenGL renderer inside unity.
+An OpenGL game engine inside unity.
+
 
 ![](smallpreview.gif)
 
@@ -7,8 +8,8 @@ An OpenGL renderer inside unity.
 - [ ] Refactor.
    - [ ] Fix some expensive calls.
    - [ ] Arquitecture.
-- [ ] Textures support.
-- [ ] Directional light.
+- [x] Textures support.
+- [x] Directional light.
 - [ ] Shadow mapping.
 - [ ] Simple GUI.
 - [ ] FMOD integration.
