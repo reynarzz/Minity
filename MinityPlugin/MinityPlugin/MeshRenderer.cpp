@@ -7,6 +7,7 @@ MeshRenderer::MeshRenderer(GameEntity* gameEntity) : GameComponent(gameEntity)
 {
 	
 }
+
 MeshRenderer::MeshRenderer(GameEntity* gameEntity, Mesh* mesh, Material* material) :
 	GameComponent(gameEntity), _mesh(mesh), _material(material), _vbo(-1), _ibo(-1)
 {

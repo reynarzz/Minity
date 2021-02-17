@@ -21,7 +21,19 @@ public:
 	void Update();
 
 	template<typename T>
-	T* GetComponent();
+	T* GetComponent()
+	{
+		// slow
+		for (auto component : _components)
+		{
+			if (dynamic_cast<T*>(component) != nullptr)
+			{
+				return dynamic_cast<T*>(component);
+			}
+		}
+
+		return nullptr;
+	}
 
 
 	void RemoveComponent();

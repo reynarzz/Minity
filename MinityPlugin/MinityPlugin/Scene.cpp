@@ -39,9 +39,15 @@ vector<MeshRenderer*> Scene::GetMeshRenderers()
 {
 	vector<MeshRenderer*> renderers;
 
+	// slow
 	for (auto gameEntities : _gameEntities)
 	{
-		renderers.push_back(gameEntities->GetComponent<MeshRenderer>());
+		MeshRenderer* renderer = gameEntities->GetComponent<MeshRenderer>();
+
+		if (renderer != nullptr)
+		{
+			renderers.push_back(renderer);
+		}
 	}
 
 	return renderers;

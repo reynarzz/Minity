@@ -2,8 +2,8 @@
 #include "Camera.h"
 #include "MeshRenderer.h"
 #include "ScreenInfo.h"
-#include "GameEntity.h"
 
+class GameEntity;
 class Scene
 {
 private:

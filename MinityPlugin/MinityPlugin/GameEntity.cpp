@@ -22,19 +22,15 @@ void GameEntity::Update()
 	}
 }
 
-template<class T>
-T* GameEntity::GetComponent() 
+bool GameEntity::ContainsComponent(GameComponent* component)
 {
-	// slow
-	for (auto component : _components)
-	{
-		if (static_cast<T>(component) != nullptr) 
-		{
-			return static_cast<T>(component);
-		}
-	}
+	// TODO
+	return false;
+}
 
-	return nullptr;
+void GameEntity::RemoveComponent() 
+{
+	// TODO
 }
 
 void GameEntity::AddComponent(GameComponent* component)
