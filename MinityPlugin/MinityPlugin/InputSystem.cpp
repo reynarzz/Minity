@@ -4,26 +4,32 @@
 #pragma comment(lib, "xinput.lib")
 #include "InputSystem.h"
 
-
 // Define your user buttons somewhere global
 enum Button
 {
 	ButtonConfirm
 };
 gainput::InputMap* _map;
+gainput::InputManager* _manager;
+gainput::DeviceId _keyboard;
+gainput::MappedInputListener _listener;
+
+bool created = false;
 
 InputSystem::InputSystem() // this should be the screen class 
 {
-	// Setting up Gainput
-	const gainput::DeviceId mouseId = _manager.CreateDevice<gainput::InputDeviceMouse>();
-	_manager.SetDisplaySize(100, 100);
+	_manager = new gainput::InputManager();
 
-	_map = new gainput::InputMap(_manager);
+	// Setting up Gainput
+	_keyboard = _manager->CreateDevice<gainput::InputDevicePad>();
+	_manager->SetDisplaySize(500, 500);
+
+	_map = new gainput::InputMap(*_manager);
+	
 	//_map(_manager);
-	_map->MapBool(ButtonConfirm, mouseId, gainput::MouseButtonLeft);
 }
 // Use function pointers.
- 
+
 //NormalKey _normalKey;
 //MouseKeys _mouseKey;
 //ModifierKeys _modifierKey;
@@ -38,7 +44,7 @@ extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetMouseData(float xP
 	/*Debug::Log("Delta x");
 	Debug::Log(deltaX);*/
 }
-  
+
 extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetKeyDow(int keyType, int key)
 {
 	/*if (keyType == 0)
@@ -130,13 +136,24 @@ extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetMoveSpeed(float sp
 
 void InputSystem::Update(float deltaTime)
 {
-	// Call every frame
-	_manager.Update();
+	Debug::Log("Updating");
+	
+	if (!created) 
+	{
+		if (_map->MapBool(ButtonConfirm, _keyboard, gainput::PadButtonA))
+		{
+
+			created = true;
+			Debug::Log("Created");
+		}
+		_map->MapBool(ButtonConfirm, _keyboard, gainput::KeySpace);
+
+		// Call every frame
+	} 
+
+	_manager->Update();
 	// May have to call platform-specific event-handling functions here.
 	// Check button state
-	if (_map->GetBoolWasDown(ButtonConfirm))
-	{
-		Debug::Log("Mouse click");
-		// Confirmed!
-	}
+
+	Debug::Log(_map->GetBoolIsNew(ButtonConfirm));
 }

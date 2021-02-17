@@ -89,7 +89,6 @@ namespace MinityEngine
 
         private void OnGUI()
         {
-
             _deltaTime = (float)(_stopWatch.Elapsed.TotalMilliseconds / 1000.0f - _totalSecs);
             _totalSecs = _stopWatch.Elapsed.TotalMilliseconds / 1000.0f;
 

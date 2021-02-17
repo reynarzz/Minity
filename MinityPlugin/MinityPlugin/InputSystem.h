@@ -47,7 +47,6 @@ public:
 	void Update(float deltaTime);
 
 private:
-	gainput::InputManager _manager;
 };
 
 
