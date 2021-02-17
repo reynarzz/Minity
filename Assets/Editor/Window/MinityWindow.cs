@@ -162,15 +162,15 @@ namespace MinityEngine
            
             _consoleScroll = GUILayout.BeginScrollView(_consoleScroll);
 
-            //for (int i = 0; i < _consoleMessages.Count; i++)
-            //{
-            //    GUILayout.Label(_consoleMessages[i], EditorStyles.helpBox);
-            //    //if (GUILayout.Button(_consoleMessages[i], EditorStyles.helpBox)) 
-            //    //{
-            //    //    Debug.Log(_consoleMessages[i]);
-            //    //}
-            //}
-             GUILayout.EndScrollView();
+            for (int i = 0; i < _consoleMessages.Count; i++)
+            {
+                GUILayout.Label(_consoleMessages[i], EditorStyles.helpBox);
+                //if (GUILayout.Button(_consoleMessages[i], EditorStyles.helpBox)) 
+                //{
+                //    Debug.Log(_consoleMessages[i]);
+                //}
+            }
+            GUILayout.EndScrollView();
         }
 
         private void ObjectNameControl(ref string name)

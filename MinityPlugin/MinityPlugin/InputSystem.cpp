@@ -1,23 +1,26 @@
 #include "pch.h"
-
+//#include <Xinput.h>
+#pragma comment(lib, "Ws2_32.lib")
+#pragma comment(lib, "xinput.lib")
 #include "InputSystem.h"
+
 
 // Define your user buttons somewhere global
 enum Button
 {
 	ButtonConfirm
 };
-//gainput::InputMap* _map;
+gainput::InputMap* _map;
 
 InputSystem::InputSystem() // this should be the screen class 
 {
-	//// Setting up Gainput
-	//const gainput::DeviceId mouseId = _manager.CreateDevice<gainput::InputDeviceMouse>();
-	//_manager.SetDisplaySize(100, 100);
+	// Setting up Gainput
+	const gainput::DeviceId mouseId = _manager.CreateDevice<gainput::InputDeviceMouse>();
+	_manager.SetDisplaySize(100, 100);
 
-	//_map = new gainput::InputMap(_manager);
-	////_map(_manager);
-	//_map->MapBool(ButtonConfirm, mouseId, gainput::MouseButtonLeft);
+	_map = new gainput::InputMap(_manager);
+	//_map(_manager);
+	_map->MapBool(ButtonConfirm, mouseId, gainput::MouseButtonLeft);
 }
 // Use function pointers.
  
@@ -27,7 +30,7 @@ InputSystem::InputSystem() // this should be the screen class
 //glm::vec2 _mouseDelta;
 //glm::vec3 _position = glm::vec3(12.0f, 11.0f, 14.0f);
 //float _i_moveSpeed;
-//
+// 
 extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetMouseData(float xPos, float yPos, float deltaX, float deltaY)
 {
 	//_mousePos = glm::vec2(xPos, yPos);
@@ -127,13 +130,13 @@ extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetMoveSpeed(float sp
 
 void InputSystem::Update(float deltaTime)
 {
-	//// Call every frame
-	//_manager.Update();
-	//// May have to call platform-specific event-handling functions here.
-	//// Check button state
-	//if (_map->GetBoolWasDown(ButtonConfirm))
-	//{
-	//	//Debug::Log("Mouse click");
-	//	// Confirmed!
-	//}
+	// Call every frame
+	_manager.Update();
+	// May have to call platform-specific event-handling functions here.
+	// Check button state
+	if (_map->GetBoolWasDown(ButtonConfirm))
+	{
+		Debug::Log("Mouse click");
+		// Confirmed!
+	}
 }

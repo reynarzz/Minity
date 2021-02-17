@@ -1,8 +1,10 @@
 #pragma once
 #include "Scene.h"
 #include "Unity_PluginAPI/IUnityInterface.h"
-#include <gainput/gainput.h>
 
+
+#include <gainput/gainput.h>
+//#include <Windows.h>
 enum class NormalKey
 {
 	RELEASED = -1,
