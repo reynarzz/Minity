@@ -54,7 +54,7 @@ void Camera::Update(float deltaTime)
 	_inmmediateRot.x += -_mouseDeltaCam.y;
 	_inmmediateRot.y += _mouseDeltaCam.x;
 
-	_cameraRot = Lerp(_cameraRot, _inmmediateRot, deltaTime * 16.0f);
+	_cameraRot = Lerp(_cameraRot, _inmmediateRot, deltaTime * 26.0f);
 
 	_forward.x = cos(glm::radians(_cameraRot.y)) * cos(glm::radians(_cameraRot.x));
 	_forward.y = sin(glm::radians(_cameraRot.x));
@@ -65,7 +65,7 @@ void Camera::Update(float deltaTime)
 	_right = glm::vec3(glm::normalize(glm::cross(_forward, glm::vec3(0.0f, 1.0, 0.0f))));
 	_up = glm::vec3(glm::normalize(glm::cross(_right, _forward)));
 
-	_cameraPos =  Lerp(_cameraPos, _inmmediatePos, deltaTime * 5.0f);
+	_cameraPos = _inmmediatePos;// Lerp(_cameraPos, _inmmediatePos, deltaTime * 10.0f);
 
 	_viewMatrix = glm::lookAt(_cameraPos, _cameraPos + _forward, _up);
 

@@ -33,11 +33,24 @@ void main()
 
 	float alpha = (maxDist - length(_pixelPos - _cameraWorldPos_));
 
-	float thickness = 0.02;
-	float spacing = 1.5;
+	float thickness = 0.01;
+	float spacing = 1.;
 
-    if (fract(_pixelPos.x/spacing) < thickness || fract(_pixelPos.z/spacing) < thickness)
-            color = vec4(vec3(1.), clamp(alpha, 0.0, 0.18)); 
+    if (fract(_pixelPos.x / spacing) < thickness || fract(_pixelPos.z / spacing) < thickness)
+    {
+	    if(round(_pixelPos.z) == 0)
+	    {
+			color = vec4(1.0, 0., 0., 0.7); 
+	    }
+	    else if(round(_pixelPos.x) == 0)
+	    {
+			color = vec4(0., 0.2, 1., 0.9); 
+	    }
+	    else
+	    {
+			color = vec4(vec3(1.), clamp(alpha, 0.0, 0.2)); 
+	    }
+    }
     else
     {
 

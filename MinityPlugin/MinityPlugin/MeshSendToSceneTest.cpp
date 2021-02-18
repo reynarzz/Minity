@@ -77,6 +77,9 @@ MatAttribs ConvertToMatAttribs(tinyobj::material_t mat)
 // testing
 void MeshSendToSceneTest::SetMeshRenderersToScene(Scene* scene)
 {
+	//auto gameEntities = LoadGameEntities("MinityRes/Models/cube.obj");
+	//auto cube2 = LoadGameEntities("MinityRes/Models/cube.obj").at(0);
+
 	auto gameEntities = LoadGameEntities("MinityRes/Models/CoffeeRestaurant.obj");
 	auto groundGrid = LoadGameEntities("MinityRes/Models/GroundGrid.obj");
 
@@ -87,6 +90,9 @@ void MeshSendToSceneTest::SetMeshRenderersToScene(Scene* scene)
 		scene->AddGameEntity(gameEntity);
 	}
 
+	//scene->AddGameEntity(cube2);
+
+	//cube2->GetTransform()->SetPosition(vec3(-2, 2, 0));
 	// Ground Grid
 	auto renderer = groundGrid.at(0)->GetComponent<MeshRenderer>();
 	auto material = renderer->GetMaterial();

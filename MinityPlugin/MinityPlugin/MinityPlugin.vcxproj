@@ -90,7 +90,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glew\include;$(SolutionDir)Dependencies\_Glm;$(SolutionDir)Dependencies\FBXReader;$(SolutionDir)Dependencies\OBJReader;$(SolutionDir)Dependencies\gInput</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glew\include;$(SolutionDir)Dependencies\_Glm;$(SolutionDir)Dependencies\FBXReader;$(SolutionDir)Dependencies\OBJReader;$(SolutionDir)Dependencies\gInput;$(SolutionDir)Dependencies\im3d</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -114,7 +114,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glew\include;$(SolutionDir)Dependencies\_Glm;$(SolutionDir)Dependencies\FBXReader;$(SolutionDir)Dependencies\OBJReader;$(SolutionDir)Dependencies\gInput</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glew\include;$(SolutionDir)Dependencies\_Glm;$(SolutionDir)Dependencies\FBXReader;$(SolutionDir)Dependencies\OBJReader;$(SolutionDir)Dependencies\gInput;$(SolutionDir)Dependencies\im3d</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -138,7 +138,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glew\include;$(SolutionDir)Dependencies\_Glm;$(SolutionDir)Dependencies\FBXReader;$(SolutionDir)Dependencies\OBJReader;$(SolutionDir)Dependencies\gInput</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glew\include;$(SolutionDir)Dependencies\_Glm;$(SolutionDir)Dependencies\FBXReader;$(SolutionDir)Dependencies\OBJReader;$(SolutionDir)Dependencies\gInput;$(SolutionDir)Dependencies\im3d</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -162,7 +162,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glew\include;$(SolutionDir)Dependencies\_Glm;$(SolutionDir)Dependencies\FBXReader;$(SolutionDir)Dependencies\OBJReader;$(SolutionDir)Dependencies\gInput</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glew\include;$(SolutionDir)Dependencies\_Glm;$(SolutionDir)Dependencies\FBXReader;$(SolutionDir)Dependencies\OBJReader;$(SolutionDir)Dependencies\gInput;$(SolutionDir)Dependencies\im3d</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>

@@ -50,7 +50,6 @@ void Renderer::AddRendererToQueue(MeshRenderer* renderer)
 
 void Renderer::Draw()
 {
-	
 	// Do proper ordering.
 	for (auto rendererGroup : _renderers)
 	{
@@ -94,7 +93,6 @@ void Renderer::Draw()
 			{
 				glDisable(GL_CULL_FACE);
 			}
-
 			Mesh* mesh = renderer->GetMesh();;
 
 			glDrawElements(mat->_renderMode, mesh->GetIndices()->size(), GL_UNSIGNED_INT, 0);

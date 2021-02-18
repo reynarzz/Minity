@@ -29,7 +29,7 @@ using System.Runtime.InteropServices;
 /// </summary>
 namespace MinityEngine
 {
-    public class MinityScene : MonoBehaviour
+    public static class MinityScene 
     {
         private const string MinityPluginName = "MinityPlugin";
 

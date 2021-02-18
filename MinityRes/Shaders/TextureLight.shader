@@ -26,15 +26,18 @@ void main()
 out vec4 color;
 in vec2 _uvCoord;
 uniform sampler2D _texture;
-vec3 lightDir;
 in vec3 _normal;
-
 
 uniform vec3 _diffuse_; // from material
 uniform float _alpha_; 	// from material
 
 void main() 
 {
-	lightDir = vec3(0.5, -0.3, -0.5);
-	color = texture(_texture, _uvCoord) * (step(normalize(dot(_normal, lightDir)), 0.4) + 0.4) * vec4(_diffuse_, _alpha_);
+	vec3 lightDir =  normalize(vec3(-0.5, 0.5, 0.5));
+
+	float light = normalize(dot(_normal, lightDir));
+
+	float flatC = step(0.4, light)  + 0.4;
+
+	color = texture(_texture, _uvCoord) * light * vec4(_diffuse_, _alpha_);
 }

@@ -8,7 +8,7 @@ using glm::mat4;
 using glm::vec3;
 using glm::vec2;
 
-class Camera// : Component
+class Camera
 {
 private:
 	mat4 _viewMatrix;
@@ -19,7 +19,7 @@ private:
 
 public:
 	vec3 _cameraPos;
-
+	// Transform
 	glm::vec3 _forward;
 	glm::vec3 _right;
 	glm::vec3 _up;
