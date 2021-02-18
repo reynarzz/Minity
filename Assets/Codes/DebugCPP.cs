@@ -28,14 +28,17 @@ using UnityEngine;
 namespace MinityEngine
 {
     [ExecuteAlways]
-    public class DebugCPP : MonoBehaviour
+    public static class DebugCPP
     {
-        // Use this for initialization
-        void OnEnable()
+        public static Action<string> OnMessageSent;
+
+        static DebugCPP()
         {
             RegisterDebugCallback(OnDebugCallback);
-        }
 
+        }
+        // Use this for initialization
+        
         //------------------------------------------------------------------------------------------------
         [DllImport("MinityPlugin", CallingConvention = CallingConvention.Cdecl)]
         static extern void RegisterDebugCallback(debugCallback cb);
@@ -44,6 +47,7 @@ namespace MinityEngine
         delegate void debugCallback(IntPtr request, int color, int size);
         enum Color { red, green, blue, black, white, yellow, orange };
         [MonoPInvokeCallback(typeof(debugCallback))]
+
         static void OnDebugCallback(IntPtr request, int color, int size)
         {
             //Ptr to string
@@ -58,6 +62,8 @@ namespace MinityEngine
                 debug_string,
                 "</color>"
                 );
+
+            //OnMessageSent(debug_string);
 
             UnityEngine.Debug.Log(debug_string);
         }

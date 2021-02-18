@@ -12,14 +12,14 @@ class Camera
 {
 private:
 	mat4 _viewMatrix;
-	vec3 _cameraPos;
 	vec2 _cameraRot;
 	mat4 _projectionMatrix;
 	mat4 _viewProjM;
 	float _aspectRatio;
 
 public:
-
+	vec3 _cameraPos;
+	// Transform
 	glm::vec3 _forward;
 	glm::vec3 _right;
 	glm::vec3 _up;

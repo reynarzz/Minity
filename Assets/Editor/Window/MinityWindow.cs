@@ -42,6 +42,9 @@ namespace MinityEngine
         private static bool _isOpened;
         public static bool IsOpened => _isOpened;
 
+        private List<string> _consoleMessages;
+
+
         [MenuItem("Window/Minity")]
         public static void Open()
         {
@@ -61,6 +64,14 @@ namespace MinityEngine
             }
             _hierarchyRect.width = 230;
             _sceneViewRect.width = 700;
+
+            DebugCPP.OnMessageSent = SetConsoleMessage;
+            _consoleMessages = new List<string>();
+        }
+
+        public void SetConsoleMessage(string message)
+        {
+            _consoleMessages.Add(message);
         }
 
         private void OnDestroy()
@@ -75,9 +86,9 @@ namespace MinityEngine
         private Rect _hierarchyRect;
         private Rect _sceneViewRect;
 
+
         private void OnGUI()
         {
-
             _deltaTime = (float)(_stopWatch.Elapsed.TotalMilliseconds / 1000.0f - _totalSecs);
             _totalSecs = _stopWatch.Elapsed.TotalMilliseconds / 1000.0f;
 
@@ -99,6 +110,8 @@ namespace MinityEngine
             var inspectorXPos = (_sceneViewRect.x + _sceneViewRect.width) + windowsOffset;
             var inspectorRect = new Rect(inspectorXPos, playModeRect.height, Screen.width - inspectorXPos, Screen.height);
 
+            var consoleRect = new Rect(_hierarchyRect.width, _sceneViewRect.height + _sceneViewRect.y, inspectorXPos - _hierarchyRect.width - windowsOffset, (Screen.height - (_sceneViewRect.height + _sceneViewRect.y)) - 17);
+
             BeginWindows();
 
             // Hierarchy window
@@ -112,14 +125,21 @@ namespace MinityEngine
             GUI.Window(1, playModeRect, (id) => PlayModeControls(id, playModeRect), "", GUIStyle.none);
 
             // Scene window
-            EditorGUI.DrawRect(_sceneViewRect, Color.black * 0.4f);
+            EditorGUI.DrawRect(_sceneViewRect, Color.white * 0.25f);
             GUI.SetNextControlName("SceneView");
             GUI.Window(2, _sceneViewRect, (id) => SceneWindow(id, _sceneViewRect), "", GUIStyle.none);
+
+            //Console
+            EditorGUI.DrawRect(consoleRect, new Color(0.10f, 0.10f, 0.10f, 1));
+            GUI.SetNextControlName("Console");
+            GUI.Window(3, consoleRect, (id) => ConsoleWindow(id, consoleRect), "", GUIStyle.none);
+
 
             // Inspector window
             EditorGUI.DrawRect(inspectorRect, new Color(0.14f, 0.14f, 0.14f, 1));
             GUI.SetNextControlName("Inspector");
-            GUI.Window(3, inspectorRect, (id) => InspectorView(id, inspectorRect), "", GUIStyle.none);
+            GUI.Window(4, inspectorRect, (id) => InspectorView(id, inspectorRect), "", GUIStyle.none);
+
 
             EndWindows();
 
@@ -131,6 +151,25 @@ namespace MinityEngine
             }
 
             Repaint();
+        }
+
+        private Vector2 _consoleScroll;
+
+        private void ConsoleWindow(int id, Rect consoleRect)
+        {
+            GUILayout.Label("Debug Console:");
+
+            _consoleScroll = GUILayout.BeginScrollView(_consoleScroll);
+
+            for (int i = 0; i < _consoleMessages.Count; i++)
+            {
+                GUILayout.Label(_consoleMessages[i], EditorStyles.helpBox);
+                //if (GUILayout.Button(_consoleMessages[i], EditorStyles.helpBox)) 
+                //{
+                //    Debug.Log(_consoleMessages[i]);
+                //}
+            }
+            GUILayout.EndScrollView();
         }
 
         private void ObjectNameControl(ref string name)
@@ -260,13 +299,13 @@ namespace MinityEngine
                 }
             }
 
-            public void TraverseChildren() 
+            public void TraverseChildren()
             {
                 for (int i = 0; i < _children.Count; i++)
                 {
                     _children[i].TraverseChildren();
                 }
-                
+
             }
 
             public HierarchyObj GetChild(int index)
@@ -293,7 +332,7 @@ namespace MinityEngine
             {
                 _hierarchyObjs = new List<HierarchyObj>();
             }
-             
+
             public void AddObj(string name)
             {
                 var child = new HierarchyObj(_hierarchyObjs.Count, name, new Rect(_hSpacing, GetChildrensHeightSum(), 100, 20));
@@ -315,7 +354,7 @@ namespace MinityEngine
                 for (int i = 0; i < _hierarchyObjs.Count; i++)
                 {
                     var childHeight = 0f;
-                     
+
                     var parent = _hierarchyObjs[i];
 
                     if (parent.ShowContent)
@@ -343,8 +382,8 @@ namespace MinityEngine
                     {
                         next.Rect = new Rect(next.Rect.x, current.GetChildrensHeightSum(), next.Rect.width, next.Rect.height);
                         next.RecalculateChildren();
-                    } 
-                    else 
+                    }
+                    else
                     {
                         next.Rect = new Rect(next.Rect.x, current.Rect.y + next.Rect.height + _vSpacing, next.Rect.width, next.Rect.height);
                         next.RecalculateChildren();
@@ -422,7 +461,7 @@ namespace MinityEngine
         {
             //this name have to be an unique ID
             GUI.SetNextControlName(obj.Name);
-            
+
             if (obj.Elements > 0)
             {
                 obj.ShowContent = EditorGUI.Foldout(obj.Rect, obj.ShowContent, obj.Name);
@@ -460,15 +499,23 @@ namespace MinityEngine
 
             MinityScene.SetScreenValues((int)rect.width, (int)rect.height, rect.width / rect.height);
 
-            MinityScene.SetMoveSpeed(50f);
+            MinityScene.SetMoveSpeed(10f);
 
             Event current = Event.current;
 
             windowRect.x = 0;
             windowRect.y = 0;
 
+            var mouseDelta = new Vector2(current.delta.x, current.delta.y);
+
+            if (current.type == EventType.MouseUp)
+            {
+                Debug.Log("up");
+                mouseDelta = default;
+            }
+
             if (!_canDragLine && windowRect.Contains(current.mousePosition))
-                MinityScene.SetMouseData(current.mousePosition.x, current.mousePosition.y, current.delta.x, current.delta.y);
+                MinityScene.SetMouseData(current.mousePosition.x, current.mousePosition.y, mouseDelta.x, mouseDelta.y);
 
             //EditorGUI.DrawRect(windowRect, Color.red);
 
@@ -506,36 +553,34 @@ namespace MinityEngine
             }
 
 
-            if (current.type == EventType.KeyDown)
+            if (current.keyCode == KeyCode.A)
             {
-                if (current.keyCode == KeyCode.A)
-                {
-                    MinityScene.SetKeyDow(0, 2);
-                }
-                else if (current.keyCode == KeyCode.D)
-                {
-                    MinityScene.SetKeyDow(0, 4);
-                }
-
-                if (current.keyCode == KeyCode.W)
-                {
-                    MinityScene.SetKeyDow(0, 1);
-                }
-                else if (current.keyCode == KeyCode.S)
-                {
-                    MinityScene.SetKeyDow(0, 3);
-                }
-
-                if (current.keyCode == KeyCode.Q)
-                {
-                    MinityScene.SetKeyDow(0, 5);
-                }
-                else if (current.keyCode == KeyCode.E)
-                {
-                    MinityScene.SetKeyDow(0, 6);
-                }
+                MinityScene.SetKeyDow(0, 2);
             }
-            else if (current.type == EventType.KeyUp)
+            else if (current.keyCode == KeyCode.D)
+            {
+                MinityScene.SetKeyDow(0, 4);
+            }
+
+            if (current.keyCode == KeyCode.W)
+            {
+                MinityScene.SetKeyDow(0, 1);
+            }
+            else if (current.keyCode == KeyCode.S)
+            {
+                MinityScene.SetKeyDow(0, 3);
+            }
+
+            if (current.keyCode == KeyCode.Q)
+            {
+                MinityScene.SetKeyDow(0, 5);
+            }
+            else if (current.keyCode == KeyCode.E)
+            {
+                MinityScene.SetKeyDow(0, 6);
+            }
+
+            if (current.type == EventType.KeyUp)
             {
                 MinityScene.SetKeyUp(0);
 

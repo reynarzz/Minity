@@ -1,9 +1,14 @@
 #include "pch.h"
-
+#include "GameEntity.h"
 #include "MeshRenderer.h"
 
-MeshRenderer::MeshRenderer(Mesh* mesh, Material* material) :
-	_mesh(mesh), _material(material), _vbo(-1), _ibo(-1)
+MeshRenderer::MeshRenderer(GameEntity* gameEntity) : GameComponent(gameEntity)
+{
+	
+}
+
+MeshRenderer::MeshRenderer(GameEntity* gameEntity, Mesh* mesh, Material* material) :
+	GameComponent(gameEntity), _mesh(mesh), _material(material), _vbo(-1), _ibo(-1)
 {
 }
 
@@ -15,6 +20,11 @@ Mesh* MeshRenderer::GetMesh() const
 Material* MeshRenderer::GetMaterial() const
 {
 	return _material;
+}
+
+void MeshRenderer::Update() 
+{
+	_material->SetModelMatrix(GetTransform()->GetModelMatrix());
 }
 
 void MeshRenderer::Init()
@@ -29,10 +39,10 @@ void MeshRenderer::Init()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * _mesh->GetIndices()->size(), &_mesh->GetIndices()->at(0), GL_STREAM_DRAW);
 
-	_material->BindTextures();
+	//_material->BindTextures();
 }
 
-void MeshRenderer::Bind(Camera* camera)
+void MeshRenderer::Bind(mat4 viewProjM, vec3 cameraWorldPos)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * _mesh->GetVertices()->size(), &_mesh->GetVertices()->at(0));
@@ -54,7 +64,7 @@ void MeshRenderer::Bind(Camera* camera)
 	glVertexAttribPointer(2, 3, GL_FLOAT, false, stride, (void*)(sizeof(float) * 5));
 	glEnableVertexAttribArray(2);
 	
-	_material->UseMaterial(camera);
+	_material->UseMaterial(viewProjM, cameraWorldPos);
 }
 
 MeshRenderer::~MeshRenderer()

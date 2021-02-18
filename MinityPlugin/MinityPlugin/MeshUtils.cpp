@@ -44,6 +44,10 @@ vector<MeshData*> LoadMeshes(const string& objectPath)
 
 			size_t index_offset = 0;
 
+			// To render a face per material i will have to create an 
+			//array and organize the faces per material types.
+
+
 			int testMat = 0;
 			// Face
 			for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)
@@ -93,9 +97,9 @@ vector<MeshData*> LoadMeshes(const string& objectPath)
 			MeshData* data = new MeshData();
 			data->mesh = mesh;
 
-			if(materials.size() > 0)
+			//if(materials.size() > 0)
 			data->mat = materials[testMat];
-			else 
+			/*else 
 			{
 				tinyobj::material_t defaultMat;
 				
@@ -105,7 +109,7 @@ vector<MeshData*> LoadMeshes(const string& objectPath)
 
 				data->mat = defaultMat;
 
-			}
+			}*/
 			meshes.push_back(data);
 		}
 	}

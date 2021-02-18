@@ -9,7 +9,7 @@
 class MeshSendToSceneTest
 {
 private:
-	vector<MeshRenderer*> LoadMeshRenderers(const string& objectPath);
+	vector<GameEntity*> LoadGameEntities(const string& objectPath);
 public:
 	void SetMeshRenderersToScene(Scene* scene);
 };

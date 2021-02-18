@@ -3,6 +3,12 @@
 #include "Unity_PluginAPI/IUnityInterface.h"
 
 
+#include <gainput/gainput.h>
+#include <gainput/GainputDebugRenderer.h>
+
+using gainput::DebugRenderer;
+
+//#include <Windows.h>
 enum class NormalKey
 {
 	RELEASED = -1,
@@ -37,13 +43,27 @@ enum class ModifierKeys
 
 class InputSystem
 {
+
 public:
-	Camera* _camera;
 	// Use function pointers.
-	
+	class GAINPUT_LIBEXPORT DebugInput : public DebugRenderer
+	{
+	public:
+		 ~DebugInput() override;
+
+		 void DrawCircle(float x, float y, float radius) override;
+
+		 void DrawLine(float x1, float y1, float x2, float y2) override;
+
+		 void DrawText(float x, float y, const char* const text) override;
+	};
+
 
 	InputSystem(Camera* camera);
 	void Update(float deltaTime);
+
+private:
+	DebugInput _debugInput;
 };
 
 

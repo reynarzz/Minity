@@ -1,4 +1,6 @@
 #include "pch.h"
+#include "GameEntity.h"
+
 #include "Scene.h"
 
 Scene::Scene()
@@ -21,21 +23,39 @@ void Scene::Update(ScreenInfo screenInfo, float deltaTime)
 
 		camera->Update(deltaTime);
 	}
+
+	for (GameEntity* entity : _gameEntities)
+	{
+		entity->Update();
+	}
 }
 
-void Scene::AddMeshRenderer(MeshRenderer* renderer) 
+void Scene::AddGameEntity(GameEntity* gameEntity) 
 {
-	_objects.push_back(renderer);
+	_gameEntities.push_back(gameEntity);
 }
 
-void Scene::RemoveMeshRenderer(MeshRenderer* renderer) 
+void Scene::RemoveGameEntity(GameEntity* gameEntity)
 {
 	// TODO
 }
 
-const vector<MeshRenderer*>& Scene::GetMeshRenderers() const
+vector<MeshRenderer*> Scene::GetMeshRenderers()
 {
-	return _objects;
+	vector<MeshRenderer*> renderers;
+
+	// slow
+	for (auto gameEntities : _gameEntities)
+	{
+		MeshRenderer* renderer = gameEntities->GetComponent<MeshRenderer>();
+
+		if (renderer != nullptr)
+		{
+			renderers.push_back(renderer);
+		}
+	}
+
+	return renderers;
 }
 
 const vector<Camera*>& Scene::GetCameras() const
@@ -46,6 +66,6 @@ const vector<Camera*>& Scene::GetCameras() const
 Scene::~Scene()
 {
 	// Clear destroys the objects!
-	_objects.clear();
-	_objects.shrink_to_fit();
+	_gameEntities.clear();
+	_gameEntities.shrink_to_fit();
 }

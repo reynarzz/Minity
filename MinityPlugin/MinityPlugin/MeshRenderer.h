@@ -2,8 +2,12 @@
 
 #include "Mesh.h"
 #include "Material.h"
+#include "GameComponent.h"
+#include "Transform.h"
 
-class MeshRenderer
+class GameEntity;
+
+class MeshRenderer : public GameComponent
 {
 private:
 	
@@ -12,15 +16,18 @@ private:
 	
 public:
 	
+	
 	/// <summary>Vertex buffer obj.</summary>
 	unsigned int _vbo;
 	/// <summary>Index buffer obj.</summary>
 	unsigned int _ibo;
-	MeshRenderer(Mesh* mesh, Material* material);
+	MeshRenderer(GameEntity* gameEntity);
+	MeshRenderer(GameEntity* gameEntity, Mesh* mesh, Material* material);
 	~MeshRenderer();
 
+	void Update() override;
 	Mesh* GetMesh() const;
 	Material* GetMaterial() const;
 	void Init();
-	void Bind(Camera* camera);
+	void Bind(mat4 viewProjM, vec3 cameraWorldPos);
 };
