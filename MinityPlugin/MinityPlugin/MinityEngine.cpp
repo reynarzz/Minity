@@ -13,21 +13,8 @@ float timeToDestroy;
 
 void SendRenders_Test(Renderer* renderer, Scene* scene)
 {
-	int count = 0;
-
 	for (auto meshRenderer : scene->GetMeshRenderers())
 	{
-		if (count == 0) 
-		{
-			meshRenderer->GetTransform()->SetPosition(vec3(-2, 0, 0));
-		}
-		else if (count == 1)
-		{
-			meshRenderer->GetTransform()->SetPosition(vec3(1, 0, -1));
-			meshRenderer->GetTransform()->SetRotation(vec3(40, 0, 10));
-			meshRenderer->GetTransform()->SetScale(vec3(1, 1, 1));
-		}
-
 		meshRenderer->Init();
 
 		Material* mat = meshRenderer->GetMaterial();
@@ -44,12 +31,11 @@ void SendRenders_Test(Renderer* renderer, Scene* scene)
 		}
 		else 
 		{
-			mat->culling._enabled = true;
-			mat->culling.face = GL_BACK;
+			/*mat->culling._enabled = true;
+			mat->culling.face = GL_BACK;*/
 		}
 
 		renderer->AddRendererToQueue(meshRenderer);
-		count++;
 	}
 }
 

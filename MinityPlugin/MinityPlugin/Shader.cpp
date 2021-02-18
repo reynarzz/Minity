@@ -71,7 +71,6 @@ void Shader::SetUniforms(mat4 mvp, vec3 cameraworldPos, MatAttribs attribs)
 	unsigned int alphaID = glGetUniformLocation(_programID, "_alpha_");
 	unsigned int cameraPosID = glGetUniformLocation(_programID, "_cameraWorldPos_");
 
-
 	//modelTest = glm::rotate(modelTest, glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
 
 	glUniform3f(cameraPosID, cameraworldPos.x, cameraworldPos.y, cameraworldPos.z);
