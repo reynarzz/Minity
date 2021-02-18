@@ -63,7 +63,7 @@ unsigned int Shader::UseShader()
 	return _programID;
 }
 
-void Shader::SetUniforms(mat4 model, MatAttribs attribs, Camera* camera)
+void Shader::SetUniforms(mat4 mvp, MatAttribs attribs)
 {
 	unsigned int uniformModelID = glGetUniformLocation(_programID, "_MVP");
 	unsigned int matAmbientID = glGetUniformLocation(_programID, "_ambient_");
@@ -71,7 +71,6 @@ void Shader::SetUniforms(mat4 model, MatAttribs attribs, Camera* camera)
 	unsigned int alphaID = glGetUniformLocation(_programID, "_alpha_");
 
 
-	mat4 viewProjM = camera->GetViewProjMatrix();
 	//modelTest = glm::rotate(modelTest, glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
 
 
@@ -79,7 +78,7 @@ void Shader::SetUniforms(mat4 model, MatAttribs attribs, Camera* camera)
 	glUniform3f(diffuseId, attribs.diffuse.r, attribs.diffuse.g, attribs.diffuse.b);
 	glUniform1f(alphaID, attribs.dissolve);
 
-	glUniformMatrix4fv(uniformModelID, 1, GL_FALSE, glm::value_ptr(viewProjM * model));
+	glUniformMatrix4fv(uniformModelID, 1, GL_FALSE, glm::value_ptr(mvp));
 }
 
 unsigned int Shader::GetProgramID() const 

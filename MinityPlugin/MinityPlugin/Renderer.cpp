@@ -58,7 +58,8 @@ void Renderer::Draw()
 
 		for (auto renderer : group)
 		{
-			renderer->Bind(_camera);
+			renderer->Bind(_camera->GetViewProjMatrix());
+
 			const Material* mat = renderer->GetMaterial();
 
 			if (mat->_blending.enabled)

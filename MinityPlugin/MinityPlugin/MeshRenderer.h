@@ -16,6 +16,7 @@ private:
 	
 public:
 	
+	
 	/// <summary>Vertex buffer obj.</summary>
 	unsigned int _vbo;
 	/// <summary>Index buffer obj.</summary>
@@ -28,5 +29,5 @@ public:
 	Mesh* GetMesh() const;
 	Material* GetMaterial() const;
 	void Init();
-	void Bind(Camera* camera);
+	void Bind(mat4 viewProjM);
 };

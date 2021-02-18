@@ -42,7 +42,7 @@ void MeshRenderer::Init()
 	//_material->BindTextures();
 }
 
-void MeshRenderer::Bind(Camera* camera)
+void MeshRenderer::Bind(mat4 viewProjM)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * _mesh->GetVertices()->size(), &_mesh->GetVertices()->at(0));
@@ -64,7 +64,7 @@ void MeshRenderer::Bind(Camera* camera)
 	glVertexAttribPointer(2, 3, GL_FLOAT, false, stride, (void*)(sizeof(float) * 5));
 	glEnableVertexAttribArray(2);
 	
-	_material->UseMaterial(camera);
+	_material->UseMaterial(viewProjM);
 }
 
 MeshRenderer::~MeshRenderer()

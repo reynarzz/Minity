@@ -39,7 +39,7 @@ void Material::SetModelMatrix(mat4 model)
 	_modelM = model;
 }
 
-void Material::UseMaterial(Camera* camera)
+void Material::UseMaterial(mat4 viewProjM)
 {
 	unsigned int id = _shader->UseShader();
 
@@ -50,7 +50,7 @@ void Material::UseMaterial(Camera* camera)
 		_textures[i]->Bind(i);
 	}
 
-	_shader->SetUniforms(_modelM, attribs, camera);
+	_shader->SetUniforms(viewProjM * _modelM, attribs);
 }
 
 Material::~Material()

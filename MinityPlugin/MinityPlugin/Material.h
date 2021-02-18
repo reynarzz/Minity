@@ -60,7 +60,7 @@ public:
 	Material(Shader* shader, MatAttribs attribs, Texture* texture);
 	Material(Shader* shader, MatAttribs attribs, std::vector<Texture*> texture);
 	~Material();
-	void UseMaterial(Camera* camera);
+	void UseMaterial(mat4 viewProjM);
 	Shader* GetShader() const;
 	bool _depthWrite = true;
 	MatAttribs GetMatAttribs() const;
