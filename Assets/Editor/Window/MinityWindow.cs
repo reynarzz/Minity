@@ -104,7 +104,7 @@ namespace MinityEngine
             _hierarchyRect.height = Screen.height;
             _hierarchyRect.y = playModeRect.height;
 
-            _sceneViewRect = new Rect(_hierarchyRect.width + windowsOffset, playModeRect.height + windowsOffset, _sceneViewRect.width, Screen.height - 300 + playModeRect.height);
+            _sceneViewRect = new Rect(_hierarchyRect.width + windowsOffset, playModeRect.height + windowsOffset, _sceneViewRect.width, Screen.height - 230 + playModeRect.height);
             _sceneViewRect.width = ResizeControl(new Vector2(_sceneViewRect.x, playModeRect.height), _sceneViewRect.width);
 
             var inspectorXPos = (_sceneViewRect.x + _sceneViewRect.width) + windowsOffset;
@@ -131,7 +131,7 @@ namespace MinityEngine
 
             //Console
             EditorGUI.DrawRect(consoleRect, new Color(0.10f, 0.10f, 0.10f, 1));
-            GUI.SetNextControlName("Console");
+            GUI.SetNextControlName("Project Window");
             GUI.Window(3, consoleRect, (id) => ConsoleWindow(id, consoleRect), "", GUIStyle.none);
 
 
@@ -157,7 +157,7 @@ namespace MinityEngine
 
         private void ConsoleWindow(int id, Rect consoleRect)
         {
-            GUILayout.Label("Debug Console:");
+            GUILayout.Label("Project Window:");
 
             _consoleScroll = GUILayout.BeginScrollView(_consoleScroll);
 
@@ -499,7 +499,7 @@ namespace MinityEngine
 
             MinityScene.SetScreenValues((int)rect.width, (int)rect.height, rect.width / rect.height);
 
-            MinityScene.SetMoveSpeed(10f);
+            MinityScene.SetMoveSpeed(5f);
 
             Event current = Event.current;
 
@@ -510,7 +510,6 @@ namespace MinityEngine
 
             if (current.type == EventType.MouseUp)
             {
-                Debug.Log("up");
                 mouseDelta = default;
             }
 
@@ -552,33 +551,36 @@ namespace MinityEngine
                 }
             }
 
+            if (current.type == EventType.KeyDown) 
+            {
+                if (current.keyCode == KeyCode.A)
+                {
+                    MinityScene.SetKeyDow(0, 2);
+                }
+                else if (current.keyCode == KeyCode.D)
+                {
+                    MinityScene.SetKeyDow(0, 4);
+                }
 
-            if (current.keyCode == KeyCode.A)
-            {
-                MinityScene.SetKeyDow(0, 2);
-            }
-            else if (current.keyCode == KeyCode.D)
-            {
-                MinityScene.SetKeyDow(0, 4);
-            }
+                if (current.keyCode == KeyCode.W)
+                {
+                    MinityScene.SetKeyDow(0, 1);
+                }
+                else if (current.keyCode == KeyCode.S)
+                {
+                    MinityScene.SetKeyDow(0, 3);
+                }
 
-            if (current.keyCode == KeyCode.W)
-            {
-                MinityScene.SetKeyDow(0, 1);
+                if (current.keyCode == KeyCode.Q)
+                {
+                    MinityScene.SetKeyDow(0, 5);
+                }
+                else if (current.keyCode == KeyCode.E)
+                {
+                    MinityScene.SetKeyDow(0, 6);
+                }
             }
-            else if (current.keyCode == KeyCode.S)
-            {
-                MinityScene.SetKeyDow(0, 3);
-            }
-
-            if (current.keyCode == KeyCode.Q)
-            {
-                MinityScene.SetKeyDow(0, 5);
-            }
-            else if (current.keyCode == KeyCode.E)
-            {
-                MinityScene.SetKeyDow(0, 6);
-            }
+           
 
             if (current.type == EventType.KeyUp)
             {

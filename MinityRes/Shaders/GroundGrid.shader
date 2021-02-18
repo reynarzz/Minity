@@ -33,7 +33,7 @@ void main()
 
 	float alpha = (maxDist - length(_pixelPos - _cameraWorldPos_));
 
-	float thickness = 0.01;
+	float thickness = 0.015;
 	float spacing = 1.;
 
     if (fract(_pixelPos.x / spacing) < thickness || fract(_pixelPos.z / spacing) < thickness)

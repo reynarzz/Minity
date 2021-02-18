@@ -33,11 +33,11 @@ uniform float _alpha_; 	// from material
 
 void main() 
 {
-	vec3 lightDir =  normalize(vec3(-0.5, 0.5, 0.5));
+	vec3 lightDir =  normalize(vec3(0.5, -0.5, -0.5));
 
 	float light = normalize(dot(_normal, lightDir));
 
-	float flatC = step(0.4, light)  + 0.4;
+	float flatC = step(light, 0.4)  + 0.4;
 
-	color = texture(_texture, _uvCoord) * light * vec4(_diffuse_, _alpha_);
+	color = texture(_texture, _uvCoord) * flatC * vec4(_diffuse_, _alpha_);
 }
