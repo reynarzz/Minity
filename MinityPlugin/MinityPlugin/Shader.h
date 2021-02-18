@@ -22,7 +22,7 @@ public:
 	~Shader();
 	/// <summary>Sets up the shader program and returns it</summary>
 	/// <returns>Shader program ID</returns>
-	void SetUniforms(mat4 model, MatAttribs attribs);
+	void SetUniforms(mat4 model, vec3 cameraworldPos, MatAttribs attribs);
 	unsigned int UseShader();
 	unsigned int GetProgramID() const;
 	void Clear();

@@ -63,17 +63,18 @@ unsigned int Shader::UseShader()
 	return _programID;
 }
 
-void Shader::SetUniforms(mat4 mvp, MatAttribs attribs)
+void Shader::SetUniforms(mat4 mvp, vec3 cameraworldPos, MatAttribs attribs)
 {
-	unsigned int uniformModelID = glGetUniformLocation(_programID, "_MVP");
+	unsigned int uniformModelID = glGetUniformLocation(_programID, "_mvp_");
 	unsigned int matAmbientID = glGetUniformLocation(_programID, "_ambient_");
 	unsigned int diffuseId = glGetUniformLocation(_programID, "_diffuse_");
 	unsigned int alphaID = glGetUniformLocation(_programID, "_alpha_");
+	unsigned int cameraPosID = glGetUniformLocation(_programID, "_cameraWorldPos_");
 
 
 	//modelTest = glm::rotate(modelTest, glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
 
-
+	glUniform3f(cameraPosID, cameraworldPos.x, cameraworldPos.y, cameraworldPos.z);
 	glUniform3f(matAmbientID, attribs.ambient.r, attribs.ambient.g, attribs.ambient.b);
 	glUniform3f(diffuseId, attribs.diffuse.r, attribs.diffuse.g, attribs.diffuse.b);
 	glUniform1f(alphaID, attribs.dissolve);

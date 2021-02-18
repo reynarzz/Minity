@@ -58,7 +58,7 @@ void Renderer::Draw()
 
 		for (auto renderer : group)
 		{
-			renderer->Bind(_camera->GetViewProjMatrix());
+			renderer->Bind(_camera->GetViewProjMatrix(), _camera->_cameraPos);
 
 			const Material* mat = renderer->GetMaterial();
 
@@ -97,7 +97,7 @@ void Renderer::Draw()
 
 			Mesh* mesh = renderer->GetMesh();;
 
-			glDrawElements(GL_TRIANGLES, mesh->GetIndices()->size(), GL_UNSIGNED_INT, 0);
+			glDrawElements(mat->_renderMode, mesh->GetIndices()->size(), GL_UNSIGNED_INT, 0);
 		}
 	}
 }

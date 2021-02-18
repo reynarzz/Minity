@@ -29,5 +29,5 @@ public:
 	Mesh* GetMesh() const;
 	Material* GetMaterial() const;
 	void Init();
-	void Bind(mat4 viewProjM);
+	void Bind(mat4 viewProjM, vec3 cameraWorldPos);
 };

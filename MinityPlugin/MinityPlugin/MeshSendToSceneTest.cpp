@@ -6,9 +6,15 @@
 
 MatAttribs ConvertToMatAttribs(tinyobj::material_t mat);
 
+Shader* LoadShader(const string& path) 
+{
+	auto sources = ParseShader(path);
+	return new Shader(sources.vertexSource, sources.fragmentSource);
+}
+
 vector<GameEntity*> MeshSendToSceneTest::LoadGameEntities(const string& objectPath)
 {
-	auto sources = ParseShader("MinityRes/Shaders/TextureLight.shader");
+	Shader* shader = LoadShader("MinityRes/Shaders/TextureLight.shader");
 
 	vector<MeshData*> meshes = LoadMeshes(objectPath);
 	vector<GameEntity*> gameEntities;
@@ -33,7 +39,6 @@ vector<GameEntity*> MeshSendToSceneTest::LoadGameEntities(const string& objectPa
 	{
 		string name = meshes[i]->mesh->GetName();
 
-		Shader* shader = new Shader(sources.vertexSource, sources.fragmentSource);
 
 		//Texture* texture = new Texture(texturePath[i]);
 		
@@ -73,10 +78,32 @@ MatAttribs ConvertToMatAttribs(tinyobj::material_t mat)
 void MeshSendToSceneTest::SetMeshRenderersToScene(Scene* scene)
 {
 	auto gameEntities = LoadGameEntities("MinityRes/Models/CoffeeRestaurant.obj");
+	auto groundGrid = LoadGameEntities("MinityRes/Models/GroundGrid.obj");
+
 	//auto meshRenderers = LoadMeshRenderers("MinityRes/Models/Marina_1276_OBJ.obj");
 
 	for (auto gameEntity : gameEntities)
 	{
 		scene->AddGameEntity(gameEntity);
 	}
+
+	// Ground Grid
+	auto renderer = groundGrid.at(0)->GetComponent<MeshRenderer>();
+	auto material = renderer->GetMaterial();
+
+	material->_blending.enabled = true;
+	material->_blending._srcFactor = GL_SRC_ALPHA;
+	material->_blending._dstFactor = GL_ONE_MINUS_SRC_ALPHA;
+
+
+	material->GetMatAttribs().diffuse = vec3(0.2f, 0.2f, 0.2f);
+
+	Shader* shader = LoadShader("MinityRes/Shaders/GroundGrid.shader");
+
+	material->SetShader(shader);
+	material->culling._enabled = false;
+
+	//material->_renderMode = RenderMode::Lines;
+
+	scene->AddGameEntity(groundGrid.at(0));
 }

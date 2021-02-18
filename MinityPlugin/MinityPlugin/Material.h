@@ -48,6 +48,12 @@ public:
 	int illum;
 };
 
+enum RenderMode 
+{
+   Triangles = GL_TRIANGLES,
+   Lines = GL_LINES,
+   Points = GL_POINTS
+};
 
 class Material
 {
@@ -60,12 +66,16 @@ public:
 	Material(Shader* shader, MatAttribs attribs, Texture* texture);
 	Material(Shader* shader, MatAttribs attribs, std::vector<Texture*> texture);
 	~Material();
-	void UseMaterial(mat4 viewProjM);
+	void UseMaterial(mat4 viewProjM, vec3 cameraPos);
 	Shader* GetShader() const;
+	void SetShader(Shader* shader);
 	bool _depthWrite = true;
 	MatAttribs GetMatAttribs() const;
 	Culling culling;
+	RenderMode _renderMode;
+
 	void SetModelMatrix(mat4 modelM);
+
 private:
 	Shader* _shader;
 	mat4 _modelM;

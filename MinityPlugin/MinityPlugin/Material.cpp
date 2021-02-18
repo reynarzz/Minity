@@ -9,7 +9,8 @@ Material::Material(Shader* shader, MatAttribs attribs) :
 }
 
 Material::Material(Shader* shader, MatAttribs attribs, Texture* texture) :
-	_shader(shader), attribs(attribs), _modelM(1.0f), _renderingOrder(RenderingOrder::Opaque)
+	_shader(shader), attribs(attribs), _modelM(1.0f), 
+	_renderingOrder(RenderingOrder::Opaque), _renderMode(RenderMode::Triangles)
 {
 	if (texture == nullptr)
 	{
@@ -20,7 +21,8 @@ Material::Material(Shader* shader, MatAttribs attribs, Texture* texture) :
 }
 
 Material::Material(Shader* shader, MatAttribs attribs, std::vector<Texture*> textures) :
-	_shader(shader), attribs(attribs), _modelM(1.0f), _textures(textures), _renderingOrder(RenderingOrder::Opaque)
+	_shader(shader), attribs(attribs), _modelM(1.0f), _textures(textures), 
+	_renderingOrder(RenderingOrder::Opaque), _renderMode(RenderMode::Triangles)
 {
 }
 
@@ -39,7 +41,12 @@ void Material::SetModelMatrix(mat4 model)
 	_modelM = model;
 }
 
-void Material::UseMaterial(mat4 viewProjM)
+void Material::SetShader(Shader* shader) 
+{
+	_shader = shader;
+}
+
+void Material::UseMaterial(mat4 viewProjM, vec3 cameraPos)
 {
 	unsigned int id = _shader->UseShader();
 
@@ -50,7 +57,7 @@ void Material::UseMaterial(mat4 viewProjM)
 		_textures[i]->Bind(i);
 	}
 
-	_shader->SetUniforms(viewProjM * _modelM, attribs);
+	_shader->SetUniforms(viewProjM * _modelM, cameraPos, attribs);
 }
 
 Material::~Material()

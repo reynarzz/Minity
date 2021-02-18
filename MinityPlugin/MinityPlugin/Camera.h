@@ -12,13 +12,13 @@ class Camera// : Component
 {
 private:
 	mat4 _viewMatrix;
-	vec3 _cameraPos;
 	vec2 _cameraRot;
 	mat4 _projectionMatrix;
 	mat4 _viewProjM;
 	float _aspectRatio;
 
 public:
+	vec3 _cameraPos;
 
 	glm::vec3 _forward;
 	glm::vec3 _right;
