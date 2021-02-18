@@ -1,5 +1,5 @@
 ## Minity
-An OpenGL game engine that runs in a Unity3D EditorWindow.
+An OpenGL game engine that runs in a Unity's EditorWindow.
 
 ### Current Renderer: 
 ![](smallpreview.gif)
